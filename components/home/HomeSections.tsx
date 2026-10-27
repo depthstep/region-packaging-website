@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { withBase } from '@/lib/asset'
 import type { HomePage, SiteData } from '@/lib/types'
 import { productsIn, toCard } from '@/lib/data'
 import { ButtonLink } from '@/components/ui/Button'
@@ -49,7 +50,7 @@ export function TrustedBy({ settings }: { settings: SiteData['settings'] }) {
           {settings.trustedBrands.map((b) => (
             <li key={b.name}>
               {b.logo?.src ? (
-                <Image src={b.logo.src} alt={b.name} width={b.logo.width ?? 160} height={b.logo.height ?? 40} className="trusted__logo" />
+                <Image src={withBase(b.logo.src)} alt={b.name} width={b.logo.width ?? 160} height={b.logo.height ?? 40} className="trusted__logo" />
               ) : (
                 <span className="trusted__name">{b.name}</span>
               )}

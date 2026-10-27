@@ -189,13 +189,13 @@
   font-size: var(--p3);
 }
 .input--name {
-  background-image: url('/icons/feature-box-design.svg');
+  background-image: url('../../public/icons/feature-box-design.svg');
 }
 .input--phone {
-  background-image: url('/icons/phone.svg');
+  background-image: url('../../public/icons/phone.svg');
 }
 .input--email {
-  background-image: url('/icons/mail.svg');
+  background-image: url('../../public/icons/mail.svg');
 }
 .textarea {
   height: auto;

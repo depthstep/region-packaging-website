@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { withBase } from '@/lib/asset'
 import Link from 'next/link'
 import type { SiteSettings } from '@/lib/types'
 import { Social } from '@/components/ui/glyphs'
@@ -11,19 +12,19 @@ export function Footer({ settings }: { settings: SiteSettings }) {
       <div className="container footer__top">
         <div className="footer__brand">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/logo.svg" alt="Region Packaging" width={157} height={52} className="footer__logo" />
+          <img src={withBase('/brand/logo.svg')} alt="Region Packaging" width={157} height={52} className="footer__logo" />
           {f.blurb && <p>{f.blurb}</p>}
           {settings.phone && (
             <a href={telHref(settings.phone)} className="footer__contact">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/phone-white.svg" alt="" width={20} height={20} />
+              <img src={withBase('/icons/phone-white.svg')} alt="" width={20} height={20} />
               {settings.phone}
             </a>
           )}
           {settings.email && (
             <a href={`mailto:${settings.email}`} className="footer__contact">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/mail-white.svg" alt="" width={20} height={20} />
+              <img src={withBase('/icons/mail-white.svg')} alt="" width={20} height={20} />
               {settings.email}
             </a>
           )}
@@ -78,7 +79,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         {f.paymentLogos?.src && (
           <div>
             <p className="footer__heading">{f.paymentsLabel}</p>
-            <Image src={f.paymentLogos.src} alt={f.paymentLogos.alt} width={244} height={30} className="footer__payments" />
+            <Image src={withBase(f.paymentLogos.src)} alt={f.paymentLogos.alt} width={244} height={30} className="footer__payments" />
           </div>
         )}
       </div>

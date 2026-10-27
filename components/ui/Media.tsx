@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { withBase } from '@/lib/asset'
 import type { Img } from '@/lib/types'
 
 type Props = {
@@ -23,7 +24,7 @@ export function Media({ img, fallback, sizes, className = '', priority }: Props)
   }
   return (
     <div className={`media ${className}`}>
-      <Image src={img.src} alt={img.alt} fill sizes={sizes} priority={priority} style={{ objectFit: 'cover' }} />
+      <Image src={withBase(img.src)} alt={img.alt} fill sizes={sizes} priority={priority} style={{ objectFit: 'cover' }} />
     </div>
   )
 }
@@ -38,5 +39,5 @@ export function Icon({ img, size = 40, label = 'Icon' }: { img?: Img; size?: num
     )
   // Icons are small SVGs; next/image adds nothing here.
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={img.src} alt={img.alt} width={size} height={size} className="icon" style={{ width: size, height: size }} />
+  return <img src={withBase(img.src)} alt={img.alt} width={size} height={size} className="icon" style={{ width: size, height: size }} />
 }

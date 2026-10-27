@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { withBase } from '@/lib/asset'
 import type { Card, IconItem, Review } from '@/lib/types'
 import { ArrowRight, Stars } from './glyphs'
 import { Icon, Media } from './Media'
@@ -43,7 +44,7 @@ export function FeatureCard({ item }: { item: IconItem }) {
 
 const GoogleG = () => (
   // eslint-disable-next-line @next/next/no-img-element
-  <img src="/icons/google-g.png" alt="Google" width={24} height={24} className="google-g" />
+  <img src={withBase('/icons/google-g.png')} alt="Google" width={24} height={24} className="google-g" />
 )
 
 export function ReviewCard({ review }: { review: Review }) {

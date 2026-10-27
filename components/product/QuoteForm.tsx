@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useRef, useState } from 'react'
 import { upload } from '@vercel/blob/client'
+import { isStaticPreview, withBase } from '@/lib/asset'
 import type { FormOptions } from '@/lib/types'
 import { ArrowRight } from '@/components/ui/glyphs'
 
@@ -60,6 +61,9 @@ export function QuoteForm({ product, productChoices, options, sampleLinkLabel, n
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (status.state === 'sending') return
+    if (isStaticPreview) {
+      return setStatus({ state: 'error', message: 'This is a design preview, so the form does not send yet. It will work on the live site.' })
+    }
     setStatus({ state: 'sending' })
     const fd = new FormData(e.currentTarget)
     fd.delete('artwork')
@@ -123,7 +127,7 @@ export function QuoteForm({ product, productChoices, options, sampleLinkLabel, n
               <span className="field__label">{label}</span>
               <span className="select">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="select__icon" src={icon} alt="" width={18} height={18} />
+                <img className="select__icon" src={withBase(icon)} alt="" width={18} height={18} />
                 <select name={key} defaultValue={options[key][0]}>
                   {options[key].map((o) => (
                     <option key={o}>{o}</option>
@@ -150,7 +154,7 @@ export function QuoteForm({ product, productChoices, options, sampleLinkLabel, n
       >
         <input type="file" name="artwork" accept={ACCEPT} className="sr-only" onChange={(e) => pickFile(e.target.files?.[0])} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/icons/upload.svg" alt="" width={34} height={34} />
+        <img src={withBase('/icons/upload.svg')} alt="" width={34} height={34} />
         {file ? (
           <span className="dropzone__file">
             {file.name} ({(file.size / 1024 / 1024).toFixed(1)}MB) <span className="dropzone__change">Change</span>

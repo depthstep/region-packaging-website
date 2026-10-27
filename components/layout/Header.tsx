@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { withBase } from '@/lib/asset'
 import type { Category, SiteData } from '@/lib/types'
 import { productsIn } from '@/lib/data'
 import { ArrowRight, Chevron } from '@/components/ui/glyphs'
@@ -66,25 +67,25 @@ export function Header({ data }: { data: SiteData }) {
           {settings.announcement && (
             <p className="topbar__promo">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/sparkle.svg" alt="" width={18} height={18} />
+              <img src={withBase('/icons/sparkle.svg')} alt="" width={18} height={18} />
               {settings.announcement}
             </p>
           )}
           <div className="topbar__actions">
-            <form action="/products" role="search" className="search">
+            <form action={withBase('/products')} role="search" className="search">
               <label className="sr-only" htmlFor="site-search">
                 Search products
               </label>
               <input id="site-search" name="q" type="search" placeholder="Search products..." />
               <button type="submit" aria-label="Search">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/icons/search.svg" alt="" width={16} height={16} />
+                <img src={withBase('/icons/search.svg')} alt="" width={16} height={16} />
               </button>
             </form>
             {/* Cart is shown as designed but not wired up (quote-only site, no accounts). */}
             <span className="topbar__cart" aria-label="Cart (not active)" title="Not active yet">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/cart.svg" alt="" width={38} height={38} />
+              <img src={withBase('/icons/cart.svg')} alt="" width={38} height={38} />
             </span>
           </div>
         </div>
@@ -93,7 +94,7 @@ export function Header({ data }: { data: SiteData }) {
         <div className="container mainbar__inner">
           <Link href="/" className="logo" aria-label="Region Packaging home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/logo.svg" alt="Region Packaging" width={157} height={52} />
+            <img src={withBase('/brand/logo.svg')} alt="Region Packaging" width={157} height={52} />
           </Link>
           <nav aria-label="Main">
             <ul className="nav">
@@ -116,7 +117,7 @@ export function Header({ data }: { data: SiteData }) {
           {settings.phone && (
             <a href={telHref(settings.phone)} className="phone">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/phone.svg" alt="" width={22} height={22} />
+              <img src={withBase('/icons/phone.svg')} alt="" width={22} height={22} />
               {settings.phone}
             </a>
           )}

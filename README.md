@@ -45,6 +45,17 @@ Vercel limits a request to the site to 4.5MB. To accept 15MB files, create a Blo
 
 Import the repo in Vercel (framework preset: Next.js), add every variable from `.env.example`, and deploy. Set `NEXT_PUBLIC_SITE_URL` to the live URL.
 
+## Design preview (GitHub Pages)
+
+Every push to `main` runs `.github/workflows/deploy.yml`: type-check, full production build, then a static
+copy of the site is published to **https://depthstep.github.io/region-packaging-website/**. Progress is under
+the repo's **Actions** tab; the link updates a minute or two after a push.
+
+The preview is plain files (no server), so the quote form shows a "design preview" notice instead of sending,
+and `/studio` is not included. Everything works on the real deployment. To build the preview locally:
+`STATIC_EXPORT=1 NEXT_PUBLIC_BASE_PATH=/region-packaging-website NEXT_PUBLIC_STATIC_PREVIEW=1 next build`
+(after removing `app/api` and `app/studio` in a copy, as the workflow does).
+
 ## Where things live
 
 | What | Where |
