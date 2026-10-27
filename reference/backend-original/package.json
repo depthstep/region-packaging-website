@@ -1,0 +1,3 @@
+{ "name":"region-packaging-backend","private":true,
+  "scripts":{"studio":"sanity dev","import":"sanity dataset import seed/seed.ndjson production --replace"},
+  "dependencies":{"sanity":"^3","@sanity/client":"^6","@sanity/vision":"^3","react":"^18","react-dom":"^18","resend":"^4","zod":"^3"} }

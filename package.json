@@ -1,0 +1,37 @@
+{
+  "name": "region-packaging-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "studio": "sanity dev",
+    "seed:build": "node --experimental-strip-types --no-warnings scripts/build-seed.ts",
+    "seed:import": "npm run seed:build && sanity dataset import seed/seed.ndjson production --replace"
+  },
+  "overrides": {
+    "zod": "4.6.6"
+  },
+  "dependencies": {
+    "@sanity/client": "8.9.0",
+    "@sanity/image-url": "2.1.1",
+    "@sanity/vision": "6.18.0",
+    "@vercel/blob": "2.8.1",
+    "next": "16.4.3",
+    "next-sanity": "13.3.4",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "resend": "6.32.1",
+    "sanity": "6.18.0",
+    "styled-components": "6.5.3",
+    "zod": "4.6.6"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.9.3"
+  }
+}
