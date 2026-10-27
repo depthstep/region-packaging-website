@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={archivo.variable}>
+    // data-scroll-behavior: Next turns smooth scrolling off while changing page, so new pages open at the top instantly.
+    <html lang="en" className={archivo.variable} data-scroll-behavior="smooth">
       <body>{children}</body>
     </html>
   )
