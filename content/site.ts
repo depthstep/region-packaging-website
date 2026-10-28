@@ -34,6 +34,7 @@ export const settings: SiteSettings = {
     { label: 'FAQs', href: '/faqs' },
     { label: 'How To Order', href: '/how-to-order' },
     { label: 'Paper Weight Chart', href: '/paper-weight-chart' },
+    { label: 'Contact Us', href: '/contact' },
   ],
   stats: [
     { value: '10+', label: 'Years manufacturing' },
@@ -54,6 +55,22 @@ export const settings: SiteSettings = {
     heading: 'Loved by brands like yours.',
     text: 'Real reviews from real customers, posted on Google.',
     buttonLabel: 'Review us on Google',
+  },
+  contact: {
+    heading: 'Talk to a real person.',
+    text: "Questions about a box, an order, or artwork? Send a message and we'll get back to you.",
+    image: img('/images/contact-hero.jpg', 'Rigid supplement boxes in sage, blue and orange'),
+    callLabel: 'Call Us',
+    emailLabel: 'Email us',
+    card: {
+      heading: 'Know what box you want?',
+      text: 'Skip the message and request a quote with your size and quantity.',
+      button: { label: 'Choose Your Box', href: '/products' },
+    },
+    formHeading: 'Send us a message',
+    formText: 'Fields marked * are required.',
+    topics: ['General question', 'Order status', 'Artwork & design help', 'Samples', 'Something else'],
+    buttonLabel: 'Send Message',
   },
   trustStrip: [
     { title: 'Low Minimums', text: '', icon: img('/icons/feature-boxes.svg', '') },

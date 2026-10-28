@@ -695,6 +695,7 @@ export interface QuoteRequest {
   email?: string | null;
   phone?: string | null;
   company?: string | null;
+  topic?: string | null;
   product?: string | null;
   material?: string | null;
   size?: string | null;
@@ -1338,6 +1339,7 @@ export interface QuoteRequestsSelect<T extends boolean = true> {
   email?: T;
   phone?: T;
   company?: T;
+  topic?: T;
   product?: T;
   material?: T;
   size?: T;
@@ -1782,6 +1784,32 @@ export interface SiteSetting {
     sampleLinkLabel?: string | null;
     formNote?: string | null;
   };
+  contact?: {
+    heading?: string | null;
+    text?: string | null;
+    image?: (number | null) | Media;
+    callLabel?: string | null;
+    emailLabel?: string | null;
+    card?: {
+      heading?: string | null;
+      text?: string | null;
+      button?: {
+        label?: string | null;
+        /**
+         * e.g. /quote or https://...
+         */
+        href?: string | null;
+        id?: string | null;
+      };
+    };
+    formHeading?: string | null;
+    formText?: string | null;
+    /**
+     * The first one is selected by default.
+     */
+    topics?: string[] | null;
+    buttonLabel?: string | null;
+  };
   cta?: {
     heading?: string | null;
     text?: string | null;
@@ -2218,6 +2246,32 @@ export interface SiteSettingsSelect<T extends boolean = true> {
             };
         sampleLinkLabel?: T;
         formNote?: T;
+      };
+  contact?:
+    | T
+    | {
+        heading?: T;
+        text?: T;
+        image?: T;
+        callLabel?: T;
+        emailLabel?: T;
+        card?:
+          | T
+          | {
+              heading?: T;
+              text?: T;
+              button?:
+                | T
+                | {
+                    label?: T;
+                    href?: T;
+                    id?: T;
+                  };
+            };
+        formHeading?: T;
+        formText?: T;
+        topics?: T;
+        buttonLabel?: T;
       };
   cta?:
     | T

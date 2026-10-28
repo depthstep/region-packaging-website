@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { cards, faqList, formOptionFields, heading, iconItems, img, imgs, link, links, list, paragraphs, section, str, titleText, txt } from './fields'
+import { cards, faqList, formOptionFields, heading, iconItems, img, imgs, link, links, list, paragraphs, section, str, strings, titleText, txt } from './fields'
 import { revalidateGlobal } from './hooks'
 
 export const SiteSettings: GlobalConfig = {
@@ -55,6 +55,28 @@ export const SiteSettings: GlobalConfig = {
                 section('relatedHeading', 'Related products heading', heading),
                 str('sampleLinkLabel', 'Free sample link label'),
                 txt('formNote', 'Note under the form', 2),
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Contact page',
+          fields: [
+            {
+              name: 'contact',
+              label: 'Contact Us page',
+              type: 'group',
+              fields: [
+                str('heading', 'Banner heading'),
+                txt('text', 'Banner text', 2),
+                img('image', 'Banner photo'),
+                str('callLabel', 'Phone label'),
+                str('emailLabel', 'Email label'),
+                { name: 'card', label: 'Quote shortcut card', type: 'group', fields: [str('heading'), txt('text', 'Text', 2), link('button', 'Button')] },
+                str('formHeading', 'Form heading'),
+                str('formText', 'Text under the form heading'),
+                strings('topics', 'Topic choices', 'The first one is selected by default.'),
+                str('buttonLabel', 'Send button label'),
               ],
             },
           ],

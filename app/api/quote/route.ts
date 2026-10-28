@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { cmsEnabled } from '@/lib/data'
 
-// Adapted from region-backend.zip: zod validation and honeypot. Each enquiry is saved in the
-// Payload admin (Quote requests, with the artwork as a private file) and emailed to the team
+// Adapted from region-backend.zip: zod validation and honeypot. Each enquiry, from the quote forms
+// or the Contact Us form (which sends a `topic`), is saved in the Payload admin (Quote requests,
+// with the artwork as a private file) and emailed to the team
 // and the customer over SMTP. Without a database (local preview) it logs the enquiry instead,
 // so the form can be tried end to end.
 
@@ -16,6 +17,7 @@ const schema = z.object({
   email: z.email().max(200),
   phone: s.optional(),
   company: s.optional(),
+  topic: s.optional(),
   product: s.optional(),
   material: s.optional(),
   size: s.optional(),
@@ -43,6 +45,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: emailBad ? 'Please enter a valid email address.' : 'Please fill in your name and email.' }, { status: 400 })
   }
   const { website, ...fields } = parsed.data
+  if (fields.topic && !fields.message) return NextResponse.json({ error: 'Please write your message.' }, { status: 400 })
   if (website) return NextResponse.json({ ok: true }) // bot caught, silently accept
 
   const file = fd.get('artwork')
@@ -91,13 +94,13 @@ export async function POST(req: Request) {
         payload.sendEmail({
           to: to.split(',').map((x) => x.trim()),
           replyTo: fields.email,
-          subject: `New quote request: ${fields.product || 'General'} (${fields.name})`,
+          subject: fields.topic ? `New message: ${fields.topic} (${fields.name})` : `New quote request: ${fields.product || 'General'} (${fields.name})`,
           html: `<table cellpadding="6">${rows}</table><p><a href="${esc(adminUrl)}">Open in the admin</a></p>`,
         }),
         payload.sendEmail({
           to: fields.email,
-          subject: 'We received your quote request',
-          html: `<p>Hi ${esc(fields.name)},</p><p>Thanks for your enquiry. We'll reply with your price and a free digital proof.</p><p>Region Packaging</p>`,
+          subject: fields.topic ? 'We received your message' : 'We received your quote request',
+          html: `<p>Hi ${esc(fields.name)},</p><p>${fields.topic ? "Thanks for your message. We'll get back to you soon." : "Thanks for your enquiry. We'll reply with your price and a free digital proof."}</p><p>Region Packaging</p>`,
         }),
       ]).catch((err) => console.error('[quote] saved, but the email failed', err))
     }

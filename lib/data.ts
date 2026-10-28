@@ -33,6 +33,7 @@ const emptySettings: SiteSettings = {
   cta: {},
   footer: { columns: [], legal: [] },
   reviewsSection: {},
+  contact: { topics: [] },
 }
 const emptyHome: HomePage = {
   hero: { heading: '', slides: [] },

@@ -65,6 +65,21 @@ export type SiteSettings = {
     legal: Link[]
   }
   reviewsSection: SectionHeading & { buttonLabel?: string }
+  contact: ContactPage
+}
+
+/** The Contact Us page (Site settings > Contact page). */
+export type ContactPage = {
+  heading?: string
+  text?: string
+  image?: Img
+  callLabel?: string
+  emailLabel?: string
+  card?: { heading?: string; text?: string; button?: Link }
+  formHeading?: string
+  formText?: string
+  topics: string[]
+  buttonLabel?: string
 }
 
 export type FormOptions = {

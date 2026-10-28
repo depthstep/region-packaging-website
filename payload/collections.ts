@@ -147,7 +147,7 @@ const ro = (name: string, label?: string, type: 'text' | 'textarea' = 'text'): F
 export const QuoteRequests: CollectionConfig = {
   slug: 'quote-requests',
   labels: { singular: 'Quote request', plural: 'Quote requests' },
-  admin: { useAsTitle: 'name', defaultColumns: ['name', 'product', 'email', 'createdAt', 'handled'], group: 'Quote requests' },
+  admin: { useAsTitle: 'name', defaultColumns: ['name', 'product', 'topic', 'email', 'createdAt', 'handled'], group: 'Quote requests' },
   defaultSort: '-createdAt',
   access: { read: loggedIn, create: loggedIn, update: loggedIn, delete: loggedIn },
   fields: [
@@ -156,6 +156,7 @@ export const QuoteRequests: CollectionConfig = {
     ro('email'),
     ro('phone'),
     ro('company'),
+    ro('topic', 'Topic (contact form)'),
     ro('product'),
     ro('material'),
     ro('size'),
