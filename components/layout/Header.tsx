@@ -5,6 +5,7 @@ import { productsIn } from '@/lib/data'
 import { ArrowRight, Chevron } from '@/components/ui/glyphs'
 import { Icon } from '@/components/ui/Media'
 import { ButtonLink } from '@/components/ui/Button'
+import { MobileMenu, type MenuGroup } from './MobileMenu'
 
 const telHref = (phone?: string) => `tel:${(phone || '').replace(/[^\d+]/g, '')}`
 
@@ -60,6 +61,17 @@ export function Header({ data }: { data: SiteData }) {
   const { settings, categories } = data
   const boxes = categories.filter((c) => c.kind !== 'industry')
   const industries = categories.filter((c) => c.kind === 'industry')
+  const menuGroups: MenuGroup[] = [
+    { label: 'Custom Boxes', cats: boxes },
+    { label: 'Boxes By Industry', cats: industries },
+  ].map((g) => ({
+    label: g.label,
+    columns: g.cats.map((c) => ({
+      heading: c.menuLabel || c.title.replace(/^Custom /, ''),
+      href: `/${c.slug}`,
+      items: productsIn(data, c.id).map((p) => ({ title: p.title, href: `/${c.slug}/${p.slug}`, icon: p.menuIcon ?? c.menuIcon })),
+    })),
+  }))
   return (
     <header className="site-header">
       <div className="topbar">
@@ -124,6 +136,14 @@ export function Header({ data }: { data: SiteData }) {
           <ButtonLink href="/quote" variant="outline" className="mainbar__quote">
             Get a Quote
           </ButtonLink>
+          {/* Phones and tablets: cart + menu button; the nav, phone, quote and search move into the drawer. */}
+          <div className="mainbar__mobile">
+            <span className="topbar__cart" aria-label="Cart (not active)" title="Not active yet">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={withBase('/icons/cart.svg')} alt="" width={37} height={37} />
+            </span>
+            <MobileMenu groups={menuGroups} resources={settings.resourcesMenu} phone={settings.phone} phoneHref={telHref(settings.phone)} />
+          </div>
         </div>
       </div>
     </header>

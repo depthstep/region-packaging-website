@@ -65,7 +65,7 @@ export function TrustedBy({ settings }: { settings: SiteData['settings'] }) {
 export function ChooseBox({ s }: { s: HomePage['chooseBox'] }) {
   if (!s.cards.length) return null
   return (
-    <section className="section" id="products">
+    <section className="section choose-box" id="products">
       <div className="container">
         <SectionHeader
           eyebrow={s.eyebrow}
@@ -79,6 +79,12 @@ export function ChooseBox({ s }: { s: HomePage['chooseBox'] }) {
             <PhotoCard key={c.title} card={c} />
           ))}
         </div>
+        {/* On phones the button sits under the cards (Figma mobile). */}
+        {s.button && (
+          <ButtonLink href={s.button.href} variant="outline" size="sm" className="choose-box__more">
+            {s.button.label}
+          </ButtonLink>
+        )}
       </div>
     </section>
   )

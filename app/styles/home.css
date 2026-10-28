@@ -332,3 +332,88 @@
     padding: 32px;
   }
 }
+
+/* ---------- Phones (Figma mobile home, 402px artboard) ---------- */
+.choose-box__more {
+  display: none;
+}
+@media (max-width: 640px) {
+  .hero {
+    padding-block: 58px 66px;
+  }
+  .hero__inner {
+    min-height: 0;
+    gap: 34px;
+  }
+  .hero__copy {
+    padding-top: 0;
+  }
+  .hero__intro {
+    font-size: var(--p2);
+    line-height: 1.25;
+    margin: 12px 0 26px;
+  }
+  .hero__copy > .btn {
+    width: 100%;
+    padding-block: 13px;
+  }
+  .hero__stats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    padding-top: 36px;
+  }
+  .hero__stats dt {
+    font-size: 26px;
+  }
+  .hero__stats dd {
+    max-width: none;
+    font-size: var(--p3);
+  }
+  .hero__slider {
+    min-height: 0;
+    aspect-ratio: 315 / 251;
+  }
+  .hero__arrows {
+    left: 0;
+    right: 0;
+    bottom: 12px;
+    justify-content: center;
+  }
+
+  /* The mobile design goes straight from the hero to "Choose your box". */
+  .trusted {
+    display: none;
+  }
+
+  .choose-box .section-header .btn {
+    display: none;
+  }
+  .choose-box .card-grid {
+    row-gap: 40px;
+  }
+  .choose-box .photo-card__image {
+    aspect-ratio: 315 / 251;
+    margin-bottom: 16px;
+  }
+  .choose-box__more {
+    display: flex;
+    width: 100%;
+    margin-top: 32px;
+  }
+
+  .steps {
+    column-gap: 20px;
+    row-gap: 40px;
+  }
+  .steps .icon,
+  .steps .icon-placeholder {
+    width: 62px !important;
+    height: 62px !important;
+    margin-bottom: 8px;
+  }
+  .steps h4 {
+    font-size: 17px;
+  }
+}

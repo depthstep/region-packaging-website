@@ -442,6 +442,23 @@ a.photo-card:hover .photo-card__image img {
   padding-bottom: 30px;
   max-width: 500px;
 }
+@media (max-width: 900px) {
+  .split--faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .faq {
+    padding: 0 20px;
+  }
+  .faq summary {
+    padding-block: 20px;
+    font-size: 17px;
+  }
+  .faq__answer {
+    padding-bottom: 20px;
+  }
+}
 
 /* ---------- CTA + coupon ---------- */
 .cta__inner {
