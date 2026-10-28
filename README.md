@@ -1,60 +1,54 @@
 # Region Packaging website
 
-Next.js 16 (App Router, TypeScript) + Sanity CMS + Resend, deployed on Vercel. The site's only goal is collecting quote requests.
+Next.js 16 (App Router, TypeScript) with Payload CMS built in, self-hosted on our own server. The site's only goal is collecting quote requests.
+
+Everything runs as one Node.js app: the website, the editing admin at `/admin`, and the quote API. Content lives in a SQLite database file and uploaded images in `uploads/` on the server. No outside services are needed (email uses any SMTP mailbox).
 
 ## Run it locally
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
+cp .env.example .env      # then set PAYLOAD_SECRET to a long random string
+npm run seed              # loads the starter content and photos into data/payload.db
+npm run dev               # site: http://localhost:3000  admin: http://localhost:3000/admin
 ```
 
-With no Sanity project ID set, the site runs entirely from the local seed content in `content/` (the Figma copy, the Figma photos and all 8 categories / 32 sub-products). The quote form works too: submissions are validated and printed to the terminal instead of being emailed.
+The first visit to `/admin` asks you to create the first admin user.
 
-## Connect the CMS (Sanity)
+With `DATABASE_URI` unset, the site runs entirely from the starter content in `content/` instead of the database. The GitHub Pages preview uses this.
 
-1. Create a project at sanity.io/manage (or `npx sanity init --bare`). Note the project ID.
-2. Copy `.env.example` to `.env.local` and fill in `NEXT_PUBLIC_SANITY_PROJECT_ID`.
-3. In sanity.io/manage > API:
-   - **CORS origins**: add `http://localhost:3000` and your live domain (allow credentials).
-   - **Tokens**: create an *Editor* token and set it as `SANITY_API_WRITE_TOKEN` (server-only; used to store quote requests and artwork).
-4. Load the starter content (all pages, photos uploaded as assets): `npm run seed:import`.
-   This **replaces** documents with the same IDs, so run it once at the start, not after editors have made changes.
-5. Open the editor at http://localhost:3000/studio (also available on the live site at `/studio`).
+## Editing content (`/admin`)
 
-### Instant updates (ISR webhook)
+- **Products > Categories / Sub-products**: each has tabs for Main (title, menu group, card text, card photo, menu icon), Gallery & form, Page sections and SEO. Leave a section's heading empty to hide it. How to order, pricing, why us, FAQs and form options fall back to Site settings when empty.
+- **Content > Home page**: every home section. **Reviews**, **Blog posts**.
+- **Settings > Site settings**: top bar, phone, email, mega-menu promo, resources menu, stats, trusted-by logos, Google rating, trust strip, quote-form options, generic product-page sections, CTA/coupon, footer, social links.
+- **Quote requests**: every enquiry from the form, with the customer's artwork (only visible to logged-in staff). Tick "Handled" when done.
+- Saving anything refreshes the live pages straight away.
+- Any image shown as a striped **Placeholder** box is waiting for a photo in the matching field.
 
-Pages are static and refresh hourly on their own. For instant updates after publishing:
-sanity.io/manage > API > Webhooks > Create:
-- URL: `https://YOUR-DOMAIN/api/revalidate`
-- Trigger on: Create, Update, Delete. Filter: leave empty. Projection: `{_type}`
-- Secret: a long random string, also set as `SANITY_REVALIDATE_SECRET` in Vercel.
+## Quote emails
 
-## Quote emails (Resend)
+Set the SMTP variables in `.env` (e.g. Hostinger email: `smtp.hostinger.com`, port 465, the mailbox address and password), plus `QUOTE_FROM_EMAIL` and `QUOTE_TO_EMAIL`. The team gets each enquiry with a link to it in the admin; the customer gets a confirmation. Without SMTP, enquiries are still saved under Quote requests.
 
-1. Create a Resend account and verify your sending domain.
-2. Set `RESEND_API_KEY`, `QUOTE_TO_EMAIL` (comma-separate several inboxes) and `QUOTE_FROM_EMAIL` (an address on the verified domain).
+## Deploying to the server (Hostinger VPS, Ubuntu)
 
-Each enquiry is saved in Sanity under **Quote requests** (when the write token is set) and emailed to the team, with a confirmation email to the customer.
+One-time setup:
 
-## Artwork uploads up to 15MB
+1. Install Node.js 22, git and nginx. Clone this repo to e.g. `/var/www/region-packaging`.
+2. Create `.env` from `.env.example` with `DATABASE_URI=file:/var/www/region-packaging/data/payload.db`, a new `PAYLOAD_SECRET`, `NEXT_PUBLIC_SITE_URL=https://your-domain` and the SMTP settings.
+3. `npm ci && npm run migrate && npm run seed && npm run build`, then run `npm start` under a process manager (systemd or pm2) on port 3000.
+4. nginx: proxy the domain to `127.0.0.1:3000`, set `client_max_body_size 20m;` (artwork uploads are up to 15MB), and add a free SSL certificate with certbot.
+5. Back up `data/` and `uploads/` regularly; together they hold all content, quote requests and files.
 
-Vercel limits a request to the site to 4.5MB. To accept 15MB files, create a Blob store (Vercel > Storage > Blob) and connect it to the project; that adds `BLOB_READ_WRITE_TOKEN`. Files then upload straight from the browser to Blob storage. Without it, files go through `/api/quote` and anything over ~4.5MB is rejected on Vercel (local dev has no limit).
+Each update: `git pull && npm ci && npm run migrate && npm run build`, then restart the app.
 
-## Deploy (Vercel)
-
-Import the repo in Vercel (framework preset: Next.js), add every variable from `.env.example`, and deploy. Set `NEXT_PUBLIC_SITE_URL` to the live URL.
+After changing collections or fields in `payload/`, run `npx payload migrate:create <name>` and commit the new file in `payload/migrations/`, so the server's database gets the change.
 
 ## Design preview (GitHub Pages)
 
-Every push to `main` runs `.github/workflows/deploy.yml`: type-check, full production build, then a static
-copy of the site is published to **https://depthstep.github.io/region-packaging-website/**. Progress is under
-the repo's **Actions** tab; the link updates a minute or two after a push.
+Every push to `main` runs `.github/workflows/deploy.yml`: type-check, full production build, then a static copy of the site is published to **https://depthstep.github.io/region-packaging-website/**. Progress is under the repo's **Actions** tab; the link updates a minute or two after a push.
 
-The preview is plain files (no server), so the quote form shows a "design preview" notice instead of sending,
-and `/studio` is not included. Everything works on the real deployment. To build the preview locally:
-`STATIC_EXPORT=1 NEXT_PUBLIC_BASE_PATH=/region-packaging-website NEXT_PUBLIC_STATIC_PREVIEW=1 next build`
-(after removing `app/api` and `app/studio` in a copy, as the workflow does).
+The preview is plain files built from the starter content in `content/` (not the database), so admin edits don't appear there, the quote form shows a "design preview" notice instead of sending, and `/admin` is not included.
 
 ## Where things live
 
@@ -62,19 +56,13 @@ and `/studio` is not included. Everything works on the real deployment. To build
 | --- | --- |
 | Design tokens (colours, type scale, radii) | `app/styles/tokens.css` |
 | Shared components (buttons, section header, cards, accordion, placeholders) | `components/ui/`, `components/sections/` |
-| Header + mega menus, footer | `components/layout/` |
+| Header + mega menus, mobile menu, footer | `components/layout/` |
 | Home page sections | `components/home/HomeSections.tsx` |
 | Product template (category + sub-product pages) | `components/product/ProductTemplate.tsx` |
-| Quote form / APIs | `components/product/QuoteForm.tsx`, `app/api/quote`, `app/api/artwork` |
-| CMS schemas | `sanity/schemas/` |
-| Local seed content (preview + CMS import) | `content/` |
-| Data loading (Sanity or seed) | `lib/data.ts` |
-
-### Editing content in the Studio
-
-- **Site settings**: top bar, phone, email, mega-menu promo, resources menu, stats, trusted-by logos, Google rating, reviews heading, trust strip, quote-form options, generic product-page sections (how to order, pricing, why us, FAQs), CTA/coupon, footer, social links.
-- **Home page**: every home section.
-- **Categories / Sub-products**: same fields. Leave a section empty to hide it. How to order, pricing, why us, FAQs and form options fall back to Site settings when empty.
-- Any image shown as a striped **Placeholder** box is waiting for a photo in the matching CMS field.
+| Quote form / API | `components/product/QuoteForm.tsx`, `app/api/quote` |
+| CMS schema (collections, globals, fields) | `payload.config.ts`, `payload/` |
+| Admin routes (generated by Payload) | `app/(payload)/` |
+| Starter content (seed + preview) | `content/`, loaded by `scripts/seed.ts` |
+| Data loading (Payload or starter content) | `lib/data.ts`, `lib/cms/normalize.ts` |
 
 `reference/backend-original/` is the unzipped original backend, kept for reference only.

@@ -1,4 +1,4 @@
-// Normalised content shapes. Sanity documents and the local seed both map onto these,
+// Normalised content shapes. Payload documents and the local seed both map onto these,
 // so components never know which source the content came from.
 
 /** An image that may not exist yet. Without `src` it renders as a labelled placeholder. */

@@ -1,19 +1,11 @@
 import { cache } from 'react'
 import * as seedCatalog from '@/content/catalog'
 import * as seedSite from '@/content/site'
-import { client } from './sanity/client'
-import { CMS_TAG } from './sanity/env'
-import { normalize } from './sanity/normalize'
+import { cmsId, fromFields } from './cms/normalize'
 import type { Card, Category, HomePage, PageContent, Product, SiteData, SiteSettings } from './types'
 
-const SITE_QUERY = `{
-  "settings": *[_id == "siteSettings"][0],
-  "home": *[_id == "homePage"][0],
-  "categories": *[_type == "category" && visible != false] | order(order asc),
-  "products": *[_type == "product" && status != "hidden"] | order(order asc),
-  "reviews": *[_type == "review"] | order(order asc),
-  "posts": *[_type == "post"] | order(publishedAt desc)
-}`
+/** The Payload database is only used when one is configured; otherwise the site runs from content/*.ts. */
+export const cmsEnabled = !!process.env.DATABASE_URI
 
 const seed: SiteData = {
   settings: seedSite.settings,
@@ -77,23 +69,36 @@ function homeFromCms(doc: RawHome): HomePage {
   return mergeOnto(emptyHome, { ...doc, industries: { ...doc.industries, ...(tabs ? { tabs } : {}) }, blog: { ...blog, postIds: posts ?? [] } })
 }
 
-/** Everything the site renders, fetched in one cached query (the catalogue is small). */
+/** Everything the site renders, read in one go through Payload's Local API (the catalogue is small). */
 export const getSiteData = cache(async (): Promise<SiteData> => {
-  if (!client) return seed
-  const raw = await client.fetch(SITE_QUERY, {}, { next: { tags: [CMS_TAG], revalidate: 3600 } })
-  const d = normalize(raw) as Partial<Record<keyof SiteData, unknown>>
+  if (!cmsEnabled) return seed
+  const [{ getPayload }, { default: config }, schema] = await Promise.all([import('payload'), import('@payload-config'), import('@/payload/schema')])
+  const payload = await getPayload({ config })
+  const all = { depth: 1, pagination: false } as const
+  const [settings, home, categories, products, reviews, posts] = await Promise.all([
+    payload.findGlobal({ slug: 'site-settings', depth: 1 }),
+    payload.findGlobal({ slug: 'home-page', depth: 1 }),
+    payload.find({ collection: 'categories', where: { visible: { not_equals: false } }, sort: 'order', ...all }),
+    payload.find({ collection: 'products', where: { status: { not_equals: 'hidden' } }, sort: 'order', ...all }),
+    payload.find({ collection: 'reviews', sort: 'order', ...all }),
+    payload.find({ collection: 'posts', sort: '-publishedAt', ...all }),
+  ])
+  const doc =
+    (collection: string, fields: Parameters<typeof fromFields>[0]) =>
+    (d: { id: unknown }): Record<string, unknown> & { id: string } => ({ ...fromFields(fields, d as Record<string, unknown>), id: cmsId(collection, d.id) })
+  // A global nobody has saved yet has no updatedAt: fall back to the seed so a fresh database still renders.
+  const saved = (g: { updatedAt?: unknown }) => !!g.updatedAt
   return {
-    // A singleton that doesn't exist yet falls back to the seed so a fresh dataset still renders.
-    settings: d.settings ? mergeOnto(emptySettings, d.settings as Record<string, unknown>) : seed.settings,
-    home: d.home ? homeFromCms(d.home as RawHome) : seed.home,
-    categories: ((d.categories as (Category & { related?: string[] })[]) ?? []).map(
-      ({ related, ...c }) => pageDefaults({ ...c, relatedIds: related ?? [] }) as Category,
-    ),
-    products: ((d.products as (Product & { categories?: string[]; related?: string[] })[]) ?? []).map(
-      ({ categories, related, ...p }) => pageDefaults({ ...p, categoryIds: categories ?? [], relatedIds: related ?? [] }) as Product,
-    ),
-    reviews: (d.reviews as SiteData['reviews']) ?? [],
-    posts: (d.posts as SiteData['posts']) ?? [],
+    settings: saved(settings) ? mergeOnto(emptySettings, fromFields(schema.SiteSettings.fields, settings as unknown as Record<string, unknown>)) : seed.settings,
+    home: saved(home) ? homeFromCms(fromFields(schema.HomePage.fields, home as unknown as Record<string, unknown>) as RawHome) : seed.home,
+    categories: categories.docs
+      .map(doc('categories', schema.Categories.fields))
+      .map(({ related, ...c }) => pageDefaults({ ...c, relatedIds: (related as string[]) ?? [] }) as Category),
+    products: products.docs
+      .map(doc('products', schema.Products.fields))
+      .map(({ categories, related, ...p }) => pageDefaults({ ...p, categoryIds: (categories as string[]) ?? [], relatedIds: (related as string[]) ?? [] }) as Product),
+    reviews: reviews.docs.map(doc('reviews', schema.Reviews.fields)) as unknown as SiteData['reviews'],
+    posts: posts.docs.map(doc('posts', schema.Posts.fields)) as unknown as SiteData['posts'],
   }
 })
 

@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { useRef, useState } from 'react'
-import { upload } from '@vercel/blob/client'
 import { isStaticPreview, withBase } from '@/lib/asset'
 import type { FormOptions } from '@/lib/types'
 import { ArrowRight } from '@/components/ui/glyphs'
@@ -32,17 +31,6 @@ type Props = {
 
 type Status = { state: 'idle' | 'sending' | 'sent' } | { state: 'error'; message: string }
 
-/** Try a direct-to-storage upload (needed for files over Vercel's 4.5MB request limit). */
-async function uploadArtwork(file: File): Promise<string | null> {
-  try {
-    const safeName = file.name.replace(/[^\w.-]+/g, '-')
-    const blob = await upload(`artwork/${safeName}`, file, { access: 'public', handleUploadUrl: '/api/artwork' })
-    return blob.url
-  } catch {
-    return null // storage not configured: the file goes with the form instead
-  }
-}
-
 export function QuoteForm({ product, productChoices, options, sampleLinkLabel, note, defaultMessage }: Props) {
   const [status, setStatus] = useState<Status>({ state: 'idle' })
   const [file, setFile] = useState<File | null>(null)
@@ -68,11 +56,7 @@ export function QuoteForm({ product, productChoices, options, sampleLinkLabel, n
     const fd = new FormData(e.currentTarget)
     fd.delete('artwork')
     fd.set('pageUrl', window.location.href)
-    if (file) {
-      const url = await uploadArtwork(file)
-      if (url) fd.set('artworkUrl', url)
-      else fd.set('artwork', file)
-    }
+    if (file) fd.set('artwork', file)
     try {
       const res = await fetch('/api/quote', { method: 'POST', body: fd })
       const json = (await res.json().catch(() => ({}))) as { error?: string }
