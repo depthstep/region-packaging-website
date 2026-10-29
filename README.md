@@ -30,6 +30,17 @@ With `DATABASE_URI` unset, the site runs entirely from the starter content in `c
 
 Set the SMTP variables in `.env` (e.g. Hostinger email: `smtp.hostinger.com`, port 465, the mailbox address and password), plus `QUOTE_FROM_EMAIL` and `QUOTE_TO_EMAIL`. The team gets each enquiry with a link to it in the admin; the customer gets a confirmation. Without SMTP, enquiries are still saved under Quote requests.
 
+## Contact messages in a Google Sheet (optional)
+
+Contact Us messages can also be added as rows to a Google Sheet, alongside being saved under Quote requests:
+
+1. Create the Google Sheet and share it only with the team.
+2. In the sheet: **Extensions > Apps Script**. Paste in `scripts/contact-sheet.gs`, change `SECRET` to a long random string, and save.
+3. **Deploy > New deployment > Web app**, with *Execute as: Me* and *Who has access: Anyone*. Approve the permission prompt and copy the URL that ends in `/exec`.
+4. On the server, put `CONTACT_SHEET_URL=<that URL>` and `CONTACT_SHEET_SECRET=<the same secret>` in `.env`, then restart the app.
+
+New messages appear on a "Contact messages" tab. *Anyone* only lets the website reach the script without a Google login: the secret stops anyone else adding rows, and the sheet stays private.
+
 ## Deploying to the server (Hostinger VPS, Ubuntu)
 
 One-time setup:

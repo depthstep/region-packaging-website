@@ -81,6 +81,7 @@ export async function POST(req: Request) {
       }
     }
     const quote = await payload.create({ collection: 'quote-requests', data: { ...fields, artwork: art?.id } })
+    const sheet = fields.topic ? addToContactSheet(fields, quote.createdAt) : null
 
     const to = process.env.QUOTE_TO_EMAIL
     if (to && process.env.SMTP_HOST) {
@@ -104,9 +105,41 @@ export async function POST(req: Request) {
         }),
       ]).catch((err) => console.error('[quote] saved, but the email failed', err))
     }
+    await sheet
   } catch (err) {
     console.error('[quote] saving or emailing failed', err)
     return NextResponse.json({ error: 'Sorry, something went wrong sending your inquiry. Please try again or email us.' }, { status: 502 })
   }
   return NextResponse.json({ ok: true })
+}
+
+/**
+ * Adds a Contact Us message as a row in the team's Google Sheet, through the Apps Script web app in
+ * scripts/contact-sheet.gs (CONTACT_SHEET_URL + CONTACT_SHEET_SECRET). The message is already saved
+ * in the admin, so a failure here is only logged.
+ */
+async function addToContactSheet(fields: Record<string, string | undefined>, sentAt: string) {
+  const url = process.env.CONTACT_SHEET_URL
+  if (!url) return
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        secret: process.env.CONTACT_SHEET_SECRET,
+        sentAt,
+        name: fields.name,
+        email: fields.email,
+        phone: fields.phone ?? '',
+        topic: fields.topic,
+        message: fields.message ?? '',
+        page: fields.pageUrl ?? '',
+      }),
+      signal: AbortSignal.timeout(10_000),
+    })
+    const json = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string }
+    if (!json.ok) console.error('[contact sheet] row not added', res.status, json.error)
+  } catch (err) {
+    console.error('[contact sheet] request failed', err)
+  }
 }
