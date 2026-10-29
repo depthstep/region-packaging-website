@@ -9,7 +9,7 @@ import config from '../payload.config.ts'
 import * as catalog from '../content/catalog.ts'
 import * as site from '../content/site.ts'
 import { isParagraphList } from '../payload/fields.ts'
-import { Categories, HomePage, Posts, Products, Reviews, SiteSettings } from '../payload/schema.ts'
+import { AboutPage, Categories, HomePage, Posts, Products, Reviews, SiteSettings } from '../payload/schema.ts'
 import type { Img } from '../lib/types.ts'
 
 type Raw = Record<string, unknown>
@@ -114,6 +114,7 @@ await payload.updateGlobal({
     blog: { ...home.blog, posts: home.blog.postIds },
   } as unknown as Raw)) as never,
 })
+await payload.updateGlobal({ slug: 'about-page', data: (await toPayload(AboutPage.fields, site.about as unknown as Raw)) as never })
 await payload.updateGlobal({ slug: 'site-settings', data: (await toPayload(SiteSettings.fields, site.settings as unknown as Raw)) as never })
 
 console.log(

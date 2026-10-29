@@ -12,6 +12,7 @@ import '../styles/layout.css'
 import '../styles/home.css'
 import '../styles/product.css'
 import '../styles/contact.css'
+import '../styles/about.css'
 
 const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', display: 'swap' })
 

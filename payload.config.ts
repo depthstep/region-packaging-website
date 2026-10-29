@@ -6,7 +6,7 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import { Artwork, Categories, Media, Posts, Products, QuoteRequests, Reviews, Users } from './payload/collections'
-import { HomePage, SiteSettings } from './payload/globals'
+import { AboutPage, HomePage, SiteSettings } from './payload/globals'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const env = process.env
@@ -23,7 +23,7 @@ export default buildConfig({
     meta: { titleSuffix: ' | Region Packaging admin' },
   },
   collections: [Categories, Products, Reviews, Posts, QuoteRequests, Artwork, Media, Users],
-  globals: [HomePage, SiteSettings],
+  globals: [HomePage, AboutPage, SiteSettings],
   secret: env.PAYLOAD_SECRET || '',
   // One file on the server (e.g. file:./data/payload.db). Back it up with the uploads folder.
   // In development the tables follow the config automatically; on the server run `npm run migrate`

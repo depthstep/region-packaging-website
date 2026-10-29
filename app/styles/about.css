@@ -1,0 +1,278 @@
+/* ---------- About Us page ---------- */
+.about-icon {
+  display: block;
+  align-self: flex-start;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Hero: copy on the left, three-photo collage with the round badge on the right. */
+.about-hero {
+  background: var(--beige);
+}
+.about-hero__inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 470px) minmax(0, 593px);
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  padding-block: 33px 34px;
+}
+.about-hero__crumb {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  margin: 0;
+}
+.about-hero h1 {
+  line-height: 0.95;
+}
+.about-hero__copy p {
+  margin-top: 11px;
+  font-size: var(--p1);
+  line-height: 1.28;
+}
+.about-hero__copy .btn {
+  margin-top: 27px;
+}
+.about-hero__photos {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.about-hero__photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  aspect-ratio: 286 / 259;
+}
+.about-hero__photo--3 {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  aspect-ratio: auto;
+}
+.about-hero__badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 26%;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Mission and vision cards either side of a tinted factory photo. */
+.about-mv {
+  padding-block: 190px 204px;
+}
+.about-mv__grid {
+  display: grid;
+  grid-template-columns: 370fr 421fr 370fr;
+  gap: 20px;
+}
+.about-mv__card {
+  display: flex;
+  flex-direction: column;
+  min-height: 440px;
+  padding: 32px 32px 34px;
+  border-radius: var(--radius-card);
+  background: var(--beige);
+}
+.about-mv__card:first-child .about-icon {
+  margin-top: 11px;
+}
+.about-mv__card h2 {
+  margin-top: auto;
+  padding-top: 32px;
+}
+.about-mv__card p {
+  max-width: 290px;
+  margin-top: 6px;
+  line-height: 1.44;
+}
+.about-mv__photo {
+  position: relative;
+  overflow: hidden;
+  min-height: 440px;
+  border-radius: var(--radius-card);
+}
+.about-mv__photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(1, 47, 141, 0.7);
+}
+.about-mv__mark {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Who we are + stats, between two full-width rules. */
+.about-who {
+  padding-block: 195px 193px;
+  border-bottom: 1px solid var(--stroke);
+}
+.about-who__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 511px) minmax(0, 593px);
+  justify-content: space-between;
+  align-items: start;
+  gap: 40px;
+}
+.about-who__grid > div:first-child {
+  padding-top: 22px;
+}
+.about-who__header {
+  margin-bottom: 6px;
+}
+.about-who__header h2 {
+  max-width: 480px;
+}
+.about-who__body {
+  max-width: 488px;
+  gap: 20px;
+  font-size: var(--p2);
+  line-height: 1.28;
+}
+.about-who__photo {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 593 / 396;
+  border-radius: var(--radius-card);
+}
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  margin: 15px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.about-stats li {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 159px;
+  padding: 36px 29px 29px;
+  border-radius: var(--radius-card);
+  background: var(--sky);
+  color: var(--blue);
+}
+.about-stats strong {
+  font-size: var(--h2);
+  font-weight: 600;
+  line-height: 1;
+}
+.about-stats span {
+  font-size: var(--p2);
+}
+
+/* Values row on beige. */
+.about-values {
+  padding-block: 126px 128px;
+}
+.about-values .section-header {
+  margin-bottom: 86px;
+}
+.about-values__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 40px 61px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.about-values__icon {
+  display: flex;
+  align-items: flex-end;
+  height: 100px;
+}
+.about-values h3 {
+  margin-top: 23px;
+  font-size: var(--h4);
+  font-weight: 600;
+}
+.about-values__grid p {
+  max-width: 267px;
+  margin-top: 4px;
+  line-height: 1.44;
+}
+
+@media (max-width: 1100px) {
+  .about-mv,
+  .about-who {
+    padding-block: var(--section-y);
+  }
+  .about-values {
+    padding-block: var(--section-y);
+  }
+  .about-mv__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .about-mv__photo {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 360px;
+  }
+  .about-mv__card {
+    min-height: 0;
+  }
+  .about-values__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .about-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 64px 40px;
+  }
+  .about-who__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .about-who__grid > div:first-child {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-hero__inner {
+    padding-top: 56px;
+    gap: 32px;
+  }
+  .about-hero__photos {
+    gap: 12px;
+  }
+  .about-hero__photo {
+    border-radius: var(--radius-sm);
+  }
+  .about-hero__copy .btn {
+    width: 100%;
+  }
+  .about-mv__grid,
+  .about-stats,
+  .about-values__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .about-mv__card h2 {
+    padding-top: 24px;
+  }
+  .about-mv__photo {
+    grid-row: auto;
+    grid-column: auto;
+    min-height: 300px;
+  }
+  .about-stats li {
+    min-height: 120px;
+    padding: 24px;
+  }
+  .about-values .section-header {
+    margin-bottom: 48px;
+  }
+}

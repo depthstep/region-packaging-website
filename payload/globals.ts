@@ -124,6 +124,30 @@ export const SiteSettings: GlobalConfig = {
   ],
 }
 
+export const AboutPage: GlobalConfig = {
+  slug: 'about-page',
+  label: 'About page',
+  admin: { group: 'Content' },
+  hooks: revalidateGlobal,
+  fields: [
+    section('hero', '1. Hero', [str('heading'), txt('text', 'Text', 3), link('button', 'Button'), imgs('photos', 'Photos', 'Three photos: top left, bottom left, tall right.')]),
+    section('mission', '2. Mission & vision', [
+      str('missionHeading', 'Mission heading'),
+      txt('missionText', 'Mission text', 4),
+      img('missionIcon', 'Mission icon'),
+      img('photo', 'Middle photo', 'Shown with a blue tint and the logo mark on top.'),
+      str('visionHeading', 'Vision heading'),
+      txt('visionText', 'Vision text', 4),
+      img('visionIcon', 'Vision icon'),
+    ]),
+    section('whoWeAre', '3. Who we are', [...heading, paragraphs(), img('image', 'Photo'), list('stats', 'Stat cards', [str('value'), str('label')])]),
+    section('products', '4. What we make', heading, 'The cards are the same as Home page > Choose your box.'),
+    section('values', '5. Our values', [...heading, iconItems('items', 'Values')]),
+    str('seoTitle', 'SEO title'),
+    txt('seoDescription', 'SEO description', 2),
+  ],
+}
+
 export const HomePage: GlobalConfig = {
   slug: 'home-page',
   label: 'Home page',

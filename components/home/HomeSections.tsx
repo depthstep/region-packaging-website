@@ -260,12 +260,12 @@ export function SamplePack({ s }: { s: HomePage['sample'] }) {
   )
 }
 
-export function BlogTeasers({ s, data }: { s: HomePage['blog']; data: SiteData }) {
+export function BlogTeasers({ s, data, rule = true }: { s: HomePage['blog']; data: SiteData; rule?: boolean }) {
   const picked = s.postIds.length ? s.postIds.map((id) => data.posts.find((p) => p.id === id)).filter((p) => !!p) : data.posts
   const posts = picked.slice(0, 3)
   if (!posts.length) return null
   return (
-    <section className="section section--rule">
+    <section className={`section ${rule ? 'section--rule' : ''}`}>
       <div className="container">
         <SectionHeader eyebrow={s.eyebrow} heading={s.heading} text={s.text} />
         <div className="grid-3 card-grid">

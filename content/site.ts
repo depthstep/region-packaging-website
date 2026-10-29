@@ -1,6 +1,6 @@
 // Local seed for the site-wide singletons, reviews and blog posts.
 // Copy is taken verbatim from the Figma file (see design-copy.md).
-import type { BlogPost, HomePage, Review, SiteSettings } from '../lib/types.ts'
+import type { AboutPage, BlogPost, HomePage, Review, SiteSettings } from '../lib/types.ts'
 import { img, ph } from './helpers.ts'
 
 const faqItems = [
@@ -34,6 +34,7 @@ export const settings: SiteSettings = {
     { label: 'FAQs', href: '/faqs' },
     { label: 'How To Order', href: '/how-to-order' },
     { label: 'Paper Weight Chart', href: '/paper-weight-chart' },
+    { label: 'About Us', href: '/about' },
     { label: 'Contact Us', href: '/contact' },
   ],
   stats: [
@@ -223,14 +224,14 @@ export const home: HomePage = {
         text: 'Lightweight printed paperboard cartons, die-cut and finished for retail shelves.',
         linkLabel: 'Explore folding Cartons',
         href: '/custom-folding-cartons',
-        image: ph('Folding cartons photo'),
+        image: img('/images/folding-carton-kinn-skin.jpg', 'Sage green folding cartons with a serum bottle'),
       },
       {
         title: 'PR & Seasonal Boxes',
         text: 'Influencer PR boxes, Christmas and holiday packaging designed for a memorable launch.',
         linkLabel: 'Explore more boxes',
         href: '/products',
-        image: ph('PR & seasonal boxes photo'),
+        image: img('/images/pr-seasonal-boxes.jpg', 'Stack of colourful printed PR and seasonal boxes'),
       },
     ],
   },
@@ -353,7 +354,7 @@ export const posts: BlogPost[] = [
     slug: '15-creative-small-business-packaging-ideas',
     title: '15 Creative Small Business Packaging Ideas',
     kicker: 'Packaging ideas · 6 min read',
-    image: ph('Blog photo: packaging ideas'),
+    image: img('/images/blog-small-business-ideas.jpg', 'Colourful printed retail boxes for small brands'),
   },
   {
     id: 'post-measure-box-dimensions',
@@ -370,3 +371,70 @@ export const posts: BlogPost[] = [
     image: img('/images/blog-box-types.jpg', 'Assorted kraft box styles'),
   },
 ]
+
+export const about: AboutPage = {
+  hero: {
+    heading: 'The factory behind your packaging.',
+    text: 'Region Packaging is a packaging manufacturer. We print, build, and deliver custom boxes, and our team helps with design when you need it.',
+    button: { label: 'Choose Your Box', href: '/products' },
+    photos: [
+      img('/images/about-belmont.jpg', 'Pink Belmont handle box held up against the sky'),
+      img('/images/about-coco.jpg', 'Coco bakery boxes and carrier bag with cookies'),
+      img('/images/about-mon-chou.jpg', 'Stack of printed Mon Chou gift boxes'),
+    ],
+  },
+  mission: {
+    missionHeading: 'Our Mission',
+    missionText:
+      'To make custom packaging easy to order for brands of every size. Tell us the box you need, approve your free digital proof, and receive packaging that presents your product properly, protects it in transit, and arrives ready to use.',
+    missionIcon: img('/icons/about-mission.svg', ''),
+    photo: img('/images/about-factory.jpg', 'Packer preparing boxed orders in the Region Packaging warehouse'),
+    visionHeading: 'Our Vision',
+    visionText:
+      'To be the factory brands come back to: straightforward to work with, consistent in quality, and honest about timelines, from a first sample pack to repeat orders, with the same care for every order, large or small, year after year.',
+    visionIcon: img('/icons/about-vision.svg', ''),
+  },
+  whoWeAre: {
+    eyebrow: 'Who we are',
+    heading: 'A factory, not a design studio.',
+    body: [
+      'Region Packaging manufactures custom boxes. Printing, building, and delivering is the core of the business: your boxes are produced in-house, printed in full colour inside and out, and shipped to your door.',
+      "Design help is part of the service, not a separate studio. If you have artwork, we check it and prepare it for print. If you don't, our team helps with the design, done for you, and shows you a free digital proof before anything is printed.",
+    ],
+    image: img('/images/gift-maison-bloem.jpg', 'Maison Bloem gift box being packed by hand'),
+    stats: [
+      { value: '10+', label: 'Years of experience' },
+      { value: '10k+', label: 'Orders delivered' },
+      { value: '98%', label: 'Customers who reorder' },
+    ],
+  },
+  products: {
+    eyebrow: 'Product Range',
+    heading: 'What we make',
+    text: 'Each style is made to order: your size, your board, your print. Pick a starting point and we engineer it around your product.',
+  },
+  values: {
+    eyebrow: 'What we stand for',
+    heading: 'Our values',
+    items: [
+      { title: 'Quality first', text: 'Accurate printing and dependable materials on every run.', icon: img('/icons/about-value-quality.svg', '') },
+      {
+        title: 'Honest timelines',
+        text: "We confirm your timeline once you approve your proof, instead of promising dates we can't keep.",
+        icon: img('/icons/about-value-timelines.svg', ''),
+      },
+      {
+        title: 'Same standard, any size',
+        text: 'From 100 units to larger runs, small orders get the same attention as big ones.',
+        icon: img('/icons/about-value-standard.svg', ''),
+      },
+      {
+        title: 'Practical sustainability',
+        text: 'Kraft and recycled boards, kerbside recyclable. Sustainability in the material, not just in the marketing.',
+        icon: img('/icons/about-value-sustainability.svg', ''),
+      },
+    ],
+  },
+  seoTitle: 'About Us | Region Packaging',
+  seoDescription: 'Region Packaging is a custom packaging manufacturer: we print, build and deliver custom boxes, with design help and a free digital proof.',
+}

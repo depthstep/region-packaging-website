@@ -2,7 +2,7 @@ import { cache } from 'react'
 import * as seedCatalog from '@/content/catalog'
 import * as seedSite from '@/content/site'
 import { cmsId, fromFields } from './cms/normalize'
-import type { Card, Category, HomePage, PageContent, Product, SiteData, SiteSettings } from './types'
+import type { AboutPage, Card, Category, HomePage, PageContent, Product, SiteData, SiteSettings } from './types'
 
 /** The Payload database is only used when one is configured; otherwise the site runs from content/*.ts. */
 export const cmsEnabled = !!process.env.DATABASE_URI
@@ -10,6 +10,7 @@ export const cmsEnabled = !!process.env.DATABASE_URI
 const seed: SiteData = {
   settings: seedSite.settings,
   home: seedSite.home,
+  about: seedSite.about,
   categories: seedCatalog.categories,
   products: seedCatalog.products,
   reviews: seedSite.reviews,
@@ -48,6 +49,13 @@ const emptyHome: HomePage = {
   faq: { items: [] },
   blog: { postIds: [] },
 }
+const emptyAbout: AboutPage = {
+  hero: { photos: [] },
+  mission: {},
+  whoWeAre: { body: [], stats: [] },
+  products: {},
+  values: { items: [] },
+}
 
 /** One level deep: each top-level object keeps its empty defaults for keys the CMS lacks. */
 function mergeOnto<T extends object>(base: T, doc: Record<string, unknown> | undefined): T {
@@ -76,9 +84,10 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
   const [{ getPayload }, { default: config }, schema] = await Promise.all([import('payload'), import('@payload-config'), import('@/payload/schema')])
   const payload = await getPayload({ config })
   const all = { depth: 1, pagination: false } as const
-  const [settings, home, categories, products, reviews, posts] = await Promise.all([
+  const [settings, home, about, categories, products, reviews, posts] = await Promise.all([
     payload.findGlobal({ slug: 'site-settings', depth: 1 }),
     payload.findGlobal({ slug: 'home-page', depth: 1 }),
+    payload.findGlobal({ slug: 'about-page', depth: 1 }),
     payload.find({ collection: 'categories', where: { visible: { not_equals: false } }, sort: 'order', ...all }),
     payload.find({ collection: 'products', where: { status: { not_equals: 'hidden' } }, sort: 'order', ...all }),
     payload.find({ collection: 'reviews', sort: 'order', ...all }),
@@ -92,6 +101,7 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
   return {
     settings: saved(settings) ? mergeOnto(emptySettings, fromFields(schema.SiteSettings.fields, settings as unknown as Record<string, unknown>)) : seed.settings,
     home: saved(home) ? homeFromCms(fromFields(schema.HomePage.fields, home as unknown as Record<string, unknown>) as RawHome) : seed.home,
+    about: saved(about) ? mergeOnto(emptyAbout, fromFields(schema.AboutPage.fields, about as unknown as Record<string, unknown>)) : seed.about,
     categories: categories.docs
       .map(doc('categories', schema.Categories.fields))
       .map(({ related, ...c }) => pageDefaults({ ...c, relatedIds: (related as string[]) ?? [] }) as Category),

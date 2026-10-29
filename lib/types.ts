@@ -171,9 +171,29 @@ export type HomePage = {
   seoDescription?: string
 }
 
+/** The About Us page (Content > About page). */
+export type AboutPage = {
+  hero: { heading?: string; text?: string; button?: Link; photos: Img[] }
+  mission: {
+    missionHeading?: string
+    missionText?: string
+    missionIcon?: Img
+    photo?: Img
+    visionHeading?: string
+    visionText?: string
+    visionIcon?: Img
+  }
+  whoWeAre: SectionHeading & { body: string[]; image?: Img; stats: { value: string; label: string }[] }
+  products: SectionHeading
+  values: SectionHeading & { items: IconItem[] }
+  seoTitle?: string
+  seoDescription?: string
+}
+
 export type SiteData = {
   settings: SiteSettings
   home: HomePage
+  about: AboutPage
   categories: Category[]
   products: Product[]
   reviews: Review[]

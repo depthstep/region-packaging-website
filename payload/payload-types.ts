@@ -101,10 +101,12 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     'home-page': HomePage;
+    'about-page': AboutPage;
     'site-settings': SiteSetting;
   };
   globalsSelect: {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
+    'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
   locale: null;
@@ -1657,6 +1659,84 @@ export interface HomePage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page".
+ */
+export interface AboutPage {
+  id: number;
+  hero?: {
+    heading?: string | null;
+    text?: string | null;
+    button?: {
+      label?: string | null;
+      /**
+       * e.g. /quote or https://...
+       */
+      href?: string | null;
+    };
+    /**
+     * Three photos: top left, bottom left, tall right.
+     */
+    photos?: (number | Media)[] | null;
+  };
+  mission?: {
+    missionHeading?: string | null;
+    missionText?: string | null;
+    missionIcon?: (number | null) | Media;
+    /**
+     * Shown with a blue tint and the logo mark on top.
+     */
+    photo?: (number | null) | Media;
+    visionHeading?: string | null;
+    visionText?: string | null;
+    visionIcon?: (number | null) | Media;
+  };
+  whoWeAre?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    body?:
+      | {
+          paragraph: string;
+          id?: string | null;
+        }[]
+      | null;
+    image?: (number | null) | Media;
+    stats?:
+      | {
+          value?: string | null;
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  /**
+   * The cards are the same as Home page > Choose your box.
+   */
+  products?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+  };
+  values?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    items?:
+      | {
+          title?: string | null;
+          text?: string | null;
+          icon?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
@@ -2098,6 +2178,84 @@ export interface HomePageSelect<T extends boolean = true> {
         text?: T;
         posts?: T;
         linkLabel?: T;
+      };
+  seoTitle?: T;
+  seoDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page_select".
+ */
+export interface AboutPageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        heading?: T;
+        text?: T;
+        button?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+        photos?: T;
+      };
+  mission?:
+    | T
+    | {
+        missionHeading?: T;
+        missionText?: T;
+        missionIcon?: T;
+        photo?: T;
+        visionHeading?: T;
+        visionText?: T;
+        visionIcon?: T;
+      };
+  whoWeAre?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        body?:
+          | T
+          | {
+              paragraph?: T;
+              id?: T;
+            };
+        image?: T;
+        stats?:
+          | T
+          | {
+              value?: T;
+              label?: T;
+              id?: T;
+            };
+      };
+  products?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+      };
+  values?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        items?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              icon?: T;
+              id?: T;
+            };
       };
   seoTitle?: T;
   seoDescription?: T;
