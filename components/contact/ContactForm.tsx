@@ -6,6 +6,11 @@ import type { ContactPage } from '@/lib/types'
 
 type Status = { state: 'idle' | 'sending' | 'sent' } | { state: 'error'; message: string }
 
+// The GitHub Pages preview has no server, so for team testing it can post straight to the Google
+// Sheet script (scripts/contact-sheet.gs). Both values end up in the page source: test sheets only.
+const previewSheetUrl = process.env.NEXT_PUBLIC_PREVIEW_SHEET_URL
+const previewSheetSecret = process.env.NEXT_PUBLIC_PREVIEW_SHEET_SECRET
+
 /** The Contact Us form. Messages go to /api/quote with a `topic`, so they land under Quote requests. */
 export function ContactForm({ topics, buttonLabel }: Pick<ContactPage, 'topics' | 'buttonLabel'>) {
   const [status, setStatus] = useState<Status>({ state: 'idle' })
@@ -13,7 +18,7 @@ export function ContactForm({ topics, buttonLabel }: Pick<ContactPage, 'topics' 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (status.state === 'sending') return
-    if (isStaticPreview) {
+    if (isStaticPreview && !previewSheetUrl) {
       return setStatus({ state: 'error', message: 'This is a design preview, so the form does not send yet. It will work on the live site.' })
     }
     setStatus({ state: 'sending' })
@@ -21,7 +26,17 @@ export function ContactForm({ topics, buttonLabel }: Pick<ContactPage, 'topics' 
     const fd = new FormData(form)
     fd.set('pageUrl', window.location.href)
     try {
-      const res = await fetch('/api/quote', { method: 'POST', body: fd })
+      const res =
+        isStaticPreview && previewSheetUrl
+          ? await fetch(previewSheetUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify({ ...Object.fromEntries(fd), page: fd.get('pageUrl'), sentAt: new Date().toISOString(), secret: previewSheetSecret }),
+            }).then(async (r) => {
+              const json = (await r.json().catch(() => ({}))) as { ok?: boolean }
+              return new Response(null, { status: json.ok ? 200 : 502 })
+            })
+          : await fetch('/api/quote', { method: 'POST', body: fd })
       const json = (await res.json().catch(() => ({}))) as { error?: string }
       if (!res.ok) throw new Error(json.error || 'Something went wrong. Please try again.')
       setStatus({ state: 'sent' })

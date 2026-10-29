@@ -46,6 +46,9 @@ jobs:
           STATIC_EXPORT: '1'
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
           NEXT_PUBLIC_STATIC_PREVIEW: '1'
+          # Optional repo variables: lets the preview's Contact Us form post to a test Google Sheet.
+          NEXT_PUBLIC_PREVIEW_SHEET_URL: ${{ vars.PREVIEW_SHEET_URL }}
+          NEXT_PUBLIC_PREVIEW_SHEET_SECRET: ${{ vars.PREVIEW_SHEET_SECRET }}
       - if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
