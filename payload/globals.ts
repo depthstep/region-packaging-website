@@ -164,7 +164,7 @@ export const ArtworkPage: GlobalConfig = {
       str('heading'),
       txt('text', 'Text', 3),
       str('buttonLabel', 'Download button label'),
-      { name: 'guide', label: 'Guide file (PDF)', type: 'upload', relationTo: 'media', admin: { description: 'The download button only shows once a file is uploaded.' } },
+      { name: 'guide', label: 'Guide file (PDF)', type: 'upload', relationTo: 'media', admin: { description: 'The button downloads this file. Until one is uploaded, the button shows but does nothing.' } },
       txt('dielineText', 'Text under the dieline', 3),
     ]),
     section('formats', '2. Formats we accept', [...heading, iconItems('items', 'Formats')]),

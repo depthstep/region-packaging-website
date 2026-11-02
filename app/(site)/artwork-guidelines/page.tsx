@@ -37,10 +37,15 @@ export default async function ArtworkGuidelinesPage() {
             <h1>{a.hero.heading || 'Artwork guidelines'}</h1>
           </div>
           {a.hero.text && <p className="art-hero__text">{a.hero.text}</p>}
-          {a.hero.guide?.src && (
+          {/* Shown as in the design; it only downloads once a guide PDF is uploaded in the admin. */}
+          {a.hero.guide?.src ? (
             <a href={withBase(a.hero.guide.src)} className="btn btn--sky btn--md art-hero__btn" download>
               {a.hero.buttonLabel || 'Download the full guide'}
             </a>
+          ) : (
+            <button type="button" className="btn btn--sky btn--md art-hero__btn" aria-disabled="true">
+              {a.hero.buttonLabel || 'Download the full guide'}
+            </button>
           )}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={withBase('/brand/art-dieline.svg')} alt="Flat dieline of a mailer box with the Region Packaging logo" className="art-hero__dieline" />
