@@ -9,7 +9,8 @@ Everything runs as one Node.js app: the website, the editing admin at `/admin`, 
 ```bash
 npm install
 cp .env.example .env      # then set PAYLOAD_SECRET to a long random string
-npm run seed              # loads the starter content and photos into data/payload.db
+npm run migrate           # creates the tables in data/payload.db
+npm run seed              # loads the starter content and photos
 npm run dev               # site: http://localhost:3000  admin: http://localhost:3000/admin
 ```
 
@@ -47,13 +48,13 @@ One-time setup:
 
 1. Install Node.js 22, git and nginx. Clone this repo to e.g. `/var/www/region-packaging`.
 2. Create `.env` from `.env.example` with `DATABASE_URI=file:/var/www/region-packaging/data/payload.db`, a new `PAYLOAD_SECRET`, `NEXT_PUBLIC_SITE_URL=https://your-domain` and the SMTP settings.
-3. `npm ci && npm run migrate && NODE_ENV=production npm run seed && npm run build`, then run `npm start` under a process manager (systemd or pm2) on port 3000. (Seed with `NODE_ENV=production` on a migrated database; in development mode Payload tries to sync the schema itself and fails once on it.)
+3. `npm ci && npm run migrate && npm run seed && npm run build`, then run `npm start` under a process manager (systemd or pm2) on port 3000.
 4. nginx: proxy the domain to `127.0.0.1:3000`, set `client_max_body_size 20m;` (artwork uploads are up to 15MB), and add a free SSL certificate with certbot.
 5. Back up `data/` and `uploads/` regularly; together they hold all content, quote requests and files.
 
 Each update: `git pull && npm ci && npm run migrate && npm run build`, then restart the app.
 
-After changing collections or fields in `payload/`, run `npx payload migrate:create <name>` and commit the new file in `payload/migrations/`, so the server's database gets the change.
+After changing collections or fields in `payload/`, run `npx payload migrate:create <name>` (answer "create table" to its questions unless you really renamed something), then `npm run migrate`, and commit the new files in `payload/migrations/`. The database never changes on its own, locally or on the server: after pulling, run `npm run migrate`.
 
 ## Design preview (GitHub Pages)
 

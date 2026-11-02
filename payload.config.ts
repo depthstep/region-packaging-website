@@ -5,8 +5,9 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
-import { Artwork, Categories, Media, Posts, Products, QuoteRequests, Reviews, Users } from './payload/collections'
-import { AboutPage, HomePage, SiteSettings } from './payload/globals'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { Artwork, BlogCategories, BlogTopics, Categories, Media, Posts, Products, QuoteRequests, Reviews, Users } from './payload/collections'
+import { AboutPage, ArtworkPage, BlogPage, HomePage, SiteSettings } from './payload/globals'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const env = process.env
@@ -22,13 +23,20 @@ export default buildConfig({
     importMap: { baseDir: dirname },
     meta: { titleSuffix: ' | Region Packaging admin' },
   },
-  collections: [Categories, Products, Reviews, Posts, QuoteRequests, Artwork, Media, Users],
-  globals: [HomePage, AboutPage, SiteSettings],
+  collections: [Categories, Products, Reviews, Posts, BlogCategories, BlogTopics, QuoteRequests, Artwork, Media, Users],
+  globals: [HomePage, AboutPage, ArtworkPage, BlogPage, SiteSettings],
+  // Rich text (blog articles): headings, lists, links, quotes and images from Media.
+  editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET || '',
   // One file on the server (e.g. file:./data/payload.db). Back it up with the uploads folder.
-  // In development the tables follow the config automatically; on the server run `npm run migrate`
-  // after deploying (see payload/migrations, created with `npx payload migrate:create`).
-  db: sqliteAdapter({ client: { url: env.DATABASE_URI || 'file:./data/payload.db' }, migrationDir: path.resolve(dirname, 'payload', 'migrations') }),
+  // The tables only change through migrations (payload/migrations, made with `npx payload migrate:create`),
+  // locally and on the server: run `npm run migrate` after pulling. Payload's automatic dev sync is off
+  // because it fails on columns that migrations added.
+  db: sqliteAdapter({
+    client: { url: env.DATABASE_URI || 'file:./data/payload.db' },
+    migrationDir: path.resolve(dirname, 'payload', 'migrations'),
+    push: false,
+  }),
   email: smtpReady
     ? nodemailerAdapter({
         defaultFromAddress: env.QUOTE_FROM_EMAIL!,

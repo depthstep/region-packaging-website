@@ -1,0 +1,170 @@
+/* ---------- Industry sub-product pages (tabbed design) ---------- */
+.sub-page .trust-strip {
+  padding-top: 40px;
+}
+.sub-page .trust-strip__list li {
+  font-size: var(--p1);
+}
+.sub-page .trust-strip__icon {
+  width: 90px;
+  height: 90px;
+}
+
+/* Tab bar: icon + label, the active tab in blue with a sky underline. */
+.ptabs {
+  margin-top: 150px;
+}
+.ptabs__bar {
+  border-bottom: 1px solid var(--stroke);
+  scroll-margin-top: 0;
+}
+.ptabs__list {
+  display: flex;
+  gap: 84px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ptabs__list::-webkit-scrollbar {
+  display: none;
+}
+.ptabs__tab {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: -1px;
+  padding: 0 0 15px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--black);
+  font: inherit;
+  font-size: var(--p1);
+  font-weight: 600;
+  cursor: pointer;
+}
+.ptabs__tab:hover,
+.ptabs__tab[aria-selected='true'] {
+  color: var(--blue);
+}
+.ptabs__tab[aria-selected='true'] {
+  border-bottom-color: var(--sky);
+}
+.ptabs__icon {
+  width: 20px;
+  height: 22px;
+  background: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+/* Sections inside the tabs */
+.sub-sec:first-child {
+  padding-top: 120px;
+}
+.sub-overview {
+  grid-template-columns: minmax(0, 540px) minmax(0, 585px);
+  justify-content: space-between;
+}
+.sub-overview__image {
+  position: relative;
+  aspect-ratio: 585 / 425;
+}
+.sub-benefits {
+  grid-template-columns: minmax(0, 511px) minmax(0, 620px);
+  justify-content: space-between;
+}
+.sub-benefits__cards {
+  gap: 20px;
+}
+.sub-benefits__cards .feature-card {
+  min-height: 269px;
+  padding: 30px 33px;
+}
+.sub-benefits__cards .feature-card .icon {
+  align-self: flex-start;
+  width: auto !important;
+  height: 40px !important;
+  margin-bottom: 25px;
+}
+.sub-benefits__cards .feature-card h3,
+.sub-benefits__cards .feature-card h4 {
+  font-size: var(--h4);
+}
+
+/* One spec per row: label, then value lined up in a second column. */
+.sub-sec .spec-table {
+  grid-template-columns: minmax(0, 1fr);
+}
+.sub-sec .spec-table div {
+  display: grid;
+  grid-template-columns: minmax(0, 470px) minmax(0, 1fr);
+  justify-content: start;
+}
+.sub-sec .spec-table div:nth-last-child(2) {
+  border-bottom: 0;
+}
+.sub-sec .spec-table dd {
+  text-align: left;
+  font-size: var(--p2);
+}
+.sub-sec .material h3 {
+  font-size: var(--h4);
+  font-weight: 600;
+}
+.sub-sec .printing__list-title,
+.sub-sec .why-us__card h3 {
+  font-size: var(--h4);
+  font-weight: 600;
+}
+.sub-sample .sample-wrap {
+  padding-top: 0;
+}
+
+@media (max-width: 1100px) {
+  .ptabs {
+    margin-top: 80px;
+  }
+  .ptabs__list {
+    gap: 40px;
+  }
+  .sub-sec:first-child {
+    padding-top: var(--section-y);
+  }
+}
+
+@media (max-width: 900px) {
+  .sub-overview,
+  .sub-benefits {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sub-sec .spec-table div {
+    grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .sub-page .trust-strip__icon {
+    width: 64px;
+    height: 64px;
+  }
+  .ptabs {
+    margin-top: 56px;
+  }
+  .ptabs__list {
+    gap: 28px;
+  }
+  .ptabs__tab {
+    font-size: var(--p2);
+  }
+  .sub-benefits__cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sub-benefits__cards .feature-card {
+    min-height: 0;
+  }
+}
+
+.sub-sec .section-header--center .section-header__text {
+  max-width: 560px;
+}

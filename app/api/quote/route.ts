@@ -19,6 +19,8 @@ const schema = z.object({
   company: s.optional(),
   topic: s.optional(),
   product: s.optional(),
+  style: s.optional(),
+  finish: s.optional(),
   material: s.optional(),
   size: s.optional(),
   printing: s.optional(),

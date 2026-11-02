@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="471.64" height="191.26" viewBox="436.633 212.113 471.641 191.255" fill="none"><g>
+<rect x="445.073" y="221.269" width="453.303" height="172.33" stroke="#8FB8FF" stroke-width="3" />
+<g>
+<circle cx="672.454" cy="220.637" r="6.68065" fill="#8FB8FF" />
+<circle cx="672.454" cy="395.099" r="6.68065" fill="#8FB8FF" />
+</g>
+<rect x="439.725" y="215.207" width="10.6107" height="10.6107" fill="#012F8D" stroke="#8FB8FF" stroke-width="3" />
+<rect x="894.572" y="215.207" width="10.6107" height="10.6107" fill="#012F8D" stroke="#8FB8FF" stroke-width="3" />
+<rect x="439.725" y="388.008" width="10.6107" height="10.6107" fill="#012F8D" stroke="#8FB8FF" stroke-width="3" />
+<rect x="894.572" y="388.008" width="10.6107" height="10.6107" fill="#012F8D" stroke="#8FB8FF" stroke-width="3" />
+</g>
+<line x1="486.898" y1="221.021" x2="486.898" y2="393.313" stroke="#8FB8FF" stroke-opacity="0.4" stroke-dasharray="3 5" />
+<line x1="856.984" y1="221.021" x2="856.984" y2="393.313" stroke="#8FB8FF" stroke-opacity="0.4" stroke-dasharray="3 5" />
+<line x1="899.876" y1="257.618" x2="443.573" y2="257.618" stroke="#8FB8FF" stroke-opacity="0.4" stroke-dasharray="3 5" />
+<line x1="899.876" y1="356.734" x2="443.573" y2="356.734" stroke="#8FB8FF" stroke-opacity="0.4" stroke-dasharray="3 5" />
+<line x1="899.876" y1="299.436" x2="443.573" y2="299.436" stroke="#8FB8FF" stroke-opacity="0.4" stroke-dasharray="3 5" />
+<line x1="899.876" y1="314.061" x2="443.573" y2="314.061" stroke="#8FB8FF" stroke-opacity="0.4" stroke-dasharray="3 5" />
+</svg>

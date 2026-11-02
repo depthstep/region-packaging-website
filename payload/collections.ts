@@ -1,7 +1,7 @@
 import type { CollectionConfig, Field } from 'payload'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { img, orderField, paragraphs, slugField, str, txt } from './fields'
+import { img, orderField, slugField, str, txt } from './fields'
 import { pageTabs } from './pageFields'
 import { revalidateOnChange } from './hooks'
 
@@ -24,7 +24,7 @@ export const Media: CollectionConfig = {
   access: { read: () => true },
   upload: {
     staticDir: uploadsDir('media'),
-    mimeTypes: ['image/*'],
+    mimeTypes: ['image/*', 'application/pdf'],
   },
   fields: [{ name: 'alt', label: 'Alt text', type: 'text', admin: { description: 'Describe the image for screen readers and SEO.' } }],
   hooks: revalidateOnChange,
@@ -123,18 +123,40 @@ export const Reviews: CollectionConfig = {
   hooks: revalidateOnChange,
 }
 
+export const BlogCategories: CollectionConfig = {
+  slug: 'blog-categories',
+  labels: { singular: 'Blog category', plural: 'Blog categories' },
+  admin: { useAsTitle: 'title', defaultColumns: ['title', 'order'], group: 'Blog', description: 'Each category is a section on the blog page.' },
+  defaultSort: 'order',
+  fields: [str('title', 'Title', { required: true }), txt('description', 'Text under the heading', 2), slugField(), orderField()],
+  hooks: revalidateOnChange,
+}
+
+export const BlogTopics: CollectionConfig = {
+  slug: 'blog-topics',
+  labels: { singular: 'Blog topic', plural: 'Blog topics' },
+  admin: { useAsTitle: 'title', defaultColumns: ['title', 'order'], group: 'Blog', description: 'The filter buttons on the blog page.' },
+  defaultSort: 'order',
+  fields: [str('title', 'Title', { required: true }), slugField(), orderField()],
+  hooks: revalidateOnChange,
+}
+
 export const Posts: CollectionConfig = {
   slug: 'posts',
   labels: { singular: 'Blog post', plural: 'Blog posts' },
-  admin: { useAsTitle: 'title', defaultColumns: ['title', 'publishedAt'], group: 'Content' },
+  admin: { useAsTitle: 'title', defaultColumns: ['title', 'category', 'publishedAt', 'featured'], group: 'Blog' },
   defaultSort: '-publishedAt',
   fields: [
     str('title', 'Title', { required: true }),
-    str('kicker', 'Kicker (e.g. Box guide · 8 min read)'),
-    { name: 'publishedAt', type: 'date', admin: { position: 'sidebar' } },
-    txt('excerpt', 'Excerpt', 2),
+    { name: 'category', type: 'relationship', relationTo: 'blog-categories', maxDepth: 0 },
+    { name: 'topics', type: 'relationship', relationTo: 'blog-topics', hasMany: true, maxDepth: 0 },
+    txt('excerpt', 'Excerpt (under the title and in search results)', 2),
     img('image', 'Cover photo'),
-    paragraphs('body', 'Paragraphs'),
+    { name: 'body', type: 'richText', label: 'Article' },
+    { name: 'publishedAt', type: 'date', admin: { position: 'sidebar' } },
+    { name: 'author', type: 'text', defaultValue: 'Region Packaging', admin: { position: 'sidebar' } },
+    { name: 'readMinutes', type: 'number', label: 'Read time (minutes)', admin: { position: 'sidebar', description: 'Empty = worked out from the article length.' } },
+    { name: 'featured', type: 'checkbox', label: 'Featured on the blog page', admin: { position: 'sidebar' } },
     slugField(),
   ],
   hooks: revalidateOnChange,
@@ -158,6 +180,8 @@ export const QuoteRequests: CollectionConfig = {
     ro('company'),
     ro('topic', 'Topic (contact form)'),
     ro('product'),
+    ro('style'),
+    ro('finish'),
     ro('material'),
     ro('size'),
     ro('printing'),

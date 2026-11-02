@@ -1,20 +1,42 @@
 import { cache } from 'react'
 import * as seedCatalog from '@/content/catalog'
 import * as seedSite from '@/content/site'
+import * as seedBlog from '@/content/blog'
 import { cmsId, fromFields } from './cms/normalize'
-import type { AboutPage, Card, Category, HomePage, PageContent, Product, SiteData, SiteSettings } from './types'
+import type { AboutPage, ArtworkPage, BlogCategory, BlogPage, BlogPost, Card, Category, HomePage, PageContent, Product, SiteData, SiteSettings } from './types'
 
 /** The Payload database is only used when one is configured; otherwise the site runs from content/*.ts. */
 export const cmsEnabled = !!process.env.DATABASE_URI
+
+/** Words in a rich-text article, for the read time. */
+function wordCount(node: unknown): number {
+  if (!node || typeof node !== 'object') return 0
+  const n = node as { text?: unknown; children?: unknown[]; root?: unknown }
+  const own = typeof n.text === 'string' ? n.text.split(/\s+/).filter(Boolean).length : 0
+  return own + (n.children ?? []).reduce<number>((sum, c) => sum + wordCount(c), 0) + (n.root ? wordCount(n.root) : 0)
+}
+
+/** Read time (from the article unless set) and the "Category · N min read" card line. */
+function finishPosts(posts: Omit<BlogPost, 'kicker'>[], categories: BlogCategory[]): BlogPost[] {
+  return posts.map((p) => {
+    const readMinutes = p.readMinutes ?? Math.max(1, Math.round(wordCount(p.body) / 200))
+    const category = categories.find((c) => c.id === p.categoryId)
+    return { ...p, readMinutes, kicker: [category?.title, `${readMinutes} min read`].filter(Boolean).join(' · ') }
+  })
+}
 
 const seed: SiteData = {
   settings: seedSite.settings,
   home: seedSite.home,
   about: seedSite.about,
+  artwork: seedSite.artwork,
   categories: seedCatalog.categories,
   products: seedCatalog.products,
   reviews: seedSite.reviews,
-  posts: seedSite.posts,
+  posts: finishPosts(seedBlog.posts, seedBlog.blogCategories),
+  blogCategories: seedBlog.blogCategories,
+  blogTopics: seedBlog.blogTopics,
+  blog: seedBlog.blogPage,
 }
 
 const pageDefaults = <T extends Partial<PageContent>>(doc: T) => ({ ...doc, highlights: doc.highlights ?? [], gallery: doc.gallery ?? [] })
@@ -29,7 +51,8 @@ const emptySettings: SiteSettings = {
   trustedBrands: [],
   google: { score: '', label: '', countText: '' },
   trustStrip: [],
-  formDefaults: { material: [], size: [], printing: [], productionSpeed: [], quantity: [], design: [] },
+  formDefaults: { style: [], finish: [], material: [], size: [], printing: [], productionSpeed: [], quantity: [], design: [] },
+  subProductDefaults: { highlights: [], gallery: [] },
   productDefaults: {},
   cta: {},
   footer: { columns: [], legal: [] },
@@ -55,6 +78,13 @@ const emptyAbout: AboutPage = {
   whoWeAre: { body: [], stats: [] },
   products: {},
   values: { items: [] },
+}
+const emptyBlog: BlogPage = { hero: {}, post: { help: {} } }
+const emptyArtwork: ArtworkPage = {
+  hero: {},
+  formats: { items: [] },
+  essentials: { items: [] },
+  steps: { steps: [] },
 }
 
 /** One level deep: each top-level object keeps its empty defaults for keys the CMS lacks. */
@@ -84,14 +114,18 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
   const [{ getPayload }, { default: config }, schema] = await Promise.all([import('payload'), import('@payload-config'), import('@/payload/schema')])
   const payload = await getPayload({ config })
   const all = { depth: 1, pagination: false } as const
-  const [settings, home, about, categories, products, reviews, posts] = await Promise.all([
+  const [settings, home, about, artwork, blog, categories, products, reviews, posts, blogCategories, blogTopics] = await Promise.all([
     payload.findGlobal({ slug: 'site-settings', depth: 1 }),
     payload.findGlobal({ slug: 'home-page', depth: 1 }),
     payload.findGlobal({ slug: 'about-page', depth: 1 }),
+    payload.findGlobal({ slug: 'artwork-page', depth: 1 }),
+    payload.findGlobal({ slug: 'blog-page', depth: 1 }),
     payload.find({ collection: 'categories', where: { visible: { not_equals: false } }, sort: 'order', ...all }),
     payload.find({ collection: 'products', where: { status: { not_equals: 'hidden' } }, sort: 'order', ...all }),
     payload.find({ collection: 'reviews', sort: 'order', ...all }),
     payload.find({ collection: 'posts', sort: '-publishedAt', ...all }),
+    payload.find({ collection: 'blog-categories', sort: 'order', ...all }),
+    payload.find({ collection: 'blog-topics', sort: 'order', ...all }),
   ])
   const doc =
     (collection: string, fields: Parameters<typeof fromFields>[0]) =>
@@ -101,6 +135,7 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
   return {
     settings: saved(settings) ? mergeOnto(emptySettings, fromFields(schema.SiteSettings.fields, settings as unknown as Record<string, unknown>)) : seed.settings,
     home: saved(home) ? homeFromCms(fromFields(schema.HomePage.fields, home as unknown as Record<string, unknown>) as RawHome) : seed.home,
+    artwork: saved(artwork) ? mergeOnto(emptyArtwork, fromFields(schema.ArtworkPage.fields, artwork as unknown as Record<string, unknown>)) : seed.artwork,
     about: saved(about) ? mergeOnto(emptyAbout, fromFields(schema.AboutPage.fields, about as unknown as Record<string, unknown>)) : seed.about,
     categories: categories.docs
       .map(doc('categories', schema.Categories.fields))
@@ -109,7 +144,18 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
       .map(doc('products', schema.Products.fields))
       .map(({ categories, related, ...p }) => pageDefaults({ ...p, categoryIds: (categories as string[]) ?? [], relatedIds: (related as string[]) ?? [] }) as Product),
     reviews: reviews.docs.map(doc('reviews', schema.Reviews.fields)) as unknown as SiteData['reviews'],
-    posts: posts.docs.map(doc('posts', schema.Posts.fields)) as unknown as SiteData['posts'],
+    ...(() => {
+      const cats = blogCategories.docs.map(doc('blog-categories', schema.BlogCategories.fields)) as unknown as BlogCategory[]
+      const list = posts.docs
+        .map(doc('posts', schema.Posts.fields))
+        .map(({ category, topics, ...p }) => ({ ...p, categoryId: category, topicIds: (topics as string[]) ?? [] })) as unknown as Omit<BlogPost, 'kicker'>[]
+      return {
+        posts: finishPosts(list, cats),
+        blogCategories: cats,
+        blogTopics: blogTopics.docs.map(doc('blog-topics', schema.BlogTopics.fields)) as unknown as SiteData['blogTopics'],
+        blog: saved(blog) ? mergeOnto(emptyBlog, fromFields(schema.BlogPage.fields, blog as unknown as Record<string, unknown>)) : seed.blog,
+      }
+    })(),
   }
 })
 

@@ -1,6 +1,6 @@
 // Local seed for the site-wide singletons, reviews and blog posts.
 // Copy is taken verbatim from the Figma file (see design-copy.md).
-import type { AboutPage, BlogPost, HomePage, Review, SiteSettings } from '../lib/types.ts'
+import type { AboutPage, ArtworkPage, HomePage, Review, SiteSettings } from '../lib/types.ts'
 import { img, ph } from './helpers.ts'
 
 const faqItems = [
@@ -57,6 +57,144 @@ export const settings: SiteSettings = {
     text: 'Real reviews from real customers, posted on Google.',
     buttonLabel: 'Review us on Google',
   },
+  // Sample copy from the Figma sub-product design (written for rigid boxes); editors replace it per product.
+  subProductDefaults: {
+    tabs: { overview: 'Overview', specs: 'Specs', materials: 'Materials & Finishes', why: 'Sustainability & Why Us', faq: 'FAQ' },
+    shortDescription:
+      "Premium two-piece and magnetic-closure setup boxes, wrapped in your artwork. Free design help and low minimums. Send your inquiry and we'll reply with your price.",
+    highlights: ['Lid-and-base, magnetic, book-style and drawer styles', 'Thick greyboard that holds its shape', 'Full-colour print, inside & out'],
+    gallery: [
+      img('/images/mailer-glowries.jpg', 'Kraft box with printed skincare packaging'),
+      img('/images/mailer-dream-big.jpg', 'Blue and pink printed box'),
+      img('/images/sample-pack.jpg', 'Kraft mailer with board samples'),
+    ],
+    overview: {
+      eyebrow: 'Overview',
+      heading: 'What are {product}?',
+      body: [
+        'A custom rigid box — also called a setup box — is a premium, non-collapsible box built from thick greyboard or chipboard (typically 1.5–3 mm) wrapped in printed paper. The classic format is the two-piece rigid box: a lid-and-base construction where the lid lifts cleanly off the base. Magnetic-closure, book-style and drawer variants add different reveals for different products.',
+        'Unlike a folding carton, a rigid box holds its shape permanently, which is why luxury brands reach for it on high-value products and gifting. From skincare to electronics, a rigid box signals quality the moment it is picked up, and protects what is inside through retail handling and e-commerce fulfillment — the definition of premium product packaging.',
+      ],
+      images: [img('/images/mailer-dream-big.jpg', 'Blue and pink printed box with the lid open')],
+    },
+    benefits: {
+      eyebrow: 'Benefits',
+      heading: 'Benefits of {product} for your brand',
+      text: 'A rigid box does more than hold a product — it frames it, protects it and makes the open feel like an event.',
+      body: [],
+      items: [
+        {
+          title: 'Brand Recognition',
+          text: 'A fully printed rigid box with lid keeps your logo and colours front and centre, on the shelf and at the doorstep.',
+          icon: img('/icons/sub-benefit-brand.svg', ''),
+        },
+        {
+          title: 'Shelf Presence',
+          text: 'Weight, structure and finish signal luxury instantly, lifting how customers value what is inside.',
+          icon: img('/icons/sub-benefit-shelf.svg', ''),
+        },
+        {
+          title: 'Unboxing Moment',
+          text: 'A magnetic closure or lift-off lid creates a giftable, share-worthy reveal customers love to film.',
+          icon: img('/icons/sub-benefit-unboxing.svg', ''),
+        },
+        {
+          title: 'Superior Protection',
+          text: 'Thick board and fitted inserts guard fragile, high-value products far better than a folding carton.',
+          icon: img('/icons/sub-benefit-protection.svg', ''),
+        },
+      ],
+    },
+    useCases: {
+      eyebrow: 'Use cases',
+      heading: 'Industries & use cases',
+      text: 'Custom mailer boxes work across categories that ship directly to customers.',
+      pills: [
+        'Cosmetics & skincare',
+        'Jewelry & watches',
+        'Consumer electronics',
+        'Confectionery & spirits',
+        'Apparel & accessories',
+        'Corporate gifting',
+        'Luxury retail',
+        'Subscription & DTC',
+      ],
+      note: 'Cosmetics and skincare brands use magnetic-closure boxes with fitted inserts, jewelry and watch brands choose small rigid gift boxes with foam cradles, and electronics brands rely on structure and inserts to immobilise components. Confectionery and spirits lean on foil and embossing for a giftable look, while apparel and corporate gifting use large lift-off-lid boxes for a premium reveal. Whatever you sell, a rigid box elevates the unboxing experience and protects the product end to end.',
+    },
+    specs: {
+      eyebrow: 'Specifications',
+      heading: '{product} specifications',
+      text: 'Structure, board, print, and minimum order for custom rigid boxes.',
+      rows: [
+        { label: 'Box style', value: 'Two-piece, magnetic, book-style, drawer' },
+        { label: 'Material', value: 'Greyboard wrapped in paper' },
+        { label: 'Board thickness', value: '1.5–3 mm calliper' },
+        { label: 'Strength', value: 'Rigid, non-collapsible' },
+        { label: 'Printing', value: 'Digital, offset, litho-lam' },
+        { label: 'Print area', value: 'Full wrap, inside & out' },
+        { label: 'Minimum order', value: 'From 100 units' },
+      ],
+      stockSizes: [],
+      note: 'Dimensions are measured internally as length by width by height, so your product fits perfectly. Any dimension, depth or insert can be made to fit a specific product or a multi-item set, with free dieline help. Custom sizing and tooling can raise the minimum slightly and add a little lead time, which we confirm up front with your quote.',
+    },
+    materials: {
+      eyebrow: 'Materials',
+      heading: 'Materials & board options',
+      text: 'Pick the board that matches your product, weight and sustainability goals.',
+      items: [
+        {
+          name: 'Greyboard / Chipboard',
+          badge: 'Most Popular',
+          description: 'Dense 1.5–3 mm greyboard gives a luxury packaging box its weight and permanent structure, the core of every setup box.',
+          image: img('/images/material-greyboard.jpg', 'Stack of grey chipboard sheets'),
+        },
+        {
+          name: 'Printed Paper or Fabric',
+          badge: 'The Wrap',
+          description: 'A printed paper or textured fabric wrap carries your full-colour artwork, foil and finish around the rigid core.',
+          image: img('/images/material-paper-wrap.jpg', 'Box wrapped in patterned paper'),
+        },
+        {
+          name: 'Corrugated-backed Rigid',
+          badge: 'Heavy Duty',
+          description: 'For heavier products or shipping-first use, a corrugated-backed rigid board adds strength without losing the premium feel.',
+          image: img('/images/material-corrugated-rigid.jpg', 'Close-up of corrugated board flutes'),
+        },
+      ],
+      note: 'Every board is graded by its Edge Crush Test value, which tells you how much stacking pressure it can take. For most e-commerce products a single-wall board is ideal, while heavier or fragile items benefit from a stronger grade or double wall. If sustainability is the priority, kraft paper and recycled-content liners keep the footprint low while still printing beautifully. Tell us what you ship and how it travels, and we will specify a board that protects it reliably from the first mile to the last. The right board keeps your products safe, your parcels light and your packaging costs under control.',
+    },
+    printing: {
+      eyebrow: 'Print & finish',
+      heading: 'Printing & finishing options',
+      body: [
+        'How your box is printed shapes both the look and the unit cost. For short runs and photographic artwork, full-colour digital printing is ideal because there are no plates to pay for. For large, repeating orders, flexographic printing brings the per-unit cost down using spot colours. Whichever method fits, we print your custom printed mailer boxes to a consistent standard and can brand every panel, inside and out.',
+      ],
+      image: img('/images/printing-rigid-box.jpg', 'Kraft rigid box with a dark tray'),
+      methodsHeading: 'Printing Methods',
+      methods: [
+        { name: 'Full-colour digital', description: 'Photographic, full-colour artwork with no plate cost, perfect for short runs.' },
+        { name: 'Flexographic printing', description: 'Cost-effective spot-colour printing for larger, repeat production runs.' },
+      ],
+      finishesHeading: 'Finishes & Add-ons',
+      finishes: [
+        { name: 'Matte or gloss', description: 'Choose a finish that matches your brand, from understated matte to a premium sheen.' },
+        { name: 'Custom inserts', description: 'Die-cut pads and trays hold products in place and lift the presentation.' },
+        { name: 'Inside printing', description: 'Brand the interior for a reveal that makes the unboxing experience feel considered.' },
+        { name: 'Free design support', description: 'Download a dieline or let our designers prepare a print-ready file for you.' },
+      ],
+    },
+    whyUs: {
+      eyebrow: 'WHY US',
+      heading: 'Why Choose Region Packaging',
+      text: 'A dedicated custom packaging partner, not just a box supplier.',
+      cards: [
+        { title: '25 years of experience', text: 'Decades of packaging know-how across e-commerce, retail and gifting, so your project is in expert hands.' },
+        { title: 'In-house design', text: 'Our designers prepare dielines and artwork, check your files and make sure your branding prints perfectly.' },
+        { title: 'Quality & support', text: 'Consistent print, reliable turnaround and a real team to talk to from first quote to final delivery.' },
+      ],
+      note: 'We built Region Packaging to give growing brands the capability of a large manufacturer with the attention of a specialist partner. That means honest advice on specification, transparent pricing with no hidden setup fees, and a real person who picks up when you call. Whether you are ordering your first run of personalized mailer boxes or scaling up to custom mailer boxes wholesale, we treat every project with the same care from the first quote to the final delivery.',
+    },
+  },
   contact: {
     heading: 'Talk to a real person.',
     text: "Questions about a box, an order, or artwork? Send a message and we'll get back to you.",
@@ -81,8 +219,10 @@ export const settings: SiteSettings = {
     { title: 'Fast turnaround', text: '', icon: img('/icons/feature-fast.svg', '') },
   ],
   formDefaults: {
+    style: ['Two Piece', 'Magnetic Closure', 'Book Style', 'Drawer', 'Shoulder Neck'],
+    finish: ['Matte Lamination', 'Gloss Lamination', 'Soft Touch', 'Spot UV', 'Foil Stamping'],
     material: ['White standard', 'Kraft', 'Double wall'],
-    size: ['Medium 8x6x3', 'Small 6x4x3', 'Large 10x8x4', 'Extra Large 12.5x10x4', 'Custom size'],
+    size: ['Small 4x4x2', 'Medium 8x6x3', 'Small 6x4x3', 'Large 10x8x4', 'Extra Large 12.5x10x4', 'Custom size'],
     printing: ['Inside & Outside', 'Outside only'],
     productionSpeed: ['Standard', 'Rush'],
     quantity: ['100', '250', '500', '1,000', '2,500', '5,000+'],
@@ -151,7 +291,7 @@ export const settings: SiteSettings = {
         title: 'Support',
         links: [
           { label: 'Get a Quote', href: '/quote' },
-          { label: 'Artwork Guidelines', href: '/#design' },
+          { label: 'Artwork Guidelines', href: '/artwork-guidelines' },
           { label: 'FAQs', href: '/faqs' },
           { label: 'Materials & Finishes', href: '/custom-mailer-boxes#materials' },
         ],
@@ -348,29 +488,7 @@ export const reviews: Review[] = Array.from({ length: 6 }, (_, i) => ({
   source: 'Posted on Google',
 }))
 
-export const posts: BlogPost[] = [
-  {
-    id: 'post-small-business-packaging-ideas',
-    slug: '15-creative-small-business-packaging-ideas',
-    title: '15 Creative Small Business Packaging Ideas',
-    kicker: 'Packaging ideas · 6 min read',
-    image: img('/images/blog-small-business-ideas.jpg', 'Colourful printed retail boxes for small brands'),
-  },
-  {
-    id: 'post-measure-box-dimensions',
-    slug: 'how-to-measure-box-dimensions',
-    title: 'How to Measure Box Dimensions',
-    kicker: 'How-to guide · 4 min read',
-    image: img('/images/blog-measure-box.jpg', 'Box diagram showing length, width and height'),
-  },
-  {
-    id: 'post-types-of-boxes',
-    slug: '17-different-types-of-boxes-used-in-packaging',
-    title: '17 Different Types of Boxes Used in Packaging',
-    kicker: 'Box guide · 8 min read',
-    image: img('/images/blog-box-types.jpg', 'Assorted kraft box styles'),
-  },
-]
+export { posts } from './blog.ts'
 
 export const about: AboutPage = {
   hero: {
@@ -437,4 +555,48 @@ export const about: AboutPage = {
   },
   seoTitle: 'About Us | Region Packaging',
   seoDescription: 'Region Packaging is a custom packaging manufacturer: we print, build and deliver custom boxes, with design help and a free digital proof.',
+}
+
+export const artwork: ArtworkPage = {
+  hero: {
+    heading: 'Artwork guidelines',
+    text: 'What to send us, how to prepare it, and what happens if you have no artwork at all. Short version: send what you have, and we will help with the rest.',
+    buttonLabel: 'Download the full guide',
+    dielineText:
+      'A dieline is the flat template your box is cut and folded from. We provide standard dielines free, and set up custom ones free too. You do not need to draw one yourself.',
+  },
+  formats: {
+    heading: 'Formats we accept',
+    text: 'Send your artwork in any of these formats, attached in the inquiry form.',
+    items: [
+      { title: 'PDF', text: 'A print-ready PDF is the safest choice for accurate colour and sharp text.', icon: img('/icons/art-file-pdf.svg', '') },
+      { title: 'AI', text: 'Adobe Illustrator files keep your artwork editable, which helps if anything needs adjusting.', icon: img('/icons/art-file-ai.svg', '') },
+      { title: 'EPS', text: 'A widely supported vector format for logos and print artwork.', icon: img('/icons/art-file-eps.svg', '') },
+      { title: 'PNG', text: 'Good for artwork with transparency. Send the largest size you have.', icon: img('/icons/art-file-png.svg', '') },
+      { title: 'JPG', text: 'Fine for photographic artwork. Send the largest size you have.', icon: img('/icons/art-file-jpg.svg', '') },
+    ],
+  },
+  essentials: {
+    heading: 'The essentials',
+    text: 'Four things that decide how your print comes out. General print standards, not strict rules. If your file misses one, send it anyway and we will check it.',
+    items: [
+      { title: 'CMYK, not RGB', text: 'Screens show RGB. Print uses CMYK. Files sent in RGB can shift in colour when converted.', icon: img('/icons/art-cmyk.png', '') },
+      { title: '300 DPI', text: 'The print standard for sharp artwork. Small files that look crisp on screen can still print soft.', icon: img('/icons/art-dpi.svg', '') },
+      { title: 'Bleed', text: 'Extend backgrounds past the cut edge, so no white border shows. Keep text inside the safe area.', icon: img('/icons/art-bleed.svg', '') },
+      { title: 'Outlined fonts', text: 'Outlined text cannot shift if a font is missing. Keep text readable, not tiny or very thin.', iconText: 'Aa' },
+    ],
+  },
+  steps: {
+    heading: 'What happens next',
+    text: 'Three steps, and nothing is printed until you approve it.',
+    steps: [
+      { title: 'We check your file', text: 'Resolution, colour, bleed, and fonts. If something needs fixing, we tell you first.' },
+      { title: 'You get a free digital proof', text: 'See your artwork on the box before production starts.' },
+      { title: 'You approve, then we print', text: 'The box you receive is the box you signed off.' },
+    ],
+    note: 'No artwork? No problem. Our team helps with artwork and dielines as a done-for-you service.',
+  },
+  seoTitle: 'Artwork Guidelines | Region Packaging',
+  seoDescription:
+    'What artwork to send for custom printed boxes: accepted file formats, CMYK, 300 DPI, bleed and outlined fonts, and what happens after you upload.',
 }

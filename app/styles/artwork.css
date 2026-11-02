@@ -1,0 +1,238 @@
+/* ---------- Artwork Guidelines page ---------- */
+.art-hero {
+  background: var(--blue);
+  color: var(--sky);
+}
+.art-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: 101px 159px;
+  text-align: center;
+}
+/* The heading sits inside a "selected text box" frame, like in a design app. */
+.art-hero__title {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(589px, 100%);
+  aspect-ratio: 589 / 236;
+}
+.art-hero__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.art-hero h1 {
+  position: relative;
+  max-width: 87%;
+  color: var(--sky);
+  font-size: clamp(38px, 6vw, 70px);
+  line-height: 1;
+}
+.art-hero__text {
+  max-width: 702px;
+  margin-top: 46px;
+  font-size: var(--p1);
+  line-height: 1.28;
+}
+.art-hero__btn {
+  margin-top: 46px;
+}
+.art-hero__dieline {
+  width: min(435px, 100%);
+  height: auto;
+  margin-top: 112px;
+}
+.art-hero__dieline + .art-hero__text {
+  margin-top: 86px;
+}
+
+.art-formats {
+  padding-block: 171px 154px;
+}
+.art-essentials {
+  padding-block: 128px 155px;
+}
+.art-steps {
+  padding-block: 154px 160px;
+}
+.art-formats .section-header,
+.art-essentials .section-header,
+.art-steps .section-header {
+  margin-bottom: 68px;
+}
+.art-formats .section-header__text,
+.art-steps .section-header__text {
+  max-width: 701px;
+}
+.art-essentials .section-header__text {
+  max-width: 560px;
+}
+
+.art-grid {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.art-grid--5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 19px;
+}
+.art-grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+}
+.art-card {
+  min-height: 271px;
+  padding: 21px 25px 28px;
+  border-radius: var(--radius-card);
+}
+.art-card--beige {
+  background: var(--beige);
+}
+.art-card--outline {
+  min-height: 269px;
+  padding: 25px 26px 28px;
+  border: 1px solid var(--stroke);
+}
+.art-card__icon {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+.art-card--beige .art-card__icon {
+  height: 41px;
+}
+.art-card__media {
+  display: flex;
+  align-items: center;
+  height: 70px;
+}
+.art-card--outline .art-card__icon {
+  height: 56px;
+}
+.art-card__text-icon {
+  color: var(--black);
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+}
+.art-card h3 {
+  margin-top: 57px;
+  font-size: var(--h4);
+  font-weight: 600;
+  line-height: 1.25;
+}
+.art-card--outline h3 {
+  margin-top: 33px;
+}
+.art-card p {
+  line-height: 1.44;
+}
+
+.art-steps__list {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: start;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.art-steps__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.art-steps__num {
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--sky);
+  font-size: var(--h4);
+  font-weight: 700;
+}
+.art-steps__step h3 {
+  margin-top: 29px;
+  font-size: var(--h4);
+  font-weight: 600;
+  line-height: 1.25;
+}
+.art-steps__step p {
+  max-width: 278px;
+  line-height: 1.44;
+}
+.art-steps__sep {
+  padding-top: 93px;
+  color: var(--sky);
+}
+.art-steps__note {
+  max-width: 546px;
+  margin: 103px auto 0;
+  text-align: center;
+  font-size: var(--p1);
+  line-height: 1.28;
+}
+
+@media (max-width: 1100px) {
+  .art-formats,
+  .art-essentials,
+  .art-steps {
+    padding-block: var(--section-y);
+  }
+  .art-grid--5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .art-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .art-hero__inner {
+    padding-block: 64px 80px;
+  }
+  .art-hero__dieline {
+    margin-top: 64px;
+  }
+  .art-hero__dieline + .art-hero__text {
+    margin-top: 48px;
+  }
+  .art-steps__list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .art-steps__sep {
+    display: none;
+  }
+  .art-steps__note {
+    margin-top: 56px;
+  }
+}
+
+@media (max-width: 640px) {
+  .art-hero__text,
+  .art-hero__btn {
+    margin-top: 32px;
+  }
+  .art-grid--5,
+  .art-grid--4 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .art-card,
+  .art-card--outline {
+    min-height: 0;
+  }
+  .art-card h3,
+  .art-card--outline h3 {
+    margin-top: 24px;
+  }
+}

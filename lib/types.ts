@@ -22,14 +22,56 @@ export type Review = {
   source?: string
 }
 
+/** Payload rich text (Lexical JSON). Images inside it are already Img (see lib/cms/normalize.ts). */
+export type RichTextNode = {
+  type: string
+  children?: RichTextNode[]
+  text?: string
+  format?: number | string
+  tag?: string
+  listType?: string
+  fields?: { url?: string; newTab?: boolean; linkType?: string; doc?: unknown } | null
+  value?: Img | unknown
+  [key: string]: unknown
+}
+export type RichText = { root: RichTextNode }
+
+export type BlogCategory = { id: string; slug: string; title: string; description?: string }
+export type BlogTopic = { id: string; slug: string; title: string }
+
 export type BlogPost = {
   id: string
   slug: string
   title: string
+  /** Small line above card titles; worked out as "Category · N min read". */
   kicker?: string
   excerpt?: string
-  body?: string[]
+  body?: RichText
   image?: Img
+  categoryId?: string
+  topicIds: string[]
+  publishedAt?: string
+  author?: string
+  readMinutes?: number
+  featured?: boolean
+}
+
+/** Blog index chrome and the article sidebar (Blog > Blog page). */
+export type BlogPage = {
+  hero: { heading?: string; text?: string }
+  featuredHeading?: string
+  searchPlaceholder?: string
+  viewAllLabel?: string
+  post: {
+    tocHeading?: string
+    help: { heading?: string; text?: string; phoneLabel?: string; button?: Link }
+    followLabel?: string
+    relatedEyebrow?: string
+    relatedHeading?: string
+    relatedButton?: Link
+  }
+  seoTitle?: string
+  seoDescription?: string
 }
 
 export type Card = { title: string; kicker?: string; text?: string; linkLabel?: string; href?: string; image?: Img }
@@ -50,6 +92,7 @@ export type SiteSettings = {
   trustStrip: IconItem[]
   formDefaults: FormOptions
   productDefaults: ProductDefaults
+  subProductDefaults: SubProductDefaults
   cta: { heading?: string; text?: string; primary?: Link; secondary?: Link; coupon?: Coupon }
   footer: {
     blurb?: string
@@ -83,6 +126,8 @@ export type ContactPage = {
 }
 
 export type FormOptions = {
+  style: string[]
+  finish: string[]
   material: string[]
   size: string[]
   printing: string[]
@@ -105,6 +150,11 @@ export type ProductDefaults = {
 }
 
 export type Faq = { question: string; answer?: string }
+
+/** What industry sub-product pages show when the product has no content of its own. "{product}" in a heading becomes the product name. */
+export type SubProductDefaults = Pick<PageContent, 'shortDescription' | 'highlights' | 'gallery' | 'overview' | 'benefits' | 'useCases' | 'specs' | 'materials' | 'printing' | 'whyUs'> & {
+  tabs?: { overview?: string; specs?: string; materials?: string; why?: string; faq?: string }
+}
 
 /** Fields shared by category pages and sub-product pages. Every section is optional. */
 export type PageContent = {
@@ -190,12 +240,26 @@ export type AboutPage = {
   seoDescription?: string
 }
 
+/** The Artwork Guidelines page (Content > Artwork page). */
+export type ArtworkPage = {
+  hero: { heading?: string; text?: string; buttonLabel?: string; guide?: Img; dielineText?: string }
+  formats: SectionHeading & { items: IconItem[] }
+  essentials: SectionHeading & { items: (IconItem & { iconText?: string })[] }
+  steps: SectionHeading & { steps: TitleText[]; note?: string }
+  seoTitle?: string
+  seoDescription?: string
+}
+
 export type SiteData = {
   settings: SiteSettings
   home: HomePage
   about: AboutPage
+  artwork: ArtworkPage
   categories: Category[]
   products: Product[]
   reviews: Review[]
   posts: BlogPost[]
+  blogCategories: BlogCategory[]
+  blogTopics: BlogTopic[]
+  blog: BlogPage
 }

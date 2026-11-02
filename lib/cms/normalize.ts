@@ -28,8 +28,21 @@ function relation(relationTo: string | string[], v: unknown): string | undefined
 }
 
 
+/** Rich text keeps Payload's (Lexical) JSON; only images inside it are turned into Img like other uploads. */
+function richText(node: unknown): unknown {
+  if (Array.isArray(node)) return node.map(richText)
+  if (!isObj(node)) return node
+  const out: Raw = { ...node }
+  if (node.type === 'upload') out.value = image(node.value)
+  if (Array.isArray(node.children)) out.children = node.children.map(richText)
+  if (isObj(node.root)) out.root = richText(node.root)
+  return out
+}
+
 function value(f: Field, v: unknown): unknown {
   switch (f.type) {
+    case 'richText':
+      return isObj(v) ? richText(v) : undefined
     case 'upload':
       if ('hasMany' in f && f.hasMany) return ((v as unknown[]) ?? []).map(image).filter(Boolean)
       return image(v)

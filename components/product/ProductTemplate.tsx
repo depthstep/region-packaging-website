@@ -1,15 +1,12 @@
-import Link from 'next/link'
 import type { Card, Category, FormOptions, PageContent, Product, SiteData, TitleText } from '@/lib/types'
-import { groupLabel, resolveRelated, toCard } from '@/lib/data'
+import { resolveRelated, toCard } from '@/lib/data'
 import { FeatureCard, PhotoCard } from '@/components/ui/Cards'
-import { Check, Star } from '@/components/ui/glyphs'
-import { Icon, Media } from '@/components/ui/Media'
+import { Media } from '@/components/ui/Media'
 import { Paragraphs, SectionHeader } from '@/components/ui/SectionHeader'
 import { CtaSection } from '@/components/sections/CtaSection'
 import { FaqSection } from '@/components/sections/FaqSection'
 import { ReviewsSection } from '@/components/sections/ReviewsSection'
-import { Gallery } from './Gallery'
-import { QuoteForm } from './QuoteForm'
+import { ProductTop } from './ProductTop'
 import { RelatedCarousel } from './RelatedCarousel'
 
 type Props = {
@@ -33,10 +30,12 @@ function withDefaults<T extends { heading?: string; eyebrow?: string; text?: str
     Record<K, TitleText[]>
 }
 
-function formOptions(page: PageContent, defaults: FormOptions): FormOptions {
+export function formOptions(page: PageContent, defaults: FormOptions): FormOptions {
   const own = page.formOptions ?? {}
   const pick = (k: keyof FormOptions) => (own[k]?.length ? own[k]! : defaults[k])
   return {
+    style: pick('style'),
+    finish: pick('finish'),
     material: pick('material'),
     size: pick('size'),
     printing: pick('printing'),
@@ -59,61 +58,18 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
   return (
     <>
-      {/* 1-2. Gallery + quote form */}
-      <section className="product-top">
-        <div className="container">
-          <nav className="breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link> / <Link href="/products">{groupLabel(category.kind)}</Link> /{' '}
-            {isCategory ? (
-              <span aria-current="page">{category.title}</span>
-            ) : (
-              <>
-                <Link href={`/${category.slug}`}>{category.title}</Link> / <span aria-current="page">{page.title}</span>
-              </>
-            )}
-          </nav>
-          <div className="product-top__grid">
-            <div className="product-top__gallery">
-              <Gallery images={page.gallery} title={page.title} />
-            </div>
-            <div className="quote-card" id="quote">
-              <h1>{page.title}</h1>
-              {(page.ratingText || settings.google.score) && (
-                <p className="quote-card__rating">
-                  <Star size={16} /> {page.ratingText || `${settings.google.score} based (${settings.google.countText.replace(/\D+/g, '')} reviews)`}
-                </p>
-              )}
-              {page.shortDescription && <p className="quote-card__desc">{page.shortDescription}</p>}
-              {page.highlights.length > 0 && (
-                <ul className="quote-card__checks">
-                  {page.highlights.map((h) => (
-                    <li key={h}>
-                      <Check /> {h}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              <QuoteForm product={page.title} options={formOptions(page, settings.formDefaults)} sampleLinkLabel={d.sampleLinkLabel} note={d.formNote} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Trust strip */}
-      {settings.trustStrip.length > 0 && (
-        <section className="trust-strip">
-          <ul className="container trust-strip__list">
-            {settings.trustStrip.map((t) => (
-              <li key={t.title}>
-                <span className="trust-strip__icon">
-                  <Icon img={t.icon} size={30} label={t.title} />
-                </span>
-                {t.title}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {/* 1-3. Gallery + quote form, trust strip */}
+      <ProductTop
+        data={data}
+        title={page.title}
+        category={category}
+        isCategory={isCategory}
+        ratingText={page.ratingText}
+        shortDescription={page.shortDescription}
+        highlights={page.highlights}
+        gallery={page.gallery}
+        options={formOptions(page, settings.formDefaults)}
+      />
 
       {/* 4. Explore styles (category pages list their sub-products) */}
       {explore.length > 0 && (

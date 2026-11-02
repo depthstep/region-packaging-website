@@ -95,6 +95,8 @@ export const cards = (name: string, label: string) =>
   list(name, label, [str('title'), str('kicker', 'Small text above title'), txt('text', 'Text', 2), str('linkLabel', 'Link label'), str('href', 'Link URL'), img('image', 'Photo')])
 
 export const formOptionFields: Field[] = [
+  strings('style', 'Style (industry sub-product pages)'),
+  strings('finish', 'Finish (industry sub-product pages)'),
   strings('material', 'Material'),
   strings('size', 'Size'),
   strings('printing', 'Printing'),

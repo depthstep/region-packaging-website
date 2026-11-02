@@ -8,8 +8,9 @@ import { getPayload } from 'payload'
 import config from '../payload.config.ts'
 import * as catalog from '../content/catalog.ts'
 import * as site from '../content/site.ts'
+import * as blog from '../content/blog.ts'
 import { isParagraphList } from '../payload/fields.ts'
-import { AboutPage, Categories, HomePage, Posts, Products, Reviews, SiteSettings } from '../payload/schema.ts'
+import { AboutPage, ArtworkPage, BlogCategories, BlogPage, BlogTopics, Categories, HomePage, Posts, Products, Reviews, SiteSettings } from '../payload/schema.ts'
 import type { Img } from '../lib/types.ts'
 
 type Raw = Record<string, unknown>
@@ -19,7 +20,7 @@ const payload: Payload = await getPayload({ config })
 const publicDir = path.resolve(process.cwd(), 'public')
 
 /** Seed id (e.g. "category-custom-mailer-boxes") → Payload collection + id. */
-const ids = new Map<string, { relationTo: 'categories' | 'products' | 'posts'; value: number | string }>()
+const ids = new Map<string, { relationTo: 'categories' | 'products' | 'posts' | 'blog-categories' | 'blog-topics'; value: number | string }>()
 
 const media = new Map<string, number | string>()
 async function upload(img: unknown) {
@@ -30,6 +31,17 @@ async function upload(img: unknown) {
     media.set(src, doc.id)
   }
   return media.get(src)
+}
+
+/** Rich text: upload images inside it and store their Media ids. */
+async function richText(node: unknown): Promise<unknown> {
+  if (Array.isArray(node)) return Promise.all(node.map(richText))
+  if (!isObj(node)) return node
+  const out: Raw = { ...node }
+  if (node.type === 'upload') Object.assign(out, { value: await upload(node.value), id: crypto.randomUUID() })
+  if (Array.isArray(node.children)) out.children = await richText(node.children)
+  if (isObj(node.root)) out.root = await richText(node.root)
+  return out
 }
 
 /** The reverse of lib/cms/normalize.ts: site content shapes → Payload data, driven by the same fields. */
@@ -61,6 +73,8 @@ async function toPayload(fields: Field[], data: Raw | undefined): Promise<Raw> {
       out[f.name] = isParagraphList(f.fields) ? rows.map((paragraph) => ({ paragraph })) : await Promise.all(rows.map((r) => toPayload(f.fields, r as Raw)))
     } else if (f.type === 'group') {
       out[f.name] = await toPayload(f.fields, v as Raw)
+    } else if (f.type === 'richText') {
+      out[f.name] = await richText(v)
     } else {
       out[f.name] = v
     }
@@ -98,12 +112,20 @@ for (const item of [...catalog.categories, ...catalog.products]) {
 for (const [i, r] of site.reviews.entries()) {
   await payload.create({ collection: 'reviews', data: (await toPayload(Reviews.fields, { ...r, order: i })) as never })
 }
-for (const [i, post] of site.posts.entries()) {
-  // Newest first on the site, so give the seed posts descending dates in their listed order.
-  const publishedAt = new Date(Date.now() - i * 86_400_000).toISOString()
-  const doc = await payload.create({ collection: 'posts', data: (await toPayload(Posts.fields, { ...post, publishedAt })) as never })
+for (const [i, c] of blog.blogCategories.entries()) {
+  const doc = await payload.create({ collection: 'blog-categories', data: (await toPayload(BlogCategories.fields, { ...c, order: i })) as never })
+  ids.set(c.id, { relationTo: 'blog-categories', value: doc.id })
+}
+for (const [i, tp] of blog.blogTopics.entries()) {
+  const doc = await payload.create({ collection: 'blog-topics', data: (await toPayload(BlogTopics.fields, { ...tp, order: i })) as never })
+  ids.set(tp.id, { relationTo: 'blog-topics', value: doc.id })
+}
+for (const post of blog.posts) {
+  const data = await toPayload(Posts.fields, { ...post, category: post.categoryId, topics: post.topicIds } as unknown as Raw)
+  const doc = await payload.create({ collection: 'posts', data: data as never })
   ids.set(post.id, { relationTo: 'posts', value: doc.id })
 }
+await payload.updateGlobal({ slug: 'blog-page', data: (await toPayload(BlogPage.fields, blog.blogPage as unknown as Raw)) as never })
 
 const home = site.home
 await payload.updateGlobal({
@@ -114,10 +136,11 @@ await payload.updateGlobal({
     blog: { ...home.blog, posts: home.blog.postIds },
   } as unknown as Raw)) as never,
 })
+await payload.updateGlobal({ slug: 'artwork-page', data: (await toPayload(ArtworkPage.fields, site.artwork as unknown as Raw)) as never })
 await payload.updateGlobal({ slug: 'about-page', data: (await toPayload(AboutPage.fields, site.about as unknown as Raw)) as never })
 await payload.updateGlobal({ slug: 'site-settings', data: (await toPayload(SiteSettings.fields, site.settings as unknown as Raw)) as never })
 
 console.log(
-  `Seeded ${catalog.categories.length} categories, ${catalog.products.length} sub-products, ${site.reviews.length} reviews, ${site.posts.length} posts and ${media.size} images.`,
+  `Seeded ${catalog.categories.length} categories, ${catalog.products.length} sub-products, ${site.reviews.length} reviews, ${blog.posts.length} posts and ${media.size} images.`,
 )
 process.exit(0)

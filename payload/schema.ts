@@ -1,4 +1,4 @@
 // The collection and global configs, re-exported for lib/data.ts, which walks their fields
 // to turn Payload documents into the site's content types.
-export { Categories, Products, Reviews, Posts } from './collections'
-export { AboutPage, HomePage, SiteSettings } from './globals'
+export { BlogCategories, BlogTopics, Categories, Products, Reviews, Posts } from './collections'
+export { AboutPage, ArtworkPage, BlogPage, HomePage, SiteSettings } from './globals'

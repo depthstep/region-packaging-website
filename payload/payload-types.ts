@@ -71,6 +71,8 @@ export interface Config {
     products: Product;
     reviews: Review;
     posts: Post;
+    'blog-categories': BlogCategory;
+    'blog-topics': BlogTopic;
     'quote-requests': QuoteRequest;
     artwork: Artwork;
     media: Media;
@@ -86,6 +88,8 @@ export interface Config {
     products: ProductsSelect<false> | ProductsSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
+    'blog-categories': BlogCategoriesSelect<false> | BlogCategoriesSelect<true>;
+    'blog-topics': BlogTopicsSelect<false> | BlogTopicsSelect<true>;
     'quote-requests': QuoteRequestsSelect<false> | QuoteRequestsSelect<true>;
     artwork: ArtworkSelect<false> | ArtworkSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -102,11 +106,15 @@ export interface Config {
   globals: {
     'home-page': HomePage;
     'about-page': AboutPage;
+    'artwork-page': ArtworkPage;
+    'blog-page': BlogPage;
     'site-settings': SiteSetting;
   };
   globalsSelect: {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
+    'artwork-page': ArtworkPageSelect<false> | ArtworkPageSelect<true>;
+    'blog-page': BlogPageSelect<false> | BlogPageSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
   locale: null;
@@ -166,6 +174,8 @@ export interface Category {
    * Leave a list empty to use the defaults from Site settings.
    */
   formOptions?: {
+    style?: string[] | null;
+    finish?: string[] | null;
     material?: string[] | null;
     size?: string[] | null;
     printing?: string[] | null;
@@ -429,6 +439,8 @@ export interface Product {
    * Leave a list empty to use the defaults from Site settings.
    */
   formOptions?: {
+    style?: string[] | null;
+    finish?: string[] | null;
     material?: string[] | null;
     size?: string[] | null;
     printing?: string[] | null;
@@ -669,20 +681,77 @@ export interface Review {
 export interface Post {
   id: number;
   title: string;
-  kicker?: string | null;
-  publishedAt?: string | null;
+  category?: (number | null) | BlogCategory;
+  topics?: (number | BlogTopic)[] | null;
   excerpt?: string | null;
   image?: (number | null) | Media;
-  body?:
-    | {
-        paragraph: string;
-        id?: string | null;
-      }[]
-    | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  publishedAt?: string | null;
+  author?: string | null;
+  /**
+   * Empty = worked out from the article length.
+   */
+  readMinutes?: number | null;
+  featured?: boolean | null;
   /**
    * Part of the page URL. Empty = made from the title.
    */
   slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Each category is a section on the blog page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories".
+ */
+export interface BlogCategory {
+  id: number;
+  title: string;
+  description?: string | null;
+  /**
+   * Part of the page URL. Empty = made from the title.
+   */
+  slug: string;
+  /**
+   * Lower numbers show first.
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * The filter buttons on the blog page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-topics".
+ */
+export interface BlogTopic {
+  id: number;
+  title: string;
+  /**
+   * Part of the page URL. Empty = made from the title.
+   */
+  slug: string;
+  /**
+   * Lower numbers show first.
+   */
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -699,6 +768,8 @@ export interface QuoteRequest {
   company?: string | null;
   topic?: string | null;
   product?: string | null;
+  style?: string | null;
+  finish?: string | null;
   material?: string | null;
   size?: string | null;
   printing?: string | null;
@@ -797,6 +868,14 @@ export interface PayloadLockedDocument {
         value: number | Post;
       } | null)
     | ({
+        relationTo: 'blog-categories';
+        value: number | BlogCategory;
+      } | null)
+    | ({
+        relationTo: 'blog-topics';
+        value: number | BlogTopic;
+      } | null)
+    | ({
         relationTo: 'quote-requests';
         value: number | QuoteRequest;
       } | null)
@@ -872,6 +951,8 @@ export interface CategoriesSelect<T extends boolean = true> {
   formOptions?:
     | T
     | {
+        style?: T;
+        finish?: T;
         material?: T;
         size?: T;
         printing?: T;
@@ -1092,6 +1173,8 @@ export interface ProductsSelect<T extends boolean = true> {
   formOptions?:
     | T
     | {
+        style?: T;
+        finish?: T;
         material?: T;
         size?: T;
         printing?: T;
@@ -1317,17 +1400,39 @@ export interface ReviewsSelect<T extends boolean = true> {
  */
 export interface PostsSelect<T extends boolean = true> {
   title?: T;
-  kicker?: T;
-  publishedAt?: T;
+  category?: T;
+  topics?: T;
   excerpt?: T;
   image?: T;
-  body?:
-    | T
-    | {
-        paragraph?: T;
-        id?: T;
-      };
+  body?: T;
+  publishedAt?: T;
+  author?: T;
+  readMinutes?: T;
+  featured?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-categories_select".
+ */
+export interface BlogCategoriesSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  slug?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-topics_select".
+ */
+export interface BlogTopicsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1343,6 +1448,8 @@ export interface QuoteRequestsSelect<T extends boolean = true> {
   company?: T;
   topic?: T;
   product?: T;
+  style?: T;
+  finish?: T;
   material?: T;
   size?: T;
   printing?: T;
@@ -1737,6 +1844,110 @@ export interface AboutPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "artwork-page".
+ */
+export interface ArtworkPage {
+  id: number;
+  hero?: {
+    heading?: string | null;
+    text?: string | null;
+    buttonLabel?: string | null;
+    /**
+     * The download button only shows once a file is uploaded.
+     */
+    guide?: (number | null) | Media;
+    dielineText?: string | null;
+  };
+  formats?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    items?:
+      | {
+          title?: string | null;
+          text?: string | null;
+          icon?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  essentials?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    items?:
+      | {
+          title?: string | null;
+          text?: string | null;
+          icon?: (number | null) | Media;
+          iconText?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  steps?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    steps?:
+      | {
+          title?: string | null;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    note?: string | null;
+  };
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-page".
+ */
+export interface BlogPage {
+  id: number;
+  hero?: {
+    heading?: string | null;
+    text?: string | null;
+  };
+  featuredHeading?: string | null;
+  searchPlaceholder?: string | null;
+  viewAllLabel?: string | null;
+  post?: {
+    tocHeading?: string | null;
+    help?: {
+      heading?: string | null;
+      text?: string | null;
+      phoneLabel?: string | null;
+      button?: {
+        label?: string | null;
+        /**
+         * e.g. /quote or https://...
+         */
+        href?: string | null;
+      };
+    };
+    followLabel?: string | null;
+    relatedEyebrow?: string | null;
+    relatedHeading?: string | null;
+    relatedButton?: {
+      label?: string | null;
+      /**
+       * e.g. /quote or https://...
+       */
+      href?: string | null;
+    };
+  };
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
@@ -1796,6 +2007,8 @@ export interface SiteSetting {
       }[]
     | null;
   formDefaults?: {
+    style?: string[] | null;
+    finish?: string[] | null;
     material?: string[] | null;
     size?: string[] | null;
     printing?: string[] | null;
@@ -1863,6 +2076,137 @@ export interface SiteSetting {
     };
     sampleLinkLabel?: string | null;
     formNote?: string | null;
+  };
+  subProductDefaults?: {
+    tabs?: {
+      overview?: string | null;
+      specs?: string | null;
+      materials?: string | null;
+      why?: string | null;
+      faq?: string | null;
+    };
+    shortDescription?: string | null;
+    highlights?: string[] | null;
+    gallery?: (number | Media)[] | null;
+    overview?: {
+      eyebrow?: string | null;
+      heading?: string | null;
+      text?: string | null;
+      body?:
+        | {
+            paragraph: string;
+            id?: string | null;
+          }[]
+        | null;
+      images?: (number | Media)[] | null;
+    };
+    benefits?: {
+      eyebrow?: string | null;
+      heading?: string | null;
+      text?: string | null;
+      body?:
+        | {
+            paragraph: string;
+            id?: string | null;
+          }[]
+        | null;
+      items?:
+        | {
+            title?: string | null;
+            text?: string | null;
+            icon?: (number | null) | Media;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    specs?: {
+      eyebrow?: string | null;
+      heading?: string | null;
+      text?: string | null;
+      rows?:
+        | {
+            label?: string | null;
+            value?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      stockSizesHeading?: string | null;
+      stockSizes?:
+        | {
+            size?: string | null;
+            dimensions?: string | null;
+            bestFor?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      note?: string | null;
+    };
+    materials?: {
+      eyebrow?: string | null;
+      heading?: string | null;
+      text?: string | null;
+      items?:
+        | {
+            name?: string | null;
+            badge?: string | null;
+            description?: string | null;
+            image?: (number | null) | Media;
+            id?: string | null;
+          }[]
+        | null;
+      note?: string | null;
+    };
+    printing?: {
+      eyebrow?: string | null;
+      heading?: string | null;
+      text?: string | null;
+      body?:
+        | {
+            paragraph: string;
+            id?: string | null;
+          }[]
+        | null;
+      image?: (number | null) | Media;
+      methodsHeading?: string | null;
+      methods?:
+        | {
+            name?: string | null;
+            description?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      finishesHeading?: string | null;
+      finishes?:
+        | {
+            name?: string | null;
+            description?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
+    useCases?: {
+      eyebrow?: string | null;
+      heading?: string | null;
+      text?: string | null;
+      pills?: string[] | null;
+      note?: string | null;
+    };
+    whyUs?: {
+      eyebrow?: string | null;
+      heading?: string | null;
+      text?: string | null;
+      /**
+       * Empty = defaults from Site settings.
+       */
+      cards?:
+        | {
+            title?: string | null;
+            text?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      note?: string | null;
+    };
   };
   contact?: {
     heading?: string | null;
@@ -2265,6 +2609,119 @@ export interface AboutPageSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "artwork-page_select".
+ */
+export interface ArtworkPageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        heading?: T;
+        text?: T;
+        buttonLabel?: T;
+        guide?: T;
+        dielineText?: T;
+      };
+  formats?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        items?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              icon?: T;
+              id?: T;
+            };
+      };
+  essentials?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        items?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              icon?: T;
+              iconText?: T;
+              id?: T;
+            };
+      };
+  steps?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        steps?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+        note?: T;
+      };
+  seoTitle?: T;
+  seoDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog-page_select".
+ */
+export interface BlogPageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        heading?: T;
+        text?: T;
+      };
+  featuredHeading?: T;
+  searchPlaceholder?: T;
+  viewAllLabel?: T;
+  post?:
+    | T
+    | {
+        tocHeading?: T;
+        help?:
+          | T
+          | {
+              heading?: T;
+              text?: T;
+              phoneLabel?: T;
+              button?:
+                | T
+                | {
+                    label?: T;
+                    href?: T;
+                  };
+            };
+        followLabel?: T;
+        relatedEyebrow?: T;
+        relatedHeading?: T;
+        relatedButton?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+      };
+  seoTitle?: T;
+  seoDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
@@ -2328,6 +2785,8 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   formDefaults?:
     | T
     | {
+        style?: T;
+        finish?: T;
         material?: T;
         size?: T;
         printing?: T;
@@ -2404,6 +2863,152 @@ export interface SiteSettingsSelect<T extends boolean = true> {
             };
         sampleLinkLabel?: T;
         formNote?: T;
+      };
+  subProductDefaults?:
+    | T
+    | {
+        tabs?:
+          | T
+          | {
+              overview?: T;
+              specs?: T;
+              materials?: T;
+              why?: T;
+              faq?: T;
+            };
+        shortDescription?: T;
+        highlights?: T;
+        gallery?: T;
+        overview?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              body?:
+                | T
+                | {
+                    paragraph?: T;
+                    id?: T;
+                  };
+              images?: T;
+            };
+        benefits?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              body?:
+                | T
+                | {
+                    paragraph?: T;
+                    id?: T;
+                  };
+              items?:
+                | T
+                | {
+                    title?: T;
+                    text?: T;
+                    icon?: T;
+                    id?: T;
+                  };
+            };
+        specs?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              rows?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              stockSizesHeading?: T;
+              stockSizes?:
+                | T
+                | {
+                    size?: T;
+                    dimensions?: T;
+                    bestFor?: T;
+                    id?: T;
+                  };
+              note?: T;
+            };
+        materials?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              items?:
+                | T
+                | {
+                    name?: T;
+                    badge?: T;
+                    description?: T;
+                    image?: T;
+                    id?: T;
+                  };
+              note?: T;
+            };
+        printing?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              body?:
+                | T
+                | {
+                    paragraph?: T;
+                    id?: T;
+                  };
+              image?: T;
+              methodsHeading?: T;
+              methods?:
+                | T
+                | {
+                    name?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              finishesHeading?: T;
+              finishes?:
+                | T
+                | {
+                    name?: T;
+                    description?: T;
+                    id?: T;
+                  };
+            };
+        useCases?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              pills?: T;
+              note?: T;
+            };
+        whyUs?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              cards?:
+                | T
+                | {
+                    title?: T;
+                    text?: T;
+                    id?: T;
+                  };
+              note?: T;
+            };
       };
   contact?:
     | T

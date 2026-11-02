@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { cards, faqList, formOptionFields, heading, iconItems, img, imgs, link, links, list, paragraphs, section, str, strings, titleText, txt } from './fields'
 import { revalidateGlobal } from './hooks'
+import { subProductDefaultFields } from './pageFields'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
@@ -58,6 +59,11 @@ export const SiteSettings: GlobalConfig = {
               ],
             },
           ],
+        },
+        {
+          label: 'Sub-product pages',
+          description: 'Industry sub-product pages (e.g. Cream Boxes) use these until the product has its own. {product} in a heading becomes the product name.',
+          fields: [{ name: 'subProductDefaults', label: 'Sub-product page defaults', type: 'group', fields: subProductDefaultFields }],
         },
         {
           label: 'Contact page',
@@ -143,6 +149,53 @@ export const AboutPage: GlobalConfig = {
     section('whoWeAre', '3. Who we are', [...heading, paragraphs(), img('image', 'Photo'), list('stats', 'Stat cards', [str('value'), str('label')])]),
     section('products', '4. What we make', heading, 'The cards are the same as Home page > Choose your box.'),
     section('values', '5. Our values', [...heading, iconItems('items', 'Values')]),
+    str('seoTitle', 'SEO title'),
+    txt('seoDescription', 'SEO description', 2),
+  ],
+}
+
+export const ArtworkPage: GlobalConfig = {
+  slug: 'artwork-page',
+  label: 'Artwork page',
+  admin: { group: 'Content' },
+  hooks: revalidateGlobal,
+  fields: [
+    section('hero', '1. Banner', [
+      str('heading'),
+      txt('text', 'Text', 3),
+      str('buttonLabel', 'Download button label'),
+      { name: 'guide', label: 'Guide file (PDF)', type: 'upload', relationTo: 'media', admin: { description: 'The download button only shows once a file is uploaded.' } },
+      txt('dielineText', 'Text under the dieline', 3),
+    ]),
+    section('formats', '2. Formats we accept', [...heading, iconItems('items', 'Formats')]),
+    section('essentials', '3. The essentials', [
+      ...heading,
+      list('items', 'Cards', [str('title'), txt('text', 'Text', 2), img('icon', 'Icon'), str('iconText', 'Or text instead of an icon (e.g. Aa)')]),
+    ]),
+    section('steps', '4. What happens next', [...heading, titleText('steps', 'Steps'), txt('note', 'Note under the steps', 2)]),
+    str('seoTitle', 'SEO title'),
+    txt('seoDescription', 'SEO description', 2),
+  ],
+}
+
+export const BlogPage: GlobalConfig = {
+  slug: 'blog-page',
+  label: 'Blog page',
+  admin: { group: 'Blog' },
+  hooks: revalidateGlobal,
+  fields: [
+    section('hero', 'Banner', [str('heading'), txt('text', 'Text', 2)]),
+    str('featuredHeading', 'Featured posts heading'),
+    str('searchPlaceholder', 'Search box placeholder'),
+    str('viewAllLabel', 'View all label'),
+    section('post', 'Article pages', [
+      str('tocHeading', 'Contents heading'),
+      { name: 'help', label: 'Help card', type: 'group', fields: [str('heading'), txt('text', 'Text', 3), str('phoneLabel', 'Phone label'), link('button', 'Button')] },
+      str('followLabel', 'Follow label'),
+      str('relatedEyebrow', 'Keep reading eyebrow'),
+      str('relatedHeading', 'Keep reading heading'),
+      link('relatedButton', 'Keep reading button'),
+    ]),
     str('seoTitle', 'SEO title'),
     txt('seoDescription', 'SEO description', 2),
   ],

@@ -5,7 +5,7 @@ import { faqList, formOptionFields, heading, iconItems, img, imgs, list, nameDes
 // (/custom-mailer-boxes/kraft-mailer-boxes). Leave a section's heading empty to hide it on the site.
 // How to order, pricing, why us and FAQs fall back to Site settings > Product page defaults.
 
-const galleryTab: Field[] = [
+export const galleryTab: Field[] = [
   str('ratingText', 'Rating line', { description: 'e.g. "4.9 based (127 reviews)". Empty = Google rating from Site settings.' }),
   txt('shortDescription', 'Short description (under the title)', 3),
   strings('highlights', 'Highlights (three checks)'),
@@ -13,7 +13,7 @@ const galleryTab: Field[] = [
   section('formOptions', 'Quote form options', formOptionFields, 'Leave a list empty to use the defaults from Site settings.'),
 ]
 
-const sectionsTab: Field[] = [
+export const sectionsTab: Field[] = [
   section('explore', '4. Explore styles (category pages)', heading),
   section('overview', '5. Overview', [...heading, paragraphs(), imgs('images', 'Photos (3)')]),
   section('benefits', '6. Benefits', [...heading, paragraphs(), iconItems('items', 'Benefit cards')]),
@@ -73,3 +73,16 @@ export const pageTabs = (main: Field[]): Field => ({
     { label: 'SEO', fields: seoTab },
   ] satisfies Tab[],
 })
+
+/** Site settings > Sub-product pages: the defaults for industry sub-products (same fields as their own sections). */
+const named = (fields: Field[], names: string[]) => fields.filter((f) => 'name' in f && names.includes(f.name))
+export const subProductDefaultFields: Field[] = [
+  {
+    name: 'tabs',
+    label: 'Tab labels',
+    type: 'group',
+    fields: ['overview', 'specs', 'materials', 'why', 'faq'].map((n) => ({ name: n, type: 'text' as const })),
+  },
+  ...named(galleryTab, ['shortDescription', 'highlights', 'gallery']),
+  ...named(sectionsTab, ['overview', 'benefits', 'useCases', 'specs', 'materials', 'printing', 'whyUs']),
+]

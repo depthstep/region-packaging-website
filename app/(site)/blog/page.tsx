@@ -1,23 +1,27 @@
 import type { Metadata } from 'next'
 import { getSiteData } from '@/lib/data'
-import { PageIntro } from '@/components/layout/PageIntro'
-import { PhotoCard } from '@/components/ui/Cards'
+import { BlogIndex } from '@/components/blog/BlogIndex'
+import { CtaSection } from '@/components/sections/CtaSection'
 
 export const revalidate = 3600
-export const metadata: Metadata = { title: 'Blogs' }
 
-export default async function BlogIndex() {
-  const { posts, home } = await getSiteData()
+export async function generateMetadata(): Promise<Metadata> {
+  const { blog } = await getSiteData()
+  return { title: blog.seoTitle ? { absolute: blog.seoTitle } : 'Blog', description: blog.seoDescription }
+}
+
+export default async function BlogPage() {
+  const { blog, posts, blogCategories, blogTopics, settings } = await getSiteData()
   return (
     <>
-      <PageIntro title={home.blog.heading || 'Blogs'} crumb="Blogs" text={home.blog.text} />
-      <section className="section section--tight">
-        <div className="container grid-3 card-grid">
-          {posts.map((p) => (
-            <PhotoCard key={p.id} card={{ title: p.title, kicker: p.kicker, linkLabel: home.blog.linkLabel, href: `/blog/${p.slug}`, image: p.image }} />
-          ))}
+      <section className="blog-hero">
+        <div className="container">
+          <h1>{blog.hero.heading || 'Blog'}</h1>
+          {blog.hero.text && <p>{blog.hero.text}</p>}
         </div>
       </section>
+      <BlogIndex page={blog} posts={posts} categories={blogCategories} topics={blogTopics} />
+      <CtaSection cta={settings.cta} />
     </>
   )
 }

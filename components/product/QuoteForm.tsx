@@ -11,8 +11,10 @@ const ACCEPT = '.pdf,.eps,.png,.jpg,.jpeg,application/pdf,application/postscript
 const ALLOWED_EXT = /\.(pdf|eps|png|jpe?g)$/i
 
 const SELECTS: { key: keyof FormOptions; label: string; icon: string }[] = [
+  { key: 'style', label: 'Style', icon: '/icons/feature-layers.svg' },
   { key: 'material', label: 'Material', icon: '/icons/feature-layers.svg' },
   { key: 'size', label: 'Size', icon: '/icons/feature-box-search.svg' },
+  { key: 'finish', label: 'Finish', icon: '/icons/feature-print.svg' },
   { key: 'printing', label: 'Printing', icon: '/icons/feature-print.svg' },
   { key: 'productionSpeed', label: 'Production Speed', icon: '/icons/feature-fast.svg' },
   { key: 'quantity', label: 'Quantity', icon: '/icons/feature-boxes.svg' },
@@ -27,11 +29,16 @@ type Props = {
   sampleLinkLabel?: string
   note?: string
   defaultMessage?: string
+  /** Which option lists to show, in order (the two-column grid fills left to right). */
+  fields?: (keyof FormOptions)[]
 }
+
+/** Category pages and the /quote page. Industry sub-products pass their own set. */
+export const DEFAULT_FIELDS: (keyof FormOptions)[] = ['material', 'size', 'printing', 'productionSpeed', 'quantity', 'design']
 
 type Status = { state: 'idle' | 'sending' | 'sent' } | { state: 'error'; message: string }
 
-export function QuoteForm({ product, productChoices, options, sampleLinkLabel, note, defaultMessage }: Props) {
+export function QuoteForm({ product, productChoices, options, sampleLinkLabel, note, defaultMessage, fields = DEFAULT_FIELDS }: Props) {
   const [status, setStatus] = useState<Status>({ state: 'idle' })
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState('')
@@ -105,7 +112,7 @@ export function QuoteForm({ product, productChoices, options, sampleLinkLabel, n
             </span>
           </label>
         )}
-        {SELECTS.map(({ key, label, icon }) =>
+        {fields.map((f) => SELECTS.find((s) => s.key === f)!).map(({ key, label, icon }) =>
           options[key]?.length ? (
             <label key={key} className="field">
               <span className="field__label">{label}</span>
