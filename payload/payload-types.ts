@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     categories: Category;
     products: Product;
+    pages: Page;
     reviews: Review;
     posts: Post;
     'blog-categories': BlogCategory;
@@ -86,6 +87,7 @@ export interface Config {
   collectionsSelect: {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     'blog-categories': BlogCategoriesSelect<false> | BlogCategoriesSelect<true>;
@@ -655,6 +657,40 @@ export interface Product {
   createdAt: string;
 }
 /**
+ * Text pages. The address is your-domain/slug.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  intro?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  /**
+   * Part of the page URL. Empty = made from the title.
+   */
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "reviews".
  */
@@ -807,6 +843,7 @@ export interface Artwork {
 export interface User {
   id: number;
   name?: string | null;
+  role: 'admin' | 'editor';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -858,6 +895,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'products';
         value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'reviews';
@@ -1380,6 +1421,20 @@ export interface ProductsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  intro?: T;
+  body?: T;
+  seoTitle?: T;
+  seoDescription?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "reviews_select".
  */
 export interface ReviewsSelect<T extends boolean = true> {
@@ -1503,6 +1558,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1853,7 +1909,7 @@ export interface ArtworkPage {
     text?: string | null;
     buttonLabel?: string | null;
     /**
-     * The download button only shows once a file is uploaded.
+     * The button downloads this file. Until one is uploaded, the button shows but does nothing.
      */
     guide?: (number | null) | Media;
     dielineText?: string | null;
@@ -2076,6 +2132,38 @@ export interface SiteSetting {
     };
     sampleLinkLabel?: string | null;
     formNote?: string | null;
+  };
+  pageIntros?: {
+    products?: {
+      heading?: string | null;
+      text?: string | null;
+      seoTitle?: string | null;
+      seoDescription?: string | null;
+    };
+    faqs?: {
+      heading?: string | null;
+      text?: string | null;
+      seoTitle?: string | null;
+      seoDescription?: string | null;
+    };
+    howToOrder?: {
+      heading?: string | null;
+      text?: string | null;
+      seoTitle?: string | null;
+      seoDescription?: string | null;
+    };
+    quote?: {
+      heading?: string | null;
+      text?: string | null;
+      seoTitle?: string | null;
+      seoDescription?: string | null;
+    };
+    sample?: {
+      heading?: string | null;
+      text?: string | null;
+      seoTitle?: string | null;
+      seoDescription?: string | null;
+    };
   };
   subProductDefaults?: {
     tabs?: {
@@ -2863,6 +2951,50 @@ export interface SiteSettingsSelect<T extends boolean = true> {
             };
         sampleLinkLabel?: T;
         formNote?: T;
+      };
+  pageIntros?:
+    | T
+    | {
+        products?:
+          | T
+          | {
+              heading?: T;
+              text?: T;
+              seoTitle?: T;
+              seoDescription?: T;
+            };
+        faqs?:
+          | T
+          | {
+              heading?: T;
+              text?: T;
+              seoTitle?: T;
+              seoDescription?: T;
+            };
+        howToOrder?:
+          | T
+          | {
+              heading?: T;
+              text?: T;
+              seoTitle?: T;
+              seoDescription?: T;
+            };
+        quote?:
+          | T
+          | {
+              heading?: T;
+              text?: T;
+              seoTitle?: T;
+              seoDescription?: T;
+            };
+        sample?:
+          | T
+          | {
+              heading?: T;
+              text?: T;
+              seoTitle?: T;
+              seoDescription?: T;
+            };
       };
   subProductDefaults?:
     | T

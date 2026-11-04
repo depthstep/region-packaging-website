@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Archivo } from 'next/font/google'
 import { Footer } from '@/components/layout/Footer'
 import { Header } from '@/components/layout/Header'
+import { noIndex } from '@/lib/asset'
 import { getSiteData } from '@/lib/data'
 // The website and the Payload admin (app/(payload)) are separate root layouts, so these
 // styles never reach the admin.
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: { default: 'Region Packaging', template: '%s | Region Packaging' },
   description: 'Custom printed packaging and boxes with low minimums and fast turnaround.',
+  ...(noIndex && { robots: { index: false, follow: false } }),
 }
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {

@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { getSiteData } from '@/lib/data'
+import { getSiteData, introMetadata } from '@/lib/data'
 import { QuoteBody, QuotePageBody } from '@/components/product/QuotePageBody'
 
-export const metadata: Metadata = { title: 'Get a Quote' }
+export async function generateMetadata(): Promise<Metadata> {
+  return introMetadata((await getSiteData()).settings.pageIntros.quote, 'Get a Quote')
+}
 
 export default async function QuotePage() {
   const data = await getSiteData()
@@ -13,6 +15,7 @@ export default async function QuotePage() {
     options: settings.formDefaults,
     formNote: settings.productDefaults.formNote,
     ctaText: settings.cta.text,
+    intros: settings.pageIntros,
   }
   return (
     <Suspense fallback={<QuoteBody {...props} />}>

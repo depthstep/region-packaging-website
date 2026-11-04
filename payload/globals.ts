@@ -61,6 +61,24 @@ export const SiteSettings: GlobalConfig = {
           ],
         },
         {
+          label: 'Other pages',
+          description: 'Headings and SEO for pages that have no editor of their own.',
+          fields: [
+            {
+              name: 'pageIntros',
+              label: 'Page headings & SEO',
+              type: 'group',
+              fields: [
+                ['products', 'All Products'],
+                ['faqs', 'FAQs'],
+                ['howToOrder', 'How To Order'],
+                ['quote', 'Get a Quote'],
+                ['sample', 'Request Free Sample'],
+              ].map(([name, label]) => section(name, label, [str('heading'), txt('text', 'Text under the heading', 2), str('seoTitle', 'SEO title'), txt('seoDescription', 'SEO description', 2)])),
+            },
+          ],
+        },
+        {
           label: 'Sub-product pages',
           description: 'Industry sub-product pages (e.g. Cream Boxes) use these until the product has its own. {product} in a heading becomes the product name.',
           fields: [{ name: 'subProductDefaults', label: 'Sub-product page defaults', type: 'group', fields: subProductDefaultFields }],

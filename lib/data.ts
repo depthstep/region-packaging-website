@@ -3,7 +3,7 @@ import * as seedCatalog from '@/content/catalog'
 import * as seedSite from '@/content/site'
 import * as seedBlog from '@/content/blog'
 import { cmsId, fromFields } from './cms/normalize'
-import type { AboutPage, ArtworkPage, BlogCategory, BlogPage, BlogPost, Card, Category, HomePage, PageContent, Product, SiteData, SiteSettings } from './types'
+import type { AboutPage, ArtworkPage, BlogCategory, BlogPage, BlogPost, Card, Category, HomePage, PageContent, PageIntroText, Product, SiteData, SiteSettings } from './types'
 
 /** The Payload database is only used when one is configured; otherwise the site runs from content/*.ts. */
 export const cmsEnabled = !!process.env.DATABASE_URI
@@ -37,6 +37,7 @@ const seed: SiteData = {
   blogCategories: seedBlog.blogCategories,
   blogTopics: seedBlog.blogTopics,
   blog: seedBlog.blogPage,
+  pages: seedSite.pages,
 }
 
 const pageDefaults = <T extends Partial<PageContent>>(doc: T) => ({ ...doc, highlights: doc.highlights ?? [], gallery: doc.gallery ?? [] })
@@ -53,6 +54,7 @@ const emptySettings: SiteSettings = {
   trustStrip: [],
   formDefaults: { style: [], finish: [], material: [], size: [], printing: [], productionSpeed: [], quantity: [], design: [] },
   subProductDefaults: { highlights: [], gallery: [] },
+  pageIntros: {},
   productDefaults: {},
   cta: {},
   footer: { columns: [], legal: [] },
@@ -114,7 +116,7 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
   const [{ getPayload }, { default: config }, schema] = await Promise.all([import('payload'), import('@payload-config'), import('@/payload/schema')])
   const payload = await getPayload({ config })
   const all = { depth: 1, pagination: false } as const
-  const [settings, home, about, artwork, blog, categories, products, reviews, posts, blogCategories, blogTopics] = await Promise.all([
+  const [settings, home, about, artwork, blog, categories, products, reviews, posts, blogCategories, blogTopics, pages] = await Promise.all([
     payload.findGlobal({ slug: 'site-settings', depth: 1 }),
     payload.findGlobal({ slug: 'home-page', depth: 1 }),
     payload.findGlobal({ slug: 'about-page', depth: 1 }),
@@ -126,6 +128,7 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
     payload.find({ collection: 'posts', sort: '-publishedAt', ...all }),
     payload.find({ collection: 'blog-categories', sort: 'order', ...all }),
     payload.find({ collection: 'blog-topics', sort: 'order', ...all }),
+    payload.find({ collection: 'pages', sort: 'title', ...all }),
   ])
   const doc =
     (collection: string, fields: Parameters<typeof fromFields>[0]) =>
@@ -144,6 +147,7 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
       .map(doc('products', schema.Products.fields))
       .map(({ categories, related, ...p }) => pageDefaults({ ...p, categoryIds: (categories as string[]) ?? [], relatedIds: (related as string[]) ?? [] }) as Product),
     reviews: reviews.docs.map(doc('reviews', schema.Reviews.fields)) as unknown as SiteData['reviews'],
+    pages: pages.docs.map(doc('pages', schema.Pages.fields)) as unknown as SiteData['pages'],
     ...(() => {
       const cats = blogCategories.docs.map(doc('blog-categories', schema.BlogCategories.fields)) as unknown as BlogCategory[]
       const list = posts.docs
@@ -158,6 +162,11 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
     })(),
   }
 })
+
+/** Page title + description from Site settings > Other pages. */
+export function introMetadata(intro: PageIntroText | undefined, fallback: string) {
+  return { title: intro?.seoTitle ? { absolute: intro.seoTitle } : intro?.heading || fallback, description: intro?.seoDescription }
+}
 
 export const groupLabel = (kind: Category['kind']) => (kind === 'industry' ? 'Boxes By Industry' : 'Custom Boxes')
 

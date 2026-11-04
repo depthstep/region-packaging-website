@@ -24,8 +24,23 @@ With `DATABASE_URI` unset, the site runs entirely from the starter content in `c
 - **Content > Home page**: every home section. **Content > About page**: hero photos, mission and vision, who we are and stats, values (the "What we make" cards and the guides come from the Home page). **Reviews**, **Blog posts**.
 - **Settings > Site settings**: top bar, phone, email, mega-menu promo, resources menu, stats, trusted-by logos, Google rating, trust strip, quote-form options, generic product-page sections, Contact Us page (banner, quote card, topic choices), CTA/coupon, footer, social links.
 - **Quote requests**: every enquiry from the quote forms and the Contact Us form (those have a Topic), with the customer's artwork (only visible to logged-in staff). Tick "Handled" when done.
-- Saving anything refreshes the live pages straight away.
+- **Content > Simple pages**: text pages at `/slug` (Paper Weight Chart, Privacy Policy, Terms, or new ones). Link to them from Site settings.
+- **Settings > Site settings > Other pages**: headings and SEO for Products, FAQs, How To Order and Quote.
+- Form labels and button text inside the quote and contact forms are in the code, not the admin.
+- Saving anything refreshes the live pages and the sitemap straight away.
 - Any image shown as a striped **Placeholder** box is waiting for a photo in the matching field.
+
+## Logins
+
+**Admins** do everything. **Editors** (the SEO team) manage all site content but cannot see quote requests, customer artwork or other logins. The first login made at `/admin` is an admin. Admins can add more under **Settings > Logins**, or from the server, which also prints a random password (running it again resets the password):
+
+```bash
+USER_EMAIL=seo@regionpackaging.com USER_ROLE=editor npm run create-user
+```
+
+## Search engines
+
+`/sitemap.xml` lists every public page and updates on each save; `/robots.txt` points to it and keeps `/admin` and the API out. While `SITE_NOINDEX=1` is in `.env`, the sitemap is empty and all pages are blocked from search engines: use that until launch, then remove it, run `npm run build` and restart. The GitHub Pages preview is always blocked.
 
 ## Quote emails
 

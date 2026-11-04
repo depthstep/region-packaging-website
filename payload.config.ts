@@ -6,7 +6,7 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { Artwork, BlogCategories, BlogTopics, Categories, Media, Posts, Products, QuoteRequests, Reviews, Users } from './payload/collections'
+import { Artwork, BlogCategories, BlogTopics, Categories, Media, Pages, Posts, Products, QuoteRequests, Reviews, Users } from './payload/collections'
 import { AboutPage, ArtworkPage, BlogPage, HomePage, SiteSettings } from './payload/globals'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -23,7 +23,7 @@ export default buildConfig({
     importMap: { baseDir: dirname },
     meta: { titleSuffix: ' | Region Packaging admin' },
   },
-  collections: [Categories, Products, Reviews, Posts, BlogCategories, BlogTopics, QuoteRequests, Artwork, Media, Users],
+  collections: [Categories, Products, Pages, Reviews, Posts, BlogCategories, BlogTopics, QuoteRequests, Artwork, Media, Users],
   globals: [HomePage, AboutPage, ArtworkPage, BlogPage, SiteSettings],
   // Rich text (blog articles): headings, lists, links, quotes and images from Media.
   editor: lexicalEditor(),

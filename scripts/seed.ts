@@ -10,7 +10,7 @@ import * as catalog from '../content/catalog.ts'
 import * as site from '../content/site.ts'
 import * as blog from '../content/blog.ts'
 import { isParagraphList } from '../payload/fields.ts'
-import { AboutPage, ArtworkPage, BlogCategories, BlogPage, BlogTopics, Categories, HomePage, Posts, Products, Reviews, SiteSettings } from '../payload/schema.ts'
+import { AboutPage, ArtworkPage, BlogCategories, BlogPage, BlogTopics, Categories, HomePage, Pages, Posts, Products, Reviews, SiteSettings } from '../payload/schema.ts'
 import type { Img } from '../lib/types.ts'
 
 type Raw = Record<string, unknown>
@@ -124,6 +124,9 @@ for (const post of blog.posts) {
   const data = await toPayload(Posts.fields, { ...post, category: post.categoryId, topics: post.topicIds } as unknown as Raw)
   const doc = await payload.create({ collection: 'posts', data: data as never })
   ids.set(post.id, { relationTo: 'posts', value: doc.id })
+}
+for (const page of site.pages) {
+  await payload.create({ collection: 'pages', data: (await toPayload(Pages.fields, page as unknown as Raw)) as never })
 }
 await payload.updateGlobal({ slug: 'blog-page', data: (await toPayload(BlogPage.fields, blog.blogPage as unknown as Raw)) as never })
 

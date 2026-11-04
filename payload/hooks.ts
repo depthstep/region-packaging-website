@@ -5,6 +5,7 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, GlobalAfterC
 function revalidateSite() {
   try {
     revalidatePath('/', 'layout')
+    revalidatePath('/sitemap.xml')
   } catch {
     // Not inside a Next.js request (e.g. the seed script): nothing to refresh.
   }

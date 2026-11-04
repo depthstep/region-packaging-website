@@ -93,6 +93,7 @@ export type SiteSettings = {
   formDefaults: FormOptions
   productDefaults: ProductDefaults
   subProductDefaults: SubProductDefaults
+  pageIntros: Partial<Record<'products' | 'faqs' | 'howToOrder' | 'quote' | 'sample', PageIntroText>>
   cta: { heading?: string; text?: string; primary?: Link; secondary?: Link; coupon?: Coupon }
   footer: {
     blurb?: string
@@ -124,6 +125,8 @@ export type ContactPage = {
   topics: string[]
   buttonLabel?: string
 }
+
+export type PageIntroText = { heading?: string; text?: string; seoTitle?: string; seoDescription?: string }
 
 export type FormOptions = {
   style: string[]
@@ -250,6 +253,9 @@ export type ArtworkPage = {
   seoDescription?: string
 }
 
+/** A text page at /slug (Content > Simple pages). */
+export type SimplePage = { id: string; slug: string; title: string; intro?: string; body?: RichText; seoTitle?: string; seoDescription?: string }
+
 export type SiteData = {
   settings: SiteSettings
   home: HomePage
@@ -262,4 +268,5 @@ export type SiteData = {
   blogCategories: BlogCategory[]
   blogTopics: BlogTopic[]
   blog: BlogPage
+  pages: SimplePage[]
 }

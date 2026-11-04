@@ -12,7 +12,8 @@
     "generate:importmap": "payload generate:importmap",
     "generate:types": "payload generate:types",
     "migrate": "payload migrate",
-    "seed": "payload run scripts/seed.ts"
+    "seed": "payload run scripts/seed.ts",
+    "create-user": "payload run scripts/create-user.ts"
   },
   "overrides": {
     "zod": "4.6.6",

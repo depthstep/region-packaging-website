@@ -9,3 +9,6 @@ export const withBase = (src: string) => (src.startsWith('/') && !src.startsWith
 
 /** True on the static GitHub Pages preview, where there is no server for the quote API. */
 export const isStaticPreview = process.env.NEXT_PUBLIC_STATIC_PREVIEW === '1'
+
+/** Keeps search engines out: always on the preview, and on the server until launch (SITE_NOINDEX=1). */
+export const noIndex = isStaticPreview || process.env.SITE_NOINDEX === '1'

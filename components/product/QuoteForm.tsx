@@ -157,7 +157,7 @@ export function QuoteForm({ product, productChoices, options, sampleLinkLabel, n
         )}
       </label>
       <div className="dropzone__meta">
-        <span>Supported formates: PDF, EPS, PNG or JPG</span>
+        <span>Supported formats: PDF, EPS, PNG or JPG</span>
         <span>Maximum Size: 15mb</span>
       </div>
       {fileError && <p className="field__error">{fileError}</p>}

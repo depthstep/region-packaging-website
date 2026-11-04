@@ -1,11 +1,11 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import type { FormOptions } from '@/lib/types'
+import type { FormOptions, SiteSettings } from '@/lib/types'
 import { PageIntro } from '@/components/layout/PageIntro'
 import { QuoteForm } from './QuoteForm'
 
-type Props = { choices: string[]; options: FormOptions; formNote?: string; ctaText?: string }
+type Props = { choices: string[]; options: FormOptions; formNote?: string; ctaText?: string; intros: SiteSettings['pageIntros'] }
 
 /** /quote reads ?type=sample and ?product= in the browser so the page itself stays static. */
 export function QuotePageBody(props: Props) {
@@ -13,11 +13,12 @@ export function QuotePageBody(props: Props) {
   return <QuoteBody {...props} type={params.get('type')} product={params.get('product') || undefined} />
 }
 
-export function QuoteBody({ choices, options, formNote, ctaText, type, product }: Props & { type?: string | null; product?: string }) {
+export function QuoteBody({ choices, options, formNote, ctaText, intros, type, product }: Props & { type?: string | null; product?: string }) {
   const sample = type === 'sample'
+  const intro = sample ? intros.sample : intros.quote
   return (
     <>
-      <PageIntro title={sample ? 'Request Free Sample' : 'Get a Quote'} text={sample ? formNote : ctaText} />
+      <PageIntro title={intro?.heading || (sample ? 'Request Free Sample' : 'Get a Quote')} text={intro?.text || (sample ? formNote : ctaText)} />
       <section className="section section--tight">
         <div className="container quote-page">
           <div className="quote-card">

@@ -1,7 +1,8 @@
 // Local seed for the site-wide singletons, reviews and blog posts.
 // Copy is taken verbatim from the Figma file (see design-copy.md).
-import type { AboutPage, ArtworkPage, HomePage, Review, SiteSettings } from '../lib/types.ts'
+import type { AboutPage, ArtworkPage, HomePage, SimplePage, Review, SiteSettings } from '../lib/types.ts'
 import { img, ph } from './helpers.ts'
+import { doc, p } from './richtext.ts'
 
 const faqItems = [
   { question: 'What types of custom boxes do you make?' },
@@ -56,6 +57,13 @@ export const settings: SiteSettings = {
     heading: 'Loved by brands like yours.',
     text: 'Real reviews from real customers, posted on Google.',
     buttonLabel: 'Review us on Google',
+  },
+  pageIntros: {
+    products: { heading: 'All Products' },
+    faqs: {},
+    howToOrder: { heading: 'How To Order' },
+    quote: { heading: 'Get a Quote' },
+    sample: { heading: 'Request Free Sample' },
   },
   // Sample copy from the Figma sub-product design (written for rigid boxes); editors replace it per product.
   subProductDefaults: {
@@ -306,8 +314,8 @@ export const settings: SiteSettings = {
     paymentLogos: img('/icons/payment-methods.png', 'Visa, Mastercard, PayPal, American Express, Discover'),
     copyright: '© 2026 Region Packaging. All rights reserved.',
     legal: [
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Terms of Service', href: '#' },
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms of Service', href: '/terms-of-service' },
     ],
   },
 }
@@ -600,3 +608,10 @@ export const artwork: ArtworkPage = {
   seoDescription:
     'What artwork to send for custom printed boxes: accepted file formats, CMYK, 300 DPI, bleed and outlined fonts, and what happens after you upload.',
 }
+
+const placeholderPage = (slug: string, title: string, note: string): SimplePage => ({ id: `page-${slug}`, slug, title, body: doc(p(`[Placeholder] ${note}`)) })
+export const pages: SimplePage[] = [
+  placeholderPage('paper-weight-chart', 'Paper Weight Chart', 'The paper weight chart has not been supplied yet.'),
+  placeholderPage('privacy-policy', 'Privacy Policy', 'The privacy policy has not been supplied yet.'),
+  placeholderPage('terms-of-service', 'Terms of Service', 'The terms of service have not been supplied yet.'),
+]

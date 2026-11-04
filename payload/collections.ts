@@ -1,4 +1,4 @@
-import type { CollectionConfig, Field } from 'payload'
+import type { Access, CollectionConfig, Field } from 'payload'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { img, orderField, slugField, str, txt } from './fields'
@@ -7,14 +7,37 @@ import { revalidateOnChange } from './hooks'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const uploadsDir = (name: string) => path.resolve(dirname, '..', 'uploads', name)
-const loggedIn = ({ req }: { req: { user?: unknown } }) => !!req.user
+
+// Two kinds of login. Admins do everything. Editors (the SEO team) manage all site content,
+// but cannot see customer enquiries or artwork, or manage other logins.
+type Role = { role?: string | null }
+const isAdmin = ({ req }: { req: { user?: unknown } }) => (req.user as Role | null | undefined)?.role === 'admin'
+const adminsOnly = { read: isAdmin, create: isAdmin, update: isAdmin, delete: isAdmin }
+const hiddenFromEditors = ({ user }: { user: unknown }) => (user as Role | null | undefined)?.role !== 'admin'
+/** Admins see every login; anyone else only their own (to change their password). */
+const adminOrSelf: Access = ({ req }) => isAdmin({ req }) || (req.user ? { id: { equals: req.user.id } } : false)
 
 export const Users: CollectionConfig = {
   slug: 'users',
-  labels: { singular: 'Admin user', plural: 'Admin users' },
-  admin: { useAsTitle: 'email', group: 'Settings' },
+  labels: { singular: 'Login', plural: 'Logins' },
+  admin: { useAsTitle: 'email', defaultColumns: ['email', 'name', 'role'], group: 'Settings', hidden: hiddenFromEditors },
   auth: true,
-  fields: [str('name')],
+  access: { read: adminOrSelf, create: isAdmin, update: adminOrSelf, delete: isAdmin, unlock: isAdmin },
+  fields: [
+    str('name'),
+    {
+      name: 'role',
+      type: 'select',
+      required: true,
+      defaultValue: 'admin',
+      options: [
+        { label: 'Admin (everything)', value: 'admin' },
+        { label: 'Editor (site content only)', value: 'editor' },
+      ],
+      access: { create: isAdmin, update: isAdmin },
+      admin: { position: 'sidebar' },
+    },
+  ],
 }
 
 /** Site photos and icons. Public, since they appear on the website. */
@@ -35,7 +58,7 @@ export const Artwork: CollectionConfig = {
   slug: 'artwork',
   labels: { singular: 'Artwork file', plural: 'Artwork files' },
   admin: { group: 'Quote requests' },
-  access: { read: loggedIn, create: loggedIn, update: loggedIn, delete: loggedIn },
+  access: adminsOnly,
   upload: {
     staticDir: uploadsDir('artwork'),
     mimeTypes: ['application/pdf', 'application/postscript', 'application/eps', 'image/eps', 'image/x-eps', 'image/png', 'image/jpeg'],
@@ -123,6 +146,22 @@ export const Reviews: CollectionConfig = {
   hooks: revalidateOnChange,
 }
 
+/** Plain text pages at /slug: Paper Weight Chart, Privacy Policy, Terms and anything new. */
+export const Pages: CollectionConfig = {
+  slug: 'pages',
+  labels: { singular: 'Simple page', plural: 'Simple pages' },
+  admin: { useAsTitle: 'title', defaultColumns: ['title', 'slug'], group: 'Content', description: 'Text pages. The address is your-domain/slug.' },
+  fields: [
+    str('title', 'Title', { required: true }),
+    txt('intro', 'Text under the title', 2),
+    { name: 'body', type: 'richText', label: 'Page text' },
+    str('seoTitle', 'SEO title'),
+    txt('seoDescription', 'SEO description', 2),
+    slugField(),
+  ],
+  hooks: revalidateOnChange,
+}
+
 export const BlogCategories: CollectionConfig = {
   slug: 'blog-categories',
   labels: { singular: 'Blog category', plural: 'Blog categories' },
@@ -169,9 +208,9 @@ const ro = (name: string, label?: string, type: 'text' | 'textarea' = 'text'): F
 export const QuoteRequests: CollectionConfig = {
   slug: 'quote-requests',
   labels: { singular: 'Quote request', plural: 'Quote requests' },
-  admin: { useAsTitle: 'name', defaultColumns: ['name', 'product', 'topic', 'email', 'createdAt', 'handled'], group: 'Quote requests' },
+  admin: { useAsTitle: 'name', defaultColumns: ['name', 'product', 'topic', 'email', 'createdAt', 'handled'], group: 'Quote requests', hidden: hiddenFromEditors },
   defaultSort: '-createdAt',
-  access: { read: loggedIn, create: loggedIn, update: loggedIn, delete: loggedIn },
+  access: adminsOnly,
   fields: [
     { name: 'handled', type: 'checkbox', defaultValue: false, admin: { position: 'sidebar' } },
     ro('name'),
