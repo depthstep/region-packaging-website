@@ -67,7 +67,7 @@ Every push to `main` builds the site on GitHub Actions and uploads it to the ser
 - The site runs as the systemd service `rp` on `127.0.0.1:3000` (`journalctl -u rp` for its logs). Caddy (`/etc/caddy/Caddyfile`) handles the domain and renews the free HTTPS certificate on its own.
 - Only SSH keys can log in, and the firewall allows ports 22, 80 and 443. Security updates install automatically.
 
-GitHub settings: variables `DEPLOY_HOST`, `DEPLOY_USER`, `SITE_URL`, `SITE_NOINDEX`; secrets `DEPLOY_SSH_KEY`, `DEPLOY_KNOWN_HOSTS`. `SITE_NOINDEX=1` keeps search engines out and is read at build time, so delete it at launch and re-run the workflow.
+GitHub settings: variables `DEPLOY_HOST`, `DEPLOY_USER`, `SITE_URL`, `SITE_NOINDEX`; secrets `DEPLOY_SSH_KEY`, `DEPLOY_KNOWN_HOSTS`. `SITE_NOINDEX=1` keeps search engines out. It's read both at build time and by the running site, so at launch delete the GitHub variable and the line in `~/rp/shared/.env`, then re-run the workflow.
 
 After changing collections or fields in `payload/`, run `npx payload migrate:create <name>` (answer "create table" to its questions unless you really renamed something), then `npm run migrate`, and commit the new files in `payload/migrations/`. The database never changes on its own, locally or on the server: after pulling, run `npm run migrate`.
 
