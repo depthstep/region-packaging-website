@@ -1,4 +1,4 @@
-// Starts the site on shared hosting (Passenger). The build replaces this folder on every deploy,
+// Starts the site on the server (systemd service "rp"). The build replaces this folder on every deploy,
 // so settings live outside it, in ../shared/.env, next to the database and uploads.
 const fs = require('fs')
 const path = require('path')
