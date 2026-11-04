@@ -16,9 +16,10 @@ permissions:
   pages: write
   id-token: write
 
+# Never cancelled part-way: a stopped deploy could leave the server with half an update.
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   NEXT_TELEMETRY_DISABLED: '1'
@@ -36,6 +37,38 @@ jobs:
       - run: npm run typecheck
       - name: Full production build
         run: npm run build
+        env:
+          STANDALONE: '1'
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+          SITE_NOINDEX: ${{ vars.SITE_NOINDEX }}
+
+      # The real site. The database, photos and settings stay in ~/rp/shared on the server.
+      - name: Deploy to the server
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.DEPLOY_HOST != ''
+        env:
+          HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+        run: |
+          cp -r public .next/standalone/
+          cp -r .next/static .next/standalone/.next/
+          cp scripts/passenger.cjs .next/standalone/
+          install -m 700 -d ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          rsync -az --delete --exclude tmp -e 'ssh -i ~/.ssh/deploy' .next/standalone/ "$DEPLOY_USER@$HOST:rp/app/"
+          ssh -i ~/.ssh/deploy "$DEPLOY_USER@$HOST" 'mkdir -p rp/app/tmp && touch rp/app/tmp/restart.txt'
+          domain="${SITE_URL#https://}"
+          for i in 1 2 3 4 5 6; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 --resolve "$domain:443:$HOST" -X POST -H "x-revalidate-secret: $REVALIDATE_SECRET" "$SITE_URL/api/revalidate" || true)
+            [ "$code" = 200 ] && break
+            sleep 10
+          done
+          echo "revalidate: $code"
+          [ "$code" = 200 ]
 
       - name: Static preview build
         if: github.event_name != 'pull_request'

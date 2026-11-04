@@ -6,7 +6,8 @@ import { pageTabs } from './pageFields'
 import { revalidateOnChange } from './hooks'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
-const uploadsDir = (name: string) => path.resolve(dirname, '..', 'uploads', name)
+// UPLOADS_DIR keeps uploads outside the app folder on the server, so deploys can't touch them.
+const uploadsDir = (name: string) => path.resolve(process.env.UPLOADS_DIR || path.resolve(dirname, '..', 'uploads'), name)
 
 // Two kinds of login. Admins do everything. Editors (the SEO team) manage all site content,
 // but cannot see customer enquiries or artwork, or manage other logins.

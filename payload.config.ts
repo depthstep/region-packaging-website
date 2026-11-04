@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { Artwork, BlogCategories, BlogTopics, Categories, Media, Pages, Posts, Products, QuoteRequests, Reviews, Users } from './payload/collections'
 import { AboutPage, ArtworkPage, BlogPage, HomePage, SiteSettings } from './payload/globals'
+import { migrations } from './payload/migrations'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const env = process.env
@@ -36,6 +37,8 @@ export default buildConfig({
     client: { url: env.DATABASE_URI || 'file:./data/payload.db' },
     migrationDir: path.resolve(dirname, 'payload', 'migrations'),
     push: false,
+    // The server has no build tools, so pending migrations run when the app starts.
+    prodMigrations: migrations,
   }),
   email: smtpReady
     ? nodemailerAdapter({

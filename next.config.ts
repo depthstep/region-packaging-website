@@ -11,6 +11,8 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const staticExport = process.env.STATIC_EXPORT === '1'
 
 const nextConfig: NextConfig = {
+  // STANDALONE=1 builds the self-contained copy that GitHub Actions uploads to the server.
+  ...(process.env.STANDALONE === '1' && { output: 'standalone' }),
   ...(staticExport && {
     output: 'export',
     basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
