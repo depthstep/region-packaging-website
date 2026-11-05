@@ -79,6 +79,7 @@ export interface Config {
     media: Media;
     users: User;
     'activity-log': ActivityLog;
+    'claude-log': ClaudeLog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -98,6 +99,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'activity-log': ActivityLogSelect<false> | ActivityLogSelect<true>;
+    'claude-log': ClaudeLogSelect<false> | ClaudeLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -867,7 +869,7 @@ export interface User {
   collection: 'users';
 }
 /**
- * Every change made in the admin. Open an entry to see exactly which characters changed. Entries cannot be edited or deleted.
+ * Every change the team made in the admin. Open an entry to see exactly which characters changed. Entries cannot be edited or deleted.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "activity-log".
@@ -875,10 +877,38 @@ export interface User {
 export interface ActivityLog {
   id: number;
   user?: string | null;
-  action?: ('created' | 'updated' | 'deleted') | null;
+  action?: ('created' | 'updated' | 'deleted' | 'deployed') | null;
   section?: string | null;
   item?: string | null;
   recordId?: string | null;
+  link?: string | null;
+  summary?: string | null;
+  changes?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Everything Claude changed: edits made with its own login, and code updates it deployed. Team edits are in the Activity log.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "claude-log".
+ */
+export interface ClaudeLog {
+  id: number;
+  user?: string | null;
+  action?: ('created' | 'updated' | 'deleted' | 'deployed') | null;
+  section?: string | null;
+  item?: string | null;
+  recordId?: string | null;
+  link?: string | null;
   summary?: string | null;
   changes?:
     | {
@@ -963,6 +993,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'activity-log';
         value: number | ActivityLog;
+      } | null)
+    | ({
+        relationTo: 'claude-log';
+        value: number | ClaudeLog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1619,6 +1653,23 @@ export interface ActivityLogSelect<T extends boolean = true> {
   section?: T;
   item?: T;
   recordId?: T;
+  link?: T;
+  summary?: T;
+  changes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "claude-log_select".
+ */
+export interface ClaudeLogSelect<T extends boolean = true> {
+  user?: T;
+  action?: T;
+  section?: T;
+  item?: T;
+  recordId?: T;
+  link?: T;
   summary?: T;
   changes?: T;
   updatedAt?: T;

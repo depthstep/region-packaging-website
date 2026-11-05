@@ -6,7 +6,7 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { ActivityLog, withActivityLog, withGlobalActivityLog } from './payload/activityLog'
+import { ActivityLog, ClaudeLog, withActivityLog, withGlobalActivityLog } from './payload/activityLog'
 import { Artwork, BlogCategories, BlogTopics, Categories, Media, Pages, Posts, Products, QuoteRequests, Reviews, Users } from './payload/collections'
 import { AboutPage, ArtworkPage, BlogPage, HomePage, SiteSettings } from './payload/globals'
 import { migrations } from './payload/migrations'
@@ -36,7 +36,7 @@ export default buildConfig({
     Users,
   ]
     .map(withActivityLog)
-    .concat(ActivityLog),
+    .concat(ActivityLog, ClaudeLog),
   globals: [HomePage, AboutPage, ArtworkPage, BlogPage, SiteSettings].map((g) => withGlobalActivityLog({ ...g, versions: { max: 50 } })),
   // Rich text (blog articles): headings, lists, links, quotes and images from Media.
   editor: lexicalEditor(),

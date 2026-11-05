@@ -11,4 +11,7 @@ for _ in $(seq 1 30); do
   sleep 2
 done
 echo "revalidate: $code"
+# Lists this update in the admin. A problem here is reported but doesn't fail the deploy.
+curl -s -o /dev/null -w 'deploy log: %{http_code}
+' --max-time 90 -X POST -H "x-revalidate-secret: $secret" -H 'Content-Type: application/json' --data @"$HOME/rp/app/deploy-note.json" http://127.0.0.1:3000/api/deploy-log || true
 [ "$code" = 200 ]

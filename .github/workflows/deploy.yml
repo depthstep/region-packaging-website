@@ -29,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # The deploy note lists the commits in each update.
       - uses: actions/setup-node@v7
         with:
           node-version: 22
@@ -48,12 +50,15 @@ jobs:
         env:
           HOST: ${{ vars.DEPLOY_HOST }}
           DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          BEFORE: ${{ github.event.before }}
+          REPO: ${{ github.repository }}
           SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
         run: |
           cp -r public .next/standalone/
           cp -r .next/static .next/standalone/.next/
           cp scripts/start.cjs scripts/after-deploy.sh .next/standalone/
+          node scripts/deploy-note.mjs "$BEFORE" "$GITHUB_SHA" > .next/standalone/deploy-note.json
           install -m 700 -d ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
           echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts

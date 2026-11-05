@@ -16,6 +16,9 @@ export type Change = { field: string; segments: Segment[] }
 type Doc = Record<string, unknown>
 type Ctx = { req: PayloadRequest; out: Change[] }
 
+/** Claude's own login. Everything it does goes in a separate log from the team's. */
+export const CLAUDE_LOGIN = 'claude@regionpackaging.com'
+
 const isAdmin = ({ req }: { req: { user?: unknown } }) => (req.user as { role?: string } | null | undefined)?.role === 'admin'
 
 export const ActivityLog: CollectionConfig = {
@@ -26,7 +29,7 @@ export const ActivityLog: CollectionConfig = {
     defaultColumns: ['createdAt', 'user', 'action', 'section', 'item', 'summary'],
     group: 'Settings',
     hidden: ({ user }) => (user as { role?: string } | null | undefined)?.role !== 'admin',
-    description: 'Every change made in the admin. Open an entry to see exactly which characters changed. Entries cannot be edited or deleted.',
+    description: 'Every change the team made in the admin. Open an entry to see exactly which characters changed. Entries cannot be edited or deleted.',
   },
   defaultSort: '-createdAt',
   access: { read: isAdmin, create: () => false, update: () => false, delete: () => false },
@@ -41,11 +44,13 @@ export const ActivityLog: CollectionConfig = {
         { label: 'Created', value: 'created' },
         { label: 'Updated', value: 'updated' },
         { label: 'Deleted', value: 'deleted' },
+        { label: 'Code deployed', value: 'deployed' },
       ],
     },
     { name: 'section', type: 'text', index: true, admin: { position: 'sidebar' } },
     { name: 'item', type: 'text', admin: { position: 'sidebar' } },
     { name: 'recordId', label: 'Record ID', type: 'text', admin: { position: 'sidebar' } },
+    { name: 'link', label: 'Full code changes (GitHub)', type: 'text', admin: { position: 'sidebar' } },
     { name: 'summary', type: 'text' },
     {
       name: 'changes',
@@ -53,6 +58,17 @@ export const ActivityLog: CollectionConfig = {
       admin: { components: { Field: '/components/admin/ActivityChanges#ActivityChanges' } },
     },
   ],
+}
+
+/** The same log for changes made by Claude: its admin login and the code updates it deploys. */
+export const ClaudeLog: CollectionConfig = {
+  ...ActivityLog,
+  slug: 'claude-log',
+  labels: { singular: 'Claude change', plural: "Claude's changes" },
+  admin: {
+    ...ActivityLog.admin,
+    description: 'Everything Claude changed: edits made with its own login, and code updates it deployed. Team edits are in the Activity log.',
+  },
 }
 
 // Bookkeeping that isn't content: login counters, password internals, and values worked out on read.
@@ -277,7 +293,7 @@ function summarise(action: string, changes: Change[]) {
 async function record(req: PayloadRequest, entry: { action: 'created' | 'updated' | 'deleted'; section: string; item: string; recordId?: unknown }, changes: Change[]) {
   if (entry.action === 'updated' && !changes.length) return
   await req.payload.create({
-    collection: 'activity-log' as 'users',
+    collection: ((req.user as { email?: string }).email === CLAUDE_LOGIN ? 'claude-log' : 'activity-log') as 'users',
     req,
     overrideAccess: true,
     data: {

@@ -5,6 +5,7 @@ import * as migration_20261102_114316_blog_artwork_subproducts from './20261102_
 import * as migration_20261104_095009_seo_login_simple_pages from './20261104_095009_seo_login_simple_pages';
 import * as migration_20261105_173053_activity_log_versions from './20261105_173053_activity_log_versions';
 import * as migration_20261105_173500_starting_versions from './20261105_173500_starting_versions';
+import * as migration_20261105_185355_claude_log from './20261105_185355_claude_log';
 
 export const migrations = [
   {
@@ -35,11 +36,16 @@ export const migrations = [
   {
     up: migration_20261105_173053_activity_log_versions.up,
     down: migration_20261105_173053_activity_log_versions.down,
-    name: '20261105_173053_activity_log_versions'
+    name: '20261105_173053_activity_log_versions',
   },
   {
     up: migration_20261105_173500_starting_versions.up,
     down: migration_20261105_173500_starting_versions.down,
     name: '20261105_173500_starting_versions',
+  },
+  {
+    up: migration_20261105_185355_claude_log.up,
+    down: migration_20261105_185355_claude_log.down,
+    name: '20261105_185355_claude_log'
   },
 ];
