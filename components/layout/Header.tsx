@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import { withBase } from '@/lib/asset'
 import type { Category, SiteData } from '@/lib/types'
-import { productsIn } from '@/lib/data'
-import { ArrowRight, Chevron } from '@/components/ui/glyphs'
+import { Chevron } from '@/components/ui/glyphs'
 import { Icon } from '@/components/ui/Media'
 import { ButtonLink } from '@/components/ui/Button'
 import { MobileMenu, type MenuGroup } from './MobileMenu'
 
 const telHref = (phone?: string) => `tel:${(phone || '').replace(/[^\d+]/g, '')}`
 
+/** The dropdown lists the categories. Each category's page links on to its sub-products. */
 function MegaMenu({ label, cats, data }: { label: string; cats: Category[]; data: SiteData }) {
   const promo = data.settings.menuPromo
   return (
@@ -18,27 +18,18 @@ function MegaMenu({ label, cats, data }: { label: string; cats: Category[]; data
       </button>
       <div className="mega">
         <div className="container mega__inner">
-          <div className={`mega__columns ${cats.length > 3 ? 'mega__columns--dense' : ''}`} style={{ ['--cols' as string]: cats.length }}>
-            {cats.map((c) => (
-              <div key={c.id} className="mega__col">
-                <p className="mega__heading">
-                  <Link href={`/${c.slug}`}>{c.menuLabel || c.title.replace(/^Custom /, '')}</Link>
-                </p>
-                <ul>
-                  {productsIn(data, c.id).map((p) => (
-                    <li key={p.id}>
-                      <Link href={`/${c.slug}/${p.slug}`} className="mega__link">
-                        <Icon img={p.menuIcon ?? c.menuIcon} size={cats.length > 3 ? 32 : 40} label={p.title} />
-                        <span>{p.title}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-                <Link href={`/${c.slug}`} className="mega__explore">
-                  Explore {c.title.replace(/^Custom /, '').toLowerCase()} <ArrowRight />
-                </Link>
-              </div>
-            ))}
+          <div className="mega__list">
+            <p className="mega__heading">{label}</p>
+            <ul>
+              {cats.map((c) => (
+                <li key={c.id}>
+                  <Link href={`/${c.slug}`} className="mega__link">
+                    <Icon img={c.menuIcon} size={40} label={c.title} />
+                    <span>{c.title}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
           {promo.title && (
             <div className="mega__promo">
@@ -66,11 +57,7 @@ export function Header({ data }: { data: SiteData }) {
     { label: 'Boxes By Industry', cats: industries },
   ].map((g) => ({
     label: g.label,
-    columns: g.cats.map((c) => ({
-      heading: c.menuLabel || c.title.replace(/^Custom /, ''),
-      href: `/${c.slug}`,
-      items: productsIn(data, c.id).map((p) => ({ title: p.title, href: `/${c.slug}/${p.slug}`, icon: p.menuIcon ?? c.menuIcon })),
-    })),
+    items: g.cats.map((c) => ({ title: c.title, href: `/${c.slug}`, icon: c.menuIcon })),
   }))
   return (
     <header className="site-header">

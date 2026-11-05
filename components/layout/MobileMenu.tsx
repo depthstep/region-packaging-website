@@ -11,7 +11,7 @@ import { Icon } from '@/components/ui/Media'
 
 export type MenuGroup = {
   label: string
-  columns: { heading: string; href: string; items: { title: string; href: string; icon?: Img }[] }[]
+  items: { title: string; href: string; icon?: Img }[]
 }
 
 type Props = { groups: MenuGroup[]; resources: NavLink[]; phone?: string; phoneHref: string }
@@ -69,23 +69,16 @@ export function MobileMenu({ groups, resources, phone, phoneHref }: Props) {
               <summary>
                 {g.label} <Chevron />
               </summary>
-              {g.columns.map((c) => (
-                <div key={c.href} className="drawer__col">
-                  <p className="drawer__heading">
-                    <Link href={c.href}>{c.heading}</Link>
-                  </p>
-                  <ul>
-                    {c.items.map((item) => (
-                      <li key={item.href}>
-                        <Link href={item.href} className="drawer__link">
-                          <Icon img={item.icon} size={36} label={item.title} />
-                          <span>{item.title}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+              <ul className="drawer__list">
+                {g.items.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href} className="drawer__link">
+                      <Icon img={item.icon} size={36} label={item.title} />
+                      <span>{item.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </details>
           ))}
           {resources.length > 0 && (

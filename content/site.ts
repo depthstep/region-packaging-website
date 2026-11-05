@@ -35,8 +35,6 @@ export const settings: SiteSettings = {
     { label: 'FAQs', href: '/faqs' },
     { label: 'How To Order', href: '/how-to-order' },
     { label: 'Paper Weight Chart', href: '/paper-weight-chart' },
-    { label: 'About Us', href: '/about' },
-    { label: 'Contact Us', href: '/contact' },
   ],
   stats: [
     { value: '10+', label: 'Years manufacturing' },
