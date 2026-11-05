@@ -394,6 +394,7 @@ export interface Category {
   visible?: boolean | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -659,6 +660,7 @@ export interface Product {
   status?: ('live' | 'hidden') | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * Text pages. The address is your-domain/slug.
@@ -693,6 +695,7 @@ export interface Page {
   slug: string;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -753,6 +756,7 @@ export interface Post {
   slug: string;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * Each category is a section on the blog page.
@@ -877,7 +881,7 @@ export interface User {
 export interface ActivityLog {
   id: number;
   user?: string | null;
-  action?: ('created' | 'updated' | 'deleted' | 'deployed') | null;
+  action?: ('created' | 'updated' | 'deleted' | 'unpublished' | 'deployed') | null;
   section?: string | null;
   item?: string | null;
   recordId?: string | null;
@@ -904,7 +908,7 @@ export interface ActivityLog {
 export interface ClaudeLog {
   id: number;
   user?: string | null;
-  action?: ('created' | 'updated' | 'deleted' | 'deployed') | null;
+  action?: ('created' | 'updated' | 'deleted' | 'unpublished' | 'deployed') | null;
   section?: string | null;
   item?: string | null;
   recordId?: string | null;
@@ -1262,6 +1266,7 @@ export interface CategoriesSelect<T extends boolean = true> {
   visible?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1484,6 +1489,7 @@ export interface ProductsSelect<T extends boolean = true> {
   status?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1498,6 +1504,7 @@ export interface PagesSelect<T extends boolean = true> {
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1533,6 +1540,7 @@ export interface PostsSelect<T extends boolean = true> {
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1915,6 +1923,7 @@ export interface HomePage {
   };
   seoTitle?: string | null;
   seoDescription?: string | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1993,6 +2002,7 @@ export interface AboutPage {
   };
   seoTitle?: string | null;
   seoDescription?: string | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2054,6 +2064,7 @@ export interface ArtworkPage {
   };
   seoTitle?: string | null;
   seoDescription?: string | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2097,6 +2108,7 @@ export interface BlogPage {
   };
   seoTitle?: string | null;
   seoDescription?: string | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2491,6 +2503,7 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2711,6 +2724,7 @@ export interface HomePageSelect<T extends boolean = true> {
       };
   seoTitle?: T;
   seoDescription?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -2789,6 +2803,7 @@ export interface AboutPageSelect<T extends boolean = true> {
       };
   seoTitle?: T;
   seoDescription?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -2855,6 +2870,7 @@ export interface ArtworkPageSelect<T extends boolean = true> {
       };
   seoTitle?: T;
   seoDescription?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -2902,6 +2918,7 @@ export interface BlogPageSelect<T extends boolean = true> {
       };
   seoTitle?: T;
   seoDescription?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -3335,6 +3352,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

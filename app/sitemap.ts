@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { noIndex } from '@/lib/asset'
-import { getSiteData, hrefFor } from '@/lib/data'
+import { getPublishedData, hrefFor } from '@/lib/data'
 
 export const dynamic = 'force-static'
 export const revalidate = 3600
@@ -11,7 +11,7 @@ const STATIC_PATHS = ['/', '/about', '/contact', '/quote', '/products', '/blog',
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (noIndex) return []
   const site = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/$/, '')
-  const data = await getSiteData()
+  const data = await getPublishedData()
   const paths = [
     ...STATIC_PATHS,
     ...data.pages.map((p) => `/${p.slug}`),

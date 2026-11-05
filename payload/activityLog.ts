@@ -44,6 +44,7 @@ export const ActivityLog: CollectionConfig = {
         { label: 'Created', value: 'created' },
         { label: 'Updated', value: 'updated' },
         { label: 'Deleted', value: 'deleted' },
+        { label: 'Unpublished', value: 'unpublished' },
         { label: 'Code deployed', value: 'deployed' },
       ],
     },
@@ -73,7 +74,7 @@ export const ClaudeLog: CollectionConfig = {
 
 // Bookkeeping that isn't content: login counters, password internals, and values worked out on read.
 const SKIP = new Set([
-  'id', 'createdAt', 'updatedAt', 'url', 'thumbnailURL', 'sizes', 'hash', 'salt', 'sessions',
+  'id', '_status', 'createdAt', 'updatedAt', 'url', 'thumbnailURL', 'sizes', 'hash', 'salt', 'sessions',
   'loginAttempts', 'lockUntil', 'resetPasswordToken', 'resetPasswordExpiration', '_verified', '_verificationToken',
 ])
 
@@ -286,12 +287,14 @@ function summarise(action: string, changes: Change[]) {
   const count = (type: string) => changes.reduce((n, c) => n + c.segments.reduce((m, [t, v]) => m + (t === type ? v.length : 0), 0), 0)
   const names = [...new Set(changes.map((c) => c.field.split(' › ').pop()!))]
   const list = names.slice(0, 4).join(', ') + (names.length > 4 ? ` and ${names.length - 4} more` : '')
+  if (action === 'unpublished') return 'Taken off the website (now a draft)'
   if (action !== 'updated') return `${action === 'created' ? 'Created' : 'Deleted'} (${changes.length} fields)`
   return `${changes.length} ${changes.length === 1 ? 'field' : 'fields'} changed: ${list} (+${count('+')} / -${count('-')} characters)`
 }
 
-async function record(req: PayloadRequest, entry: { action: 'created' | 'updated' | 'deleted'; section: string; item: string; recordId?: unknown }, changes: Change[]) {
+async function record(req: PayloadRequest, entry: { action: 'created' | 'updated' | 'deleted' | 'unpublished'; section: string; item: string; recordId?: unknown }, changes: Change[]) {
   if (entry.action === 'updated' && !changes.length) return
+  if (entry.action === 'unpublished') changes = [{ field: 'Status', segments: [['-', 'Published'], ['+', 'Draft (no longer on the website)']] }, ...changes]
   await req.payload.create({
     collection: ((req.user as { email?: string }).email === CLAUDE_LOGIN ? 'claude-log' : 'activity-log') as 'users',
     req,
@@ -324,31 +327,52 @@ const guarded = async (task: () => Promise<void>) => {
   }
 }
 
+/**
+ * Drafts autosave constantly but only Publish changes what the public sees, so for content with
+ * drafts the log compares the published record before and after, read straight from the database.
+ * If it didn't change this was a draft save: nothing is logged and the site's pages aren't refreshed.
+ */
+const published = (doc: Doc | null | undefined) => doc?._status === 'published'
+const beforeKey = (slug: string, id?: unknown) => `logBefore:${slug}:${id ?? ''}`
+
 export const withActivityLog = (c: CollectionConfig): CollectionConfig => ({
   ...c,
   hooks: {
     ...c.hooks,
+    beforeChange: [
+      ...(c.hooks?.beforeChange ?? []),
+      async ({ collection, data, operation, originalDoc, req }) => {
+        if (collection.versions?.drafts && operation === 'update' && originalDoc?.id) {
+          req.context[beforeKey(collection.slug, originalDoc.id)] = await req.payload.db.findOne({ collection: collection.slug, where: { id: { equals: originalDoc.id } }, req })
+        }
+        return data
+      },
+    ],
     afterChange: [
-      ...(c.hooks?.afterChange ?? []),
       async ({ collection, doc, previousDoc, operation, req, data }) => {
-        if (!req.user) return doc
+        const drafts = !!collection.versions?.drafts
+        const before: Doc = drafts ? ((req.context[beforeKey(collection.slug, doc.id)] as Doc) ?? previousDoc) : previousDoc
+        const after: Doc = drafts ? (((await req.payload.db.findOne({ collection: collection.slug, where: { id: { equals: doc.id } }, req })) as Doc) ?? doc) : doc
+        const draftOnly = drafts && (operation === 'create' ? !published(after) : before?.updatedAt === after.updatedAt && before?._status === after._status)
+        req.context.draftOnly = draftOnly
+        if (draftOnly || !req.user) return doc
         await guarded(async () => {
           const ctx: Ctx = { req, out: [] }
-          await walk(collection.fields, operation === 'create' ? {} : previousDoc, doc, [], ctx)
+          const isNew = operation === 'create' || (drafts && !published(before))
+          const action = isNew ? 'created' : drafts && !published(after) ? 'unpublished' : 'updated'
+          if (action !== 'unpublished') await walk(collection.fields, isNew ? {} : before, after, [], ctx)
           if (obj(req.data).password || obj(data).password) ctx.out.push({ field: 'Password', segments: [['+', 'Password changed (the password itself is never recorded)']] })
-          await record(
-            req,
-            { action: operation === 'create' ? 'created' : 'updated', section: sectionName(collection.labels, collection.slug), item: itemName(doc, collection.admin?.useAsTitle, `#${doc.id}`), recordId: doc.id },
-            ctx.out,
-          )
+          await record(req, { action, section: sectionName(collection.labels, collection.slug), item: itemName(after, collection.admin?.useAsTitle, `#${doc.id}`), recordId: doc.id }, ctx.out)
         })
         return doc
       },
+      ...(c.hooks?.afterChange ?? []),
     ],
     afterDelete: [
       ...(c.hooks?.afterDelete ?? []),
       async ({ collection, doc, req }) => {
-        if (!req.user) return doc
+        // A draft that never went live was never on the site, so removing it isn't a site change.
+        if (!req.user || (collection.versions?.drafts && !published(doc))) return doc
         await guarded(async () => {
           const ctx: Ctx = { req, out: [] }
           await walk(collection.fields, doc, {}, [], ctx)
@@ -364,20 +388,31 @@ export const withGlobalActivityLog = (g: GlobalConfig): GlobalConfig => ({
   ...g,
   hooks: {
     ...g.hooks,
+    beforeChange: [
+      ...(g.hooks?.beforeChange ?? []),
+      async ({ data, global, req }) => {
+        if (global.versions?.drafts) req.context[beforeKey(global.slug)] = await req.payload.db.findGlobal({ slug: global.slug, req })
+        return data
+      },
+    ],
     afterChange: [
-      ...(g.hooks?.afterChange ?? []),
       async ({ global, doc, previousDoc, req }) => {
-        if (!req.user) return doc
+        const drafts = !!global.versions?.drafts
+        const before: Doc = drafts ? ((req.context[beforeKey(global.slug)] as Doc) ?? previousDoc) : previousDoc
+        // Restoring a version hands over the version record, so the saved page is read back.
+        const after: Doc = drafts ? ((await req.payload.db.findGlobal({ slug: global.slug, req })) as Doc) : doc
+        const draftOnly = drafts && before?.updatedAt === after.updatedAt
+        req.context.draftOnly = draftOnly
+        if (draftOnly || !req.user) return doc
         await guarded(async () => {
           const ctx: Ctx = { req, out: [] }
-          // Restoring a version hands over the version record, with the page inside it.
-          const current = req.context.isRestoringVersion && doc.version ? doc.version : doc
-          await walk(global.fields, previousDoc, current, [], ctx)
+          await walk(global.fields, before, after, [], ctx)
           const name = typeof global.label === 'string' ? global.label : words(global.slug)
           await record(req, { action: 'updated', section: name, item: name }, ctx.out)
         })
         return doc
       },
+      ...(g.hooks?.afterChange ?? []),
     ],
   },
 })

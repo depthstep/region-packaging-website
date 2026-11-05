@@ -68,7 +68,7 @@ jobs:
       - name: Static preview build
         if: github.event_name != 'pull_request'
         run: |
-          rm -rf app/api "app/(payload)" .next
+          rm -rf app/api "app/(payload)" "app/(site)/preview" .next
           npx next build
         env:
           STATIC_EXPORT: '1'

@@ -106,6 +106,13 @@ export const formOptionFields: Field[] = [
 ]
 
 /** Generates a URL slug from the title when the editor leaves it empty. */
+const slugify = (text: unknown) =>
+  String(text ?? '')
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
 export const slugField = (): Field => ({
   name: 'slug',
   type: 'text',
@@ -115,13 +122,16 @@ export const slugField = (): Field => ({
   admin: { position: 'sidebar', description: 'Part of the page URL. Empty = made from the title.' },
   hooks: {
     beforeValidate: [
-      ({ value, data }) =>
-        (value || data?.title || '')
-          .toString()
-          .toLowerCase()
-          .replace(/&/g, 'and')
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, ''),
+      async ({ value, data, originalDoc, collection, req }) => {
+        const title = data?.title ?? originalDoc?.title
+        // Drafts autosave while someone types, so a page that was never published keeps following
+        // its title. Once published the address stays put, unless someone changes it themselves.
+        if (collection?.versions?.drafts && originalDoc?.id && value && value === slugify(originalDoc.title)) {
+          const live = await req.payload.db.findOne<{ id: number; _status?: string }>({ collection: collection.slug, where: { id: { equals: originalDoc.id } }, req })
+          if (live?._status !== 'published') return slugify(title) || undefined
+        }
+        return slugify(value || title) || undefined
+      },
     ],
   },
 })

@@ -110,25 +110,52 @@ function homeFromCms(doc: RawHome): HomePage {
   return mergeOnto(emptyHome, { ...doc, industries: { ...doc.industries, ...(tabs ? { tabs } : {}) }, blog: { ...blog, postIds: posts ?? [] } })
 }
 
+/** The one draft being previewed, if this is a logged-in editor's preview request. */
+async function previewTarget() {
+  const { cookies, draftMode } = await import('next/headers')
+  if (!(await draftMode()).isEnabled) return null
+  const { parsePreview, PREVIEW_COOKIE } = await import('./preview')
+  return parsePreview((await cookies()).get(PREVIEW_COOKIE)?.value)
+}
+
 /** Everything the site renders, read in one go through Payload's Local API (the catalogue is small). */
-export const getSiteData = cache(async (): Promise<SiteData> => {
+async function loadSiteData(preview: { type: string; id?: string } | null): Promise<SiteData> {
   if (!cmsEnabled) return seed
   const [{ getPayload }, { default: config }, schema] = await Promise.all([import('payload'), import('@payload-config'), import('@/payload/schema')])
   const payload = await getPayload({ config })
   const all = { depth: 1, pagination: false } as const
-  const [settings, home, about, artwork, blog, categories, products, reviews, posts, blogCategories, blogTopics, pages] = await Promise.all([
-    payload.findGlobal({ slug: 'site-settings', depth: 1 }),
-    payload.findGlobal({ slug: 'home-page', depth: 1 }),
-    payload.findGlobal({ slug: 'about-page', depth: 1 }),
-    payload.findGlobal({ slug: 'artwork-page', depth: 1 }),
-    payload.findGlobal({ slug: 'blog-page', depth: 1 }),
-    payload.find({ collection: 'categories', where: { visible: { not_equals: false } }, sort: 'order', ...all }),
-    payload.find({ collection: 'products', where: { status: { not_equals: 'hidden' } }, sort: 'order', ...all }),
+  const live = { _status: { equals: 'published' } } as const
+  // In a preview only the page being edited shows its draft. Everything else stays as published.
+  const readGlobal = <S extends 'site-settings' | 'home-page' | 'about-page' | 'artwork-page' | 'blog-page'>(slug: S) =>
+    payload.findGlobal({ slug, depth: 1, draft: preview?.type === slug })
+  const [settings, home, about, artwork, blog, liveCategories, liveProducts, reviews, livePosts, blogCategories, blogTopics, livePages] = await Promise.all([
+    readGlobal('site-settings'),
+    readGlobal('home-page'),
+    readGlobal('about-page'),
+    readGlobal('artwork-page'),
+    readGlobal('blog-page'),
+    payload.find({ collection: 'categories', where: { and: [live, { visible: { not_equals: false } }] }, sort: 'order', ...all }),
+    payload.find({ collection: 'products', where: { and: [live, { status: { not_equals: 'hidden' } }] }, sort: 'order', ...all }),
     payload.find({ collection: 'reviews', sort: 'order', ...all }),
-    payload.find({ collection: 'posts', sort: '-publishedAt', ...all }),
+    payload.find({ collection: 'posts', where: live, sort: '-publishedAt', ...all }),
     payload.find({ collection: 'blog-categories', sort: 'order', ...all }),
     payload.find({ collection: 'blog-topics', sort: 'order', ...all }),
-    payload.find({ collection: 'pages', sort: 'title', ...all }),
+    payload.find({ collection: 'pages', where: live, sort: 'title', ...all }),
+  ])
+  const withDraft = async <D extends { id: unknown }>(collection: 'categories' | 'products' | 'posts' | 'pages', list: { docs: D[] }) => {
+    if (preview?.type !== collection || !preview.id) return list
+    const found = await payload.findByID({ collection, id: preview.id, draft: true, depth: 1, disableErrors: true })
+    if (!found) return list
+    // A new page may have no title or address yet, and the templates need both.
+    const draft = { ...found, title: found.title || 'Untitled', slug: found.slug || 'preview' } as unknown as D
+    const at = list.docs.findIndex((d) => String(d.id) === String(preview.id))
+    return { docs: at < 0 ? [...list.docs, draft] : list.docs.map((d, i) => (i === at ? draft : d)) }
+  }
+  const [categories, products, posts, pages] = await Promise.all([
+    withDraft('categories', liveCategories),
+    withDraft('products', liveProducts),
+    withDraft('posts', livePosts),
+    withDraft('pages', livePages),
   ])
   const doc =
     (collection: string, fields: Parameters<typeof fromFields>[0]) =>
@@ -161,7 +188,13 @@ export const getSiteData = cache(async (): Promise<SiteData> => {
       }
     })(),
   }
-})
+}
+
+/** What a page shows: published content, or with one draft swapped in during an editor's preview. */
+export const getSiteData = cache(async (): Promise<SiteData> => loadSiteData(cmsEnabled ? await previewTarget() : null))
+
+/** Published content only, for build steps that can't ask about the request (generateStaticParams, sitemap). */
+export const getPublishedData = cache(async (): Promise<SiteData> => loadSiteData(null))
 
 /** Page title + description from Site settings > Other pages. */
 export function introMetadata(intro: PageIntroText | undefined, fallback: string) {

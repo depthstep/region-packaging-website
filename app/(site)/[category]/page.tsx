@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { findCategory, getSiteData, productsIn } from '@/lib/data'
+import { findCategory, getPublishedData, getSiteData, productsIn } from '@/lib/data'
 import { RichText } from '@/components/blog/RichText'
 import { PageIntro } from '@/components/layout/PageIntro'
 import { ProductTemplate } from '@/components/product/ProductTemplate'
@@ -10,7 +10,7 @@ export const revalidate = 3600
 type Params = { params: Promise<{ category: string }> }
 
 export async function generateStaticParams() {
-  const { categories, pages } = await getSiteData()
+  const { categories, pages } = await getPublishedData()
   return [...categories, ...pages].map((c) => ({ category: c.slug }))
 }
 

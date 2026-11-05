@@ -11,16 +11,17 @@ function revalidateSite() {
   }
 }
 
-const afterChange: CollectionAfterChangeHook = ({ doc }) => {
-  revalidateSite()
+// A draft doesn't change the public site, so autosaves leave the cached pages alone.
+const afterChange: CollectionAfterChangeHook = ({ doc, req }) => {
+  if (!req.context.draftOnly) revalidateSite()
   return doc
 }
 const afterDelete: CollectionAfterDeleteHook = ({ doc }) => {
   revalidateSite()
   return doc
 }
-const afterGlobalChange: GlobalAfterChangeHook = ({ doc }) => {
-  revalidateSite()
+const afterGlobalChange: GlobalAfterChangeHook = ({ doc, req }) => {
+  if (!req.context.draftOnly) revalidateSite()
   return doc
 }
 

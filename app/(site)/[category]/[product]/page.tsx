@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { findCategory, findProduct, getSiteData, productsIn } from '@/lib/data'
+import { findCategory, findProduct, getPublishedData, getSiteData, productsIn } from '@/lib/data'
 import { ProductTemplate } from '@/components/product/ProductTemplate'
 import { SubProductTemplate } from '@/components/product/SubProductTemplate'
 
@@ -9,7 +9,7 @@ export const revalidate = 3600
 type Params = { params: Promise<{ category: string; product: string }> }
 
 export async function generateStaticParams() {
-  const data = await getSiteData()
+  const data = await getPublishedData()
   return data.categories.flatMap((c) => productsIn(data, c.id).map((p) => ({ category: c.slug, product: p.slug })))
 }
 

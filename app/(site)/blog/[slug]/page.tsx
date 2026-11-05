@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getSiteData } from '@/lib/data'
+import { getPublishedData, getSiteData } from '@/lib/data'
 import { withBase } from '@/lib/asset'
 import type { BlogPost } from '@/lib/types'
 import { telHref } from '@/components/layout/Header'
@@ -18,7 +18,7 @@ export const revalidate = 3600
 type Params = { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
-  const { posts } = await getSiteData()
+  const { posts } = await getPublishedData()
   return posts.map((p) => ({ slug: p.slug }))
 }
 

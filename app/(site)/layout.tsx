@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import { Archivo } from 'next/font/google'
 import { Footer } from '@/components/layout/Footer'
 import { Header } from '@/components/layout/Header'
+import { draftMode } from 'next/headers'
+import { PreviewGuard } from '@/components/admin/PreviewGuard'
 import { noIndex } from '@/lib/asset'
-import { getSiteData } from '@/lib/data'
+import { cmsEnabled, getSiteData } from '@/lib/data'
 // The website and the Payload admin (app/(payload)) are separate root layouts, so these
 // styles never reach the admin.
 import '../styles/tokens.css'
@@ -29,6 +31,7 @@ export const metadata: Metadata = {
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const data = await getSiteData()
+  const previewing = cmsEnabled && (await draftMode()).isEnabled
   return (
     // data-scroll-behavior: Next turns smooth scrolling off while changing page, so new pages open at the top instantly.
     <html lang="en" className={archivo.variable} data-scroll-behavior="smooth">
@@ -36,6 +39,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         <Header data={data} />
         <main>{children}</main>
         <Footer settings={data.settings} />
+        {previewing && <PreviewGuard />}
       </body>
     </html>
   )

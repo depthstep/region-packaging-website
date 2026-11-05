@@ -6,6 +6,9 @@ import * as migration_20261104_095009_seo_login_simple_pages from './20261104_09
 import * as migration_20261105_173053_activity_log_versions from './20261105_173053_activity_log_versions';
 import * as migration_20261105_173500_starting_versions from './20261105_173500_starting_versions';
 import * as migration_20261105_185355_claude_log from './20261105_185355_claude_log';
+import * as migration_20261105_193203_drafts_preview from './20261105_193203_drafts_preview';
+import * as migration_20261106_120000_mark_published from './20261106_120000_mark_published';
+
 
 export const migrations = [
   {
@@ -46,6 +49,16 @@ export const migrations = [
   {
     up: migration_20261105_185355_claude_log.up,
     down: migration_20261105_185355_claude_log.down,
-    name: '20261105_185355_claude_log'
+    name: '20261105_185355_claude_log',
+  },
+  {
+    up: migration_20261105_193203_drafts_preview.up,
+    down: migration_20261105_193203_drafts_preview.down,
+    name: '20261105_193203_drafts_preview',
+  },
+  {
+    up: migration_20261106_120000_mark_published.up,
+    down: migration_20261106_120000_mark_published.down,
+    name: '20261106_120000_mark_published'
   },
 ];

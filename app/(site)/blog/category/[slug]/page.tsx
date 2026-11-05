@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getSiteData } from '@/lib/data'
+import { getPublishedData, getSiteData } from '@/lib/data'
 import { PostCard } from '@/components/blog/PostCard'
 import { CtaSection } from '@/components/sections/CtaSection'
 
@@ -9,7 +9,7 @@ export const revalidate = 3600
 type Params = { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
-  const { blogCategories } = await getSiteData()
+  const { blogCategories } = await getPublishedData()
   return blogCategories.map((c) => ({ slug: c.slug }))
 }
 

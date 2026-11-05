@@ -16,6 +16,11 @@ const env = process.env
 
 // Quote emails go out through any SMTP mailbox (e.g. Hostinger email). Without SMTP settings
 // Payload logs emails to the terminal instead of sending them.
+// Pages with a preview autosave a private draft as people type, and only Publish changes the public site.
+const previewCollections = [Categories, Products, Pages, Posts]
+const previewGlobals = [HomePage, AboutPage, ArtworkPage, BlogPage, SiteSettings]
+const drafts = { autosave: { interval: 800 }, validate: false }
+
 const smtpReady = !!(env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASS && env.QUOTE_FROM_EMAIL)
 
 export default buildConfig({
@@ -25,11 +30,29 @@ export default buildConfig({
     importMap: { baseDir: dirname },
     meta: { titleSuffix: ' | Region Packaging admin' },
     dateFormat: 'MMM d yyyy, h:mm:ss a',
+    // The real page beside the editor. See app/(site)/preview and app/api/preview.
+    livePreview: {
+      openByDefault: true,
+      collections: previewCollections.map((c) => c.slug),
+      globals: previewGlobals.map((g) => g.slug),
+      url: ({ collectionConfig, globalConfig, data }) => {
+        const type = collectionConfig?.slug ?? globalConfig?.slug
+        return `/api/preview?type=${type}&id=${data?.id ?? ''}`
+      },
+      breakpoints: [
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+        { label: 'Tablet', name: 'tablet', width: 820, height: 1100 },
+        { label: 'Phone', name: 'phone', width: 402, height: 860 },
+      ],
+    },
   },
   // Site content keeps its last 50 versions, with a Versions tab to compare and restore them.
   // Everything staff change, in any section, also goes in the Activity log.
   collections: [
-    ...[Categories, Products, Pages, Reviews, Posts, BlogCategories, BlogTopics].map((c) => ({ ...c, versions: { maxPerDoc: 50 } })),
+    ...[Categories, Products, Pages, Reviews, Posts, BlogCategories, BlogTopics].map((c) => ({
+      ...c,
+      versions: { maxPerDoc: 50, ...(previewCollections.includes(c) && { drafts }) },
+    })),
     QuoteRequests,
     Artwork,
     Media,
@@ -37,7 +60,7 @@ export default buildConfig({
   ]
     .map(withActivityLog)
     .concat(ActivityLog, ClaudeLog),
-  globals: [HomePage, AboutPage, ArtworkPage, BlogPage, SiteSettings].map((g) => withGlobalActivityLog({ ...g, versions: { max: 50 } })),
+  globals: previewGlobals.map((g) => withGlobalActivityLog({ ...g, versions: { max: 50, drafts } })),
   // Rich text (blog articles): headings, lists, links, quotes and images from Media.
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET || '',
