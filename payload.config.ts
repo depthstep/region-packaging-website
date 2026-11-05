@@ -36,8 +36,9 @@ export default buildConfig({
       collections: previewCollections.map((c) => c.slug),
       globals: previewGlobals.map((g) => g.slug),
       url: ({ collectionConfig, globalConfig, data }) => {
-        const type = collectionConfig?.slug ?? globalConfig?.slug
-        return `/api/preview?type=${type}&id=${data?.id ?? ''}`
+        // Page settings have no ID of their own. It has to stay the same, as a new address reloads the panel.
+        if (globalConfig) return `/api/preview?type=${globalConfig.slug}&id=`
+        return `/api/preview?type=${collectionConfig?.slug}&id=${data?.id ?? ''}`
       },
       breakpoints: [
         { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },

@@ -159,9 +159,6 @@ export interface Category {
   id: number;
   title: string;
   kind: 'product-type' | 'industry';
-  /**
-   * Empty = title.
-   */
   menuLabel?: string | null;
   cardText?: string | null;
   /**
@@ -174,6 +171,9 @@ export interface Category {
    */
   ratingText?: string | null;
   shortDescription?: string | null;
+  /**
+   * Type one, then press Enter to add the next.
+   */
   highlights?: string[] | null;
   gallery?: (number | Media)[] | null;
   /**
@@ -190,11 +190,17 @@ export interface Category {
     design?: string[] | null;
   };
   explore?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
   };
   overview?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -207,6 +213,9 @@ export interface Category {
     images?: (number | Media)[] | null;
   };
   benefits?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -226,6 +235,9 @@ export interface Category {
       | null;
   };
   specs?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -248,6 +260,9 @@ export interface Category {
     note?: string | null;
   };
   materials?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -263,6 +278,9 @@ export interface Category {
     note?: string | null;
   };
   printing?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -291,13 +309,22 @@ export interface Category {
       | null;
   };
   useCases?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
+    /**
+     * Type one, then press Enter to add the next.
+     */
     pills?: string[] | null;
     note?: string | null;
   };
   howToOrder?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -314,6 +341,9 @@ export interface Category {
     note?: string | null;
   };
   pricing?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -336,6 +366,9 @@ export interface Category {
     image?: (number | null) | Media;
   };
   whyUs?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -352,6 +385,9 @@ export interface Category {
     note?: string | null;
   };
   faqs?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -384,7 +420,7 @@ export interface Category {
   seoTitle?: string | null;
   seoDescription?: string | null;
   /**
-   * Part of the page URL. Empty = made from the title.
+   * The last part of the web address, such as custom-mailer-boxes. Leave it empty and it is made from the title.
    */
   slug: string;
   /**
@@ -440,6 +476,9 @@ export interface Product {
    */
   ratingText?: string | null;
   shortDescription?: string | null;
+  /**
+   * Type one, then press Enter to add the next.
+   */
   highlights?: string[] | null;
   gallery?: (number | Media)[] | null;
   /**
@@ -456,11 +495,17 @@ export interface Product {
     design?: string[] | null;
   };
   explore?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
   };
   overview?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -473,6 +518,9 @@ export interface Product {
     images?: (number | Media)[] | null;
   };
   benefits?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -492,6 +540,9 @@ export interface Product {
       | null;
   };
   specs?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -514,6 +565,9 @@ export interface Product {
     note?: string | null;
   };
   materials?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -529,6 +583,9 @@ export interface Product {
     note?: string | null;
   };
   printing?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -557,13 +614,22 @@ export interface Product {
       | null;
   };
   useCases?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
+    /**
+     * Type one, then press Enter to add the next.
+     */
     pills?: string[] | null;
     note?: string | null;
   };
   howToOrder?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -580,6 +646,9 @@ export interface Product {
     note?: string | null;
   };
   pricing?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -602,6 +671,9 @@ export interface Product {
     image?: (number | null) | Media;
   };
   whyUs?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -618,6 +690,9 @@ export interface Product {
     note?: string | null;
   };
   faqs?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -650,7 +725,7 @@ export interface Product {
   seoTitle?: string | null;
   seoDescription?: string | null;
   /**
-   * Part of the page URL. Empty = made from the title.
+   * The last part of the web address, such as custom-mailer-boxes. Leave it empty and it is made from the title.
    */
   slug: string;
   /**
@@ -690,7 +765,7 @@ export interface Page {
   seoTitle?: string | null;
   seoDescription?: string | null;
   /**
-   * Part of the page URL. Empty = made from the title.
+   * The last part of the web address, such as custom-mailer-boxes. Leave it empty and it is made from the title.
    */
   slug: string;
   updatedAt: string;
@@ -751,7 +826,7 @@ export interface Post {
   readMinutes?: number | null;
   featured?: boolean | null;
   /**
-   * Part of the page URL. Empty = made from the title.
+   * The last part of the web address, such as custom-mailer-boxes. Leave it empty and it is made from the title.
    */
   slug: string;
   updatedAt: string;
@@ -769,7 +844,7 @@ export interface BlogCategory {
   title: string;
   description?: string | null;
   /**
-   * Part of the page URL. Empty = made from the title.
+   * The last part of the web address, such as custom-mailer-boxes. Leave it empty and it is made from the title.
    */
   slug: string;
   /**
@@ -789,7 +864,7 @@ export interface BlogTopic {
   id: number;
   title: string;
   /**
-   * Part of the page URL. Empty = made from the title.
+   * The last part of the web address, such as custom-mailer-boxes. Leave it empty and it is made from the title.
    */
   slug: string;
   /**
@@ -1736,20 +1811,23 @@ export interface HomePage {
     cta?: {
       label?: string | null;
       /**
-       * e.g. /quote or https://...
+       * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
        */
       href?: string | null;
     };
     slides?: (number | Media)[] | null;
   };
   chooseBox?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
     button?: {
       label?: string | null;
       /**
-       * e.g. /quote or https://...
+       * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
        */
       href?: string | null;
     };
@@ -1766,6 +1844,9 @@ export interface HomePage {
       | null;
   };
   steps?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -1779,6 +1860,9 @@ export interface HomePage {
       | null;
   };
   industries?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -1814,6 +1898,9 @@ export interface HomePage {
     note?: string | null;
   };
   quantity?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -1833,6 +1920,9 @@ export interface HomePage {
       | null;
   };
   design?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -1853,13 +1943,16 @@ export interface HomePage {
     button?: {
       label?: string | null;
       /**
-       * e.g. /quote or https://...
+       * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
        */
       href?: string | null;
     };
     image?: (number | null) | Media;
   };
   eco?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -1869,6 +1962,9 @@ export interface HomePage {
     badge?: (number | null) | Media;
   };
   logo?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -1889,13 +1985,16 @@ export interface HomePage {
     image?: (number | null) | Media;
   };
   sample?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
     button?: {
       label?: string | null;
       /**
-       * e.g. /quote or https://...
+       * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
        */
       href?: string | null;
     };
@@ -1903,6 +2002,9 @@ export interface HomePage {
     image?: (number | null) | Media;
   };
   faq?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -1915,6 +2017,9 @@ export interface HomePage {
       | null;
   };
   blog?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -1939,7 +2044,7 @@ export interface AboutPage {
     button?: {
       label?: string | null;
       /**
-       * e.g. /quote or https://...
+       * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
        */
       href?: string | null;
     };
@@ -1961,6 +2066,9 @@ export interface AboutPage {
     visionIcon?: (number | null) | Media;
   };
   whoWeAre?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -1983,11 +2091,17 @@ export interface AboutPage {
    * The cards are the same as Home page > Choose your box.
    */
   products?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
   };
   values?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -2023,6 +2137,9 @@ export interface ArtworkPage {
     dielineText?: string | null;
   };
   formats?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -2036,6 +2153,9 @@ export interface ArtworkPage {
       | null;
   };
   essentials?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -2050,6 +2170,9 @@ export interface ArtworkPage {
       | null;
   };
   steps?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -2090,7 +2213,7 @@ export interface BlogPage {
       button?: {
         label?: string | null;
         /**
-         * e.g. /quote or https://...
+         * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
          */
         href?: string | null;
       };
@@ -2101,7 +2224,7 @@ export interface BlogPage {
     relatedButton?: {
       label?: string | null;
       /**
-       * e.g. /quote or https://...
+       * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
        */
       href?: string | null;
     };
@@ -2131,7 +2254,7 @@ export interface SiteSetting {
     | {
         label?: string | null;
         /**
-         * e.g. /quote or https://...
+         * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
          */
         href?: string | null;
         id?: string | null;
@@ -2159,6 +2282,9 @@ export interface SiteSetting {
     reviewUrl?: string | null;
   };
   reviewsSection?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
@@ -2188,6 +2314,9 @@ export interface SiteSetting {
   productDefaults?: {
     exploreEyebrow?: string | null;
     howToOrder?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2200,6 +2329,9 @@ export interface SiteSetting {
         | null;
     };
     pricing?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2212,6 +2344,9 @@ export interface SiteSetting {
         | null;
     };
     whyUs?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2224,6 +2359,9 @@ export interface SiteSetting {
         | null;
     };
     faqs?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2236,6 +2374,9 @@ export interface SiteSetting {
         | null;
     };
     relatedHeading?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2284,9 +2425,15 @@ export interface SiteSetting {
       faq?: string | null;
     };
     shortDescription?: string | null;
+    /**
+     * Type one, then press Enter to add the next.
+     */
     highlights?: string[] | null;
     gallery?: (number | Media)[] | null;
     overview?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2299,6 +2446,9 @@ export interface SiteSetting {
       images?: (number | Media)[] | null;
     };
     benefits?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2318,6 +2468,9 @@ export interface SiteSetting {
         | null;
     };
     specs?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2340,6 +2493,9 @@ export interface SiteSetting {
       note?: string | null;
     };
     materials?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2355,6 +2511,9 @@ export interface SiteSetting {
       note?: string | null;
     };
     printing?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2383,13 +2542,22 @@ export interface SiteSetting {
         | null;
     };
     useCases?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
+      /**
+       * Type one, then press Enter to add the next.
+       */
       pills?: string[] | null;
       note?: string | null;
     };
     whyUs?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
       eyebrow?: string | null;
       heading?: string | null;
       text?: string | null;
@@ -2418,7 +2586,7 @@ export interface SiteSetting {
       button?: {
         label?: string | null;
         /**
-         * e.g. /quote or https://...
+         * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
          */
         href?: string | null;
         id?: string | null;
@@ -2438,7 +2606,7 @@ export interface SiteSetting {
     primary?: {
       label?: string | null;
       /**
-       * e.g. /quote or https://...
+       * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
        */
       href?: string | null;
       id?: string | null;
@@ -2446,7 +2614,7 @@ export interface SiteSetting {
     secondary?: {
       label?: string | null;
       /**
-       * e.g. /quote or https://...
+       * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
        */
       href?: string | null;
       id?: string | null;
@@ -2468,7 +2636,7 @@ export interface SiteSetting {
             | {
                 label?: string | null;
                 /**
-                 * e.g. /quote or https://...
+                 * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
                  */
                 href?: string | null;
                 id?: string | null;
@@ -2489,7 +2657,7 @@ export interface SiteSetting {
       | {
           label?: string | null;
           /**
-           * e.g. /quote or https://...
+           * For a page on this site use the part after the domain, such as /quote. For another site use the full https:// address.
            */
           href?: string | null;
           id?: string | null;
