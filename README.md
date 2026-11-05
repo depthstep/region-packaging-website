@@ -67,6 +67,8 @@ Every push to `main` builds the site on GitHub Actions and uploads it to the ser
 - The site runs as the systemd service `rp` on `127.0.0.1:3000` (`journalctl -u rp` for its logs). Caddy (`/etc/caddy/Caddyfile`) handles the domain and renews the free HTTPS certificate on its own.
 - Only SSH keys can log in, and the firewall allows ports 22, 80 and 443. Security updates install automatically.
 
+**Activity log and versions.** Every change staff make in the admin is recorded in **Settings > Activity log** (admins only), down to the character, by `payload/activityLog.ts`. Entries can't be edited or deleted from the admin. Customers' quote form submissions and scripts aren't logged, as only logged-in people are. Site content also keeps its last 50 versions under each item's **Versions** tab, which can compare and restore them. A new field type needs no change, unless it's a new kind of nested field: `walk()` in that file must know how to go through it.
+
 GitHub settings: variables `DEPLOY_HOST`, `DEPLOY_USER`, `SITE_URL`, `SITE_NOINDEX`; secrets `DEPLOY_SSH_KEY`, `DEPLOY_KNOWN_HOSTS`. `SITE_NOINDEX=1` keeps search engines out. It's read both at build time and by the running site, so at launch delete the GitHub variable and the line in `~/rp/shared/.env`, then re-run the workflow.
 
 After changing collections or fields in `payload/`, run `npx payload migrate:create <name>` (answer "create table" to its questions unless you really renamed something), then `npm run migrate`, and commit the new files in `payload/migrations/`. The database never changes on its own, locally or on the server: after pulling, run `npm run migrate`.

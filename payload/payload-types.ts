@@ -78,6 +78,7 @@ export interface Config {
     artwork: Artwork;
     media: Media;
     users: User;
+    'activity-log': ActivityLog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -96,6 +97,7 @@ export interface Config {
     artwork: ArtworkSelect<false> | ArtworkSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    'activity-log': ActivityLogSelect<false> | ActivityLogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -865,6 +867,32 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Every change made in the admin. Open an entry to see exactly which characters changed. Entries cannot be edited or deleted.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "activity-log".
+ */
+export interface ActivityLog {
+  id: number;
+  user?: string | null;
+  action?: ('created' | 'updated' | 'deleted') | null;
+  section?: string | null;
+  item?: string | null;
+  recordId?: string | null;
+  summary?: string | null;
+  changes?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -931,6 +959,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'activity-log';
+        value: number | ActivityLog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1576,6 +1608,21 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "activity-log_select".
+ */
+export interface ActivityLogSelect<T extends boolean = true> {
+  user?: T;
+  action?: T;
+  section?: T;
+  item?: T;
+  recordId?: T;
+  summary?: T;
+  changes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

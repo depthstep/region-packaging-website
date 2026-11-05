@@ -6,6 +6,7 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { ActivityLog, withActivityLog, withGlobalActivityLog } from './payload/activityLog'
 import { Artwork, BlogCategories, BlogTopics, Categories, Media, Pages, Posts, Products, QuoteRequests, Reviews, Users } from './payload/collections'
 import { AboutPage, ArtworkPage, BlogPage, HomePage, SiteSettings } from './payload/globals'
 import { migrations } from './payload/migrations'
@@ -23,9 +24,20 @@ export default buildConfig({
     user: Users.slug,
     importMap: { baseDir: dirname },
     meta: { titleSuffix: ' | Region Packaging admin' },
+    dateFormat: 'MMM d yyyy, h:mm:ss a',
   },
-  collections: [Categories, Products, Pages, Reviews, Posts, BlogCategories, BlogTopics, QuoteRequests, Artwork, Media, Users],
-  globals: [HomePage, AboutPage, ArtworkPage, BlogPage, SiteSettings],
+  // Site content keeps its last 50 versions, with a Versions tab to compare and restore them.
+  // Everything staff change, in any section, also goes in the Activity log.
+  collections: [
+    ...[Categories, Products, Pages, Reviews, Posts, BlogCategories, BlogTopics].map((c) => ({ ...c, versions: { maxPerDoc: 50 } })),
+    QuoteRequests,
+    Artwork,
+    Media,
+    Users,
+  ]
+    .map(withActivityLog)
+    .concat(ActivityLog),
+  globals: [HomePage, AboutPage, ArtworkPage, BlogPage, SiteSettings].map((g) => withGlobalActivityLog({ ...g, versions: { max: 50 } })),
   // Rich text (blog articles): headings, lists, links, quotes and images from Media.
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET || '',
