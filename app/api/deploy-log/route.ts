@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       summary: note.summary,
       link: note.link,
       changes: note.changes,
-      createdAt: note.date,
+      createdAt: new Date(note.date).toISOString(),
     },
   })
   return NextResponse.json({ ok: true })
