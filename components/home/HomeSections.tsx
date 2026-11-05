@@ -12,7 +12,7 @@ import { IndustryTabs } from './IndustryTabs'
 
 export function Hero({ hero, stats }: { hero: HomePage['hero']; stats: SiteData['settings']['stats'] }) {
   return (
-    <section className="hero">
+    <section data-section="hero stats" className="hero">
       <div className="container hero__inner">
         <div className="hero__copy">
           {hero.ratingText && (
@@ -43,7 +43,7 @@ export function Hero({ hero, stats }: { hero: HomePage['hero']; stats: SiteData[
 export function TrustedBy({ settings }: { settings: SiteData['settings'] }) {
   if (!settings.trustedBrands.length) return null
   return (
-    <section className="trusted">
+    <section data-section="trustedHeading trustedBrands" className="trusted">
       <div className="container trusted__inner">
         <p className="trusted__heading">{settings.trustedHeading}</p>
         <ul className="trusted__logos">
@@ -65,7 +65,7 @@ export function TrustedBy({ settings }: { settings: SiteData['settings'] }) {
 export function ChooseBox({ s }: { s: HomePage['chooseBox'] }) {
   if (!s.cards.length) return null
   return (
-    <section className="section choose-box" id="products">
+    <section data-section="chooseBox products" className="section choose-box" id="products">
       <div className="container">
         <SectionHeader
           eyebrow={s.eyebrow}
@@ -93,7 +93,7 @@ export function ChooseBox({ s }: { s: HomePage['chooseBox'] }) {
 export function Steps({ s }: { s: HomePage['steps'] }) {
   if (!s.steps.length) return null
   return (
-    <section className="section section--beige">
+    <section data-section="steps" className="section section--beige">
       <div className="container">
         <SectionHeader eyebrow={s.eyebrow} heading={s.heading} text={s.text} />
         <ol className="steps">
@@ -119,7 +119,7 @@ export function Industries({ s, data }: { s: HomePage['industries']; data: SiteD
     return { label: t.label, cards: fromCategory.length ? fromCategory : s.defaultCards }
   })
   return (
-    <section className="section">
+    <section data-section="industries" className="section">
       <div className="container">
         <SectionHeader eyebrow={s.eyebrow} heading={s.heading} text={s.text} />
         <IndustryTabs tabs={tabs} />
@@ -131,7 +131,7 @@ export function Industries({ s, data }: { s: HomePage['industries']; data: SiteD
 
 export function AnyQuantity({ s }: { s: HomePage['quantity'] }) {
   return (
-    <section className="section section--rule">
+    <section data-section="quantity" className="section section--rule">
       <div className="container split quantity">
         <div>
           <SectionHeader eyebrow={s.eyebrow} heading={s.heading} text={s.text} align="left" />
@@ -151,7 +151,7 @@ export function AnyQuantity({ s }: { s: HomePage['quantity'] }) {
 
 export function DesignForYou({ s }: { s: HomePage['design'] }) {
   return (
-    <section className="design-for-you" id="design">
+    <section data-section="design" className="design-for-you" id="design">
       <div className="container design__inner">
         <div className="design__art">
           <Media img={s.image} fallback="Dieline illustration" sizes="(max-width: 900px) 100vw, 466px" />
@@ -184,7 +184,7 @@ export function Eco({ s }: { s: HomePage['eco'] }) {
   if (!s.heading) return null
   const [before, after] = s.body && s.linkText && s.body.includes(s.linkText) ? s.body.split(s.linkText) : [s.body, undefined]
   return (
-    <section className="eco-wrap" id="eco">
+    <section data-section="eco" className="eco-wrap" id="eco">
       <div className="container">
         <div className="eco">
           <div className="eco__copy">
@@ -211,7 +211,7 @@ export function Eco({ s }: { s: HomePage['eco'] }) {
 
 export function WithYourLogo({ s }: { s: HomePage['logo'] }) {
   return (
-    <section className="section section--beige">
+    <section data-section="logo" className="section section--beige">
       <div className="container split split--media">
         <div>
           <SectionHeader eyebrow={s.eyebrow} heading={s.heading} align="left" className="section-header--tight" />
@@ -237,7 +237,7 @@ export function WithYourLogo({ s }: { s: HomePage['logo'] }) {
 export function SamplePack({ s }: { s: HomePage['sample'] }) {
   if (!s.heading) return null
   return (
-    <section className="section sample-wrap">
+    <section data-section="sample" className="section sample-wrap">
       <div className="container">
         <div className="sample">
           <div className="sample__copy">
@@ -265,7 +265,7 @@ export function BlogTeasers({ s, data, rule = true }: { s: HomePage['blog']; dat
   const posts = picked.slice(0, 3)
   if (!posts.length) return null
   return (
-    <section className={`section ${rule ? 'section--rule' : ''}`}>
+    <section data-section="blog" className={`section ${rule ? 'section--rule' : ''}`}>
       <div className="container">
         <SectionHeader eyebrow={s.eyebrow} heading={s.heading} text={s.text} />
         <div className="grid-3 card-grid">

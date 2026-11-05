@@ -30,6 +30,7 @@ export default buildConfig({
     importMap: { baseDir: dirname },
     meta: { titleSuffix: ' | Region Packaging admin' },
     dateFormat: 'MMM d yyyy, h:mm:ss a',
+    components: { providers: ['/components/admin/PreviewFollow#PreviewFollow'] },
     // The real page beside the editor. See app/(site)/preview and app/api/preview.
     livePreview: {
       openByDefault: true,

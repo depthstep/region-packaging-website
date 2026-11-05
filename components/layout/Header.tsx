@@ -60,7 +60,7 @@ export function Header({ data }: { data: SiteData }) {
     items: g.cats.map((c) => ({ title: c.title, href: `/${c.slug}`, icon: c.menuIcon })),
   }))
   return (
-    <header className="site-header">
+    <header data-section="announcement phone email" className="site-header">
       <div className="topbar">
         <div className="container topbar__inner">
           {settings.announcement && (

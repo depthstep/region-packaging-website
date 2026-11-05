@@ -7,7 +7,7 @@ export function ReviewsSection({ settings, reviews }: { settings: SiteSettings; 
   if (!reviews.length) return null
   const { google, reviewsSection } = settings
   return (
-    <section className="section" id="reviews">
+    <section data-section="reviewsSection google" className="section" id="reviews">
       <div className="container">
         <SectionHeader {...reviewsSection} />
         <div className="rating-bar">

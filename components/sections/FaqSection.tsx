@@ -23,7 +23,7 @@ export function FaqList({ items }: { items: Faq[] }) {
 export function FaqSection({ section, id = 'faq', rule = false }: { section?: SectionHeading & { items: Faq[] }; id?: string; rule?: boolean }) {
   if (!section?.items?.length) return null
   return (
-    <section className={`section ${rule ? 'section--rule' : ''}`} id={id}>
+    <section data-section="faq faqs" className={`section ${rule ? 'section--rule' : ''}`} id={id}>
       <div className="container split split--faq">
         <SectionHeader eyebrow={section.eyebrow} heading={section.heading} text={section.text} align="left" />
         <FaqList items={section.items} />

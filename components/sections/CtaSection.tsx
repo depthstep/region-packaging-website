@@ -5,7 +5,7 @@ import { CopyCode } from './CopyCode'
 export function CtaSection({ cta }: { cta: SiteSettings['cta'] }) {
   if (!cta.heading) return null
   return (
-    <section className="section section--beige cta">
+    <section data-section="cta" className="section section--beige cta">
       <div className="container cta__inner">
         <div className="cta__copy">
           <h2>{cta.heading}</h2>

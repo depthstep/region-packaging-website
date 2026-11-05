@@ -29,7 +29,7 @@ export default async function ArtworkGuidelinesPage() {
   const { artwork: a, settings } = await getSiteData()
   return (
     <>
-      <section className="art-hero">
+      <section data-section="hero" className="art-hero">
         <div className="container art-hero__inner">
           <div className="art-hero__title">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -54,7 +54,7 @@ export default async function ArtworkGuidelinesPage() {
       </section>
 
       {a.formats.items.length > 0 && (
-        <section className="section art-formats">
+        <section data-section="formats" className="section art-formats">
           <div className="container">
             <SectionHeader heading={a.formats.heading} text={a.formats.text} />
             <ul className="art-grid art-grid--5">
@@ -71,7 +71,7 @@ export default async function ArtworkGuidelinesPage() {
       )}
 
       {a.essentials.items.length > 0 && (
-        <section className="section section--rule art-essentials">
+        <section data-section="essentials" className="section section--rule art-essentials">
           <div className="container">
             <SectionHeader heading={a.essentials.heading} text={a.essentials.text} />
             <ul className="art-grid art-grid--4">
@@ -88,7 +88,7 @@ export default async function ArtworkGuidelinesPage() {
       )}
 
       {a.steps.steps.length > 0 && (
-        <section className="section section--rule art-steps">
+        <section data-section="steps" className="section section--rule art-steps">
           <div className="container">
             <SectionHeader heading={a.steps.heading} text={a.steps.text} />
             <ol className="art-steps__list">

@@ -8,7 +8,7 @@ import { telHref } from './Header'
 export function Footer({ settings }: { settings: SiteSettings }) {
   const f = settings.footer
   return (
-    <footer className="site-footer">
+    <footer data-section="footer socials" className="site-footer">
       <div className="container footer__top">
         <div className="footer__brand">
           {/* eslint-disable-next-line @next/next/no-img-element */}

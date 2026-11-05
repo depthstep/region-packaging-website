@@ -29,7 +29,7 @@ export default async function AboutPage() {
   const { hero, mission: m, whoWeAre: w, values } = about
   return (
     <>
-      <section className="about-hero">
+      <section data-section="hero" className="about-hero">
         <div className="container about-hero__inner">
           <nav className="breadcrumb about-hero__crumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link> / <span aria-current="page">About Us</span>
@@ -52,7 +52,7 @@ export default async function AboutPage() {
       </section>
 
       {(m.missionHeading || m.visionHeading) && (
-        <section className="section about-mv">
+        <section data-section="mission" className="section about-mv">
           <div className="container about-mv__grid">
             <div className="about-mv__card">
               <AboutIcon img={m.missionIcon} />
@@ -74,7 +74,7 @@ export default async function AboutPage() {
       )}
 
       {w.heading && (
-        <section className="section section--rule about-who">
+        <section data-section="whoWeAre" className="section section--rule about-who">
           <div className="container">
             <div className="about-who__grid">
               <div>
@@ -104,7 +104,7 @@ export default async function AboutPage() {
       </div>
 
       {values.items.length > 0 && (
-        <section className="section section--beige about-values">
+        <section data-section="values" className="section section--beige about-values">
           <div className="container">
             <SectionHeader eyebrow={values.eyebrow} heading={values.heading} text={values.text} />
             <ul className="about-values__grid">

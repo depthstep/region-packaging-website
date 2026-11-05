@@ -73,7 +73,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 4. Explore styles (category pages list their sub-products) */}
       {explore.length > 0 && (
-        <section className="section">
+        <section data-section="explore" className="section">
           <div className="container">
             <SectionHeader
               eyebrow={page.explore?.eyebrow || d.exploreEyebrow}
@@ -91,7 +91,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 5. Overview */}
       {page.overview?.heading && (
-        <section className="section section--beige">
+        <section data-section="overview" className="section section--beige">
           <div className="container overview">
             <div className="overview__images">
               {[0, 1, 2].map((i) => (
@@ -110,7 +110,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 6. Benefits */}
       {page.benefits?.heading && (
-        <section className="section">
+        <section data-section="benefits" className="section">
           <div className="container split quantity">
             <div>
               <SectionHeader eyebrow={page.benefits.eyebrow} heading={page.benefits.heading} text={page.benefits.text} align="left" />
@@ -129,7 +129,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 7. Specs + stock sizes */}
       {page.specs?.heading && (
-        <section className="section section--rule" id="specs">
+        <section data-section="specs" className="section section--rule" id="specs">
           <div className="container">
             <SectionHeader eyebrow={page.specs.eyebrow} heading={page.specs.heading} text={page.specs.text} />
             {(page.specs.rows?.length ?? 0) > 0 && (
@@ -174,7 +174,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 8. Materials */}
       {page.materials?.heading && (
-        <section className="section section--beige" id="materials">
+        <section data-section="materials" className="section section--beige" id="materials">
           <div className="container">
             <SectionHeader eyebrow={page.materials.eyebrow} heading={page.materials.heading} text={page.materials.text} />
             <div className="grid-3">
@@ -196,7 +196,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 9. Printing & finishing */}
       {page.printing?.heading && (
-        <section className={`section section--beige printing ${page.materials?.heading ? 'printing--joined' : ''}`}>
+        <section data-section="printing" className={`section section--beige printing ${page.materials?.heading ? 'printing--joined' : ''}`}>
           <div className="container">
             <div className="split printing__top">
               <div>
@@ -233,7 +233,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 10. Industries & use cases */}
       {page.useCases?.heading && (
-        <section className="section">
+        <section data-section="useCases" className="section">
           <div className="container">
             <SectionHeader eyebrow={page.useCases.eyebrow} heading={page.useCases.heading} text={page.useCases.text} />
             <ul className="pill-row use-cases">
@@ -250,7 +250,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 11. How to order */}
       {howToOrder && (
-        <section className="section section--rule">
+        <section data-section="howToOrder" className="section section--rule">
           <div className="container">
             <SectionHeader eyebrow={howToOrder.eyebrow} heading={howToOrder.heading} text={howToOrder.text} />
             <ol className="order-steps">
@@ -269,7 +269,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 12. Pricing */}
       {pricing && (
-        <section className="pricing">
+        <section data-section="pricing" className="pricing">
           {page.pricing?.image?.src && (
             <div className="pricing__bg" aria-hidden="true">
               <Media img={page.pricing.image} fallback="" sizes="100vw" />
@@ -296,7 +296,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 13. Why choose us */}
       {whyUs && (
-        <section className="section">
+        <section data-section="whyUs" className="section">
           <div className="container">
             <SectionHeader eyebrow={whyUs.eyebrow} heading={whyUs.heading} text={whyUs.text} />
             <div className="grid-3 why-us">

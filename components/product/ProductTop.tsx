@@ -28,7 +28,7 @@ export function ProductTop({ data, title, category, isCategory, ratingText, shor
   const d = settings.productDefaults
   return (
     <>
-      <section className="product-top">
+      <section data-section="ratingText shortDescription highlights gallery formOptions" className="product-top">
         <div className="container">
           <nav className="breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link> / <Link href="/products">{groupLabel(category.kind)}</Link> /{' '}
@@ -68,7 +68,7 @@ export function ProductTop({ data, title, category, isCategory, ratingText, shor
       </section>
 
       {settings.trustStrip.length > 0 && (
-        <section className="trust-strip">
+        <section data-section="trustStrip" className="trust-strip">
           <ul className="container trust-strip__list">
             {settings.trustStrip.map((t) => (
               <li key={t.title}>

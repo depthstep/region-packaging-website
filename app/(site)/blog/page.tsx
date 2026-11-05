@@ -14,7 +14,7 @@ export default async function BlogPage() {
   const { blog, posts, blogCategories, blogTopics, settings } = await getSiteData()
   return (
     <>
-      <section className="blog-hero">
+      <section data-section="hero" className="blog-hero">
         <div className="container">
           <h1>{blog.hero.heading || 'Blog'}</h1>
           {blog.hero.text && <p>{blog.hero.text}</p>}

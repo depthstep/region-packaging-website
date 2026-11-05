@@ -42,7 +42,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
   const overview = (
     <>
       {s.overview && (
-        <section className="section sub-sec">
+        <section data-section="overview" className="section sub-sec">
           <div className="container split sub-overview">
             <div>
               <SectionHeader eyebrow={s.overview.eyebrow} heading={s.overview.heading} text={s.overview.text} align="left" className="section-header--tight" />
@@ -55,7 +55,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
         </section>
       )}
       {s.benefits && (
-        <section className="section section--rule sub-sec">
+        <section data-section="benefits" className="section section--rule sub-sec">
           <div className="container split sub-benefits">
             <div>
               <SectionHeader eyebrow={s.benefits.eyebrow} heading={s.benefits.heading} text={s.benefits.text} align="left" />
@@ -72,7 +72,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
         </section>
       )}
       {s.useCases && (
-        <section className="section section--rule sub-sec">
+        <section data-section="useCases" className="section section--rule sub-sec">
           <div className="container">
             <SectionHeader eyebrow={s.useCases.eyebrow} heading={s.useCases.heading} text={s.useCases.text} />
             <ul className="pill-row use-cases">
@@ -90,7 +90,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
   )
 
   const specs = s.specs && (
-    <section className="section sub-sec">
+    <section data-section="specs" className="section sub-sec">
       <div className="container">
         <SectionHeader eyebrow={s.specs.eyebrow} heading={s.specs.heading} text={s.specs.text} />
         {(s.specs.rows?.length ?? 0) > 0 && (
@@ -111,7 +111,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
   const materials = (
     <>
       {s.materials && (
-        <section className="section sub-sec">
+        <section data-section="materials" className="section sub-sec">
           <div className="container">
             <SectionHeader eyebrow={s.materials.eyebrow} heading={s.materials.heading} text={s.materials.text} />
             <div className="grid-3">
@@ -131,7 +131,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
         </section>
       )}
       {s.printing && (
-        <section className="section section--rule sub-sec printing">
+        <section data-section="printing" className="section section--rule sub-sec printing">
           <div className="container">
             <div className="split printing__top">
               <div>
@@ -171,7 +171,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
   const why = (
     <>
       {s.whyUs && (
-        <section className="section sub-sec">
+        <section data-section="whyUs" className="section sub-sec">
           <div className="container">
             <SectionHeader eyebrow={s.whyUs.eyebrow} heading={s.whyUs.heading} text={s.whyUs.text} />
             <div className="grid-3 why-us">
