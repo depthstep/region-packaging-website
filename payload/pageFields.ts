@@ -63,13 +63,16 @@ export const listingFields: Field[] = [
   img('menuIcon', 'Icon in the website menu'),
 ]
 
+/** Takes a section off the form while keeping its place in the database, so nothing has to move. */
+const hideFields = (f: Field, names: string[]): Field => ('name' in f && names.includes(f.name) ? ({ ...f, admin: { ...f.admin, hidden: true } } as Field) : f)
+
 /** The editor tabs for a category or sub-product: its own main fields first, then the shared page content. */
-export const pageTabs = (main: Field[]): Field => ({
+export const pageTabs = (main: Field[], notUsed: string[] = []): Field => ({
   type: 'tabs',
   tabs: [
     { label: 'Main', fields: [...main, ...listingFields] },
     { label: 'Photos & quote form', description: 'The top of the page: the photos, and the text and choices beside them.', fields: galleryTab },
-    { label: 'Page sections', description: 'The sections of the page, from top to bottom. To hide a section, leave its heading empty.', fields: sectionsTab },
+    { label: 'Page sections', description: 'The sections of the page, from top to bottom. To hide a section, leave its heading empty.', fields: sectionsTab.map((f) => hideFields(f, notUsed)) },
     { label: 'Google (SEO)', description: 'How this page appears in Google search results.', fields: seoTab },
   ] satisfies Tab[],
 })

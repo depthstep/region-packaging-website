@@ -114,7 +114,7 @@ export const Products: CollectionConfig = {
         maxDepth: 0,
         admin: { description: 'The first category sets the URL (/category/product).' },
       },
-    ]),
+    ], ['explore']),
     slugField(),
     orderField(),
     {

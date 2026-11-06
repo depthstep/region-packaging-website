@@ -64,13 +64,66 @@ function flash(el: HTMLElement) {
   clearFlash = clear
 }
 
+const onScreen = (el: HTMLElement) => {
+  const b = el.getBoundingClientRect()
+  return b.width > 0 && b.bottom > 0 && b.top < window.innerHeight
+}
+
+/** The one piece of text on the page that is exactly this field, so typing can change it straight away. */
+function textOf(el: HTMLElement | null, text: string) {
+  const node = el?.childNodes.length === 1 ? el.firstChild : null
+  return node?.nodeType === Node.TEXT_NODE && clean(node.nodeValue ?? '') === clean(text) ? (node as Text) : null
+}
+
+type Target = { text: string; hints: string[]; path: string[] }
+
+const NOTE_STYLE = {
+  position: 'fixed',
+  left: '50%',
+  bottom: 24,
+  transform: 'translateX(-50%)',
+  zIndex: 1000,
+  width: 'max-content',
+  maxWidth: 'calc(100% - 32px)',
+  padding: '12px 18px',
+  borderRadius: 10,
+  background: '#0b2a6b',
+  color: '#fff',
+  fontSize: 15,
+  lineHeight: 1.4,
+  boxShadow: '0 6px 24px rgba(0, 0, 0, 0.3)',
+} as const
+
 /** Redraws the preview on each autosave without losing the reader's place, and follows the field being edited. */
 export function RefreshPreview() {
   const router = useRouter()
   const [origin, setOrigin] = useState('')
   const holdUntil = useRef(0)
   // Set while a field has nothing to show yet: a new section only exists after the next redraw.
-  const waiting = useRef<{ text: string; hints: string[]; path: string[] } | null>(null)
+  const waiting = useRef<Target | null>(null)
+  // The text being typed into, changed straight away rather than after the autosave and redraw.
+  const live = useRef<{ node: Text; text: string; at: number } | null>(null)
+  const watcher = useRef<MutationObserver | null>(null)
+  const [note, setNote] = useState('')
+  const noteTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  const say = (text: string) => {
+    setNote(text)
+    clearTimeout(noteTimer.current)
+    if (text) noteTimer.current = setTimeout(() => setNote(''), 6000)
+  }
+
+  const track = (node: Text | null, text: string) => {
+    watcher.current?.disconnect()
+    live.current = node ? { node, text, at: 0 } : null
+    if (!node) return
+    // A redraw can bring back an autosave from a few letters ago. Keep what was typed on screen.
+    watcher.current = new MutationObserver(() => {
+      const l = live.current
+      if (l && Date.now() - l.at < 2500 && node.nodeValue !== l.text) node.nodeValue = l.text
+    })
+    watcher.current.observe(node, { characterData: true })
+  }
 
   // The page can change height as it redraws and photos load, so the position is held briefly
   // rather than set once. Scrolling by hand ends the hold straight away.
@@ -87,6 +140,8 @@ export function RefreshPreview() {
   const follow = (text: string, hints: string[], path: string[]) => {
     const el = locate(text, hints, path)
     waiting.current = el ? null : { text, hints, path }
+    track(textOf(el, text), text)
+    say(el ? '' : "This doesn't appear on this page right now.")
     if (!el) return
     holdUntil.current = 0
     reveal(el)
@@ -96,6 +151,25 @@ export function RefreshPreview() {
       el.scrollIntoView({ block: 'center', behavior: 'instant' })
       flash(el)
     })
+  }
+
+  const type = (text: string, hints: string[], path: string[]) => {
+    const l = live.current
+    if (!l?.node.isConnected) {
+      // Nothing on the page to change yet, so it's shown once the redraw brings it in.
+      waiting.current = { text, hints, path }
+      return
+    }
+    l.text = text
+    l.at = Date.now()
+    l.node.nodeValue = text
+    const el = l.node.parentElement
+    if (!el) return
+    if (!onScreen(el)) {
+      holdUntil.current = 0
+      el.scrollIntoView({ block: 'center', behavior: 'instant' })
+    }
+    flash(el)
   }
 
   useEffect(() => {
@@ -120,9 +194,15 @@ export function RefreshPreview() {
       holdUntil.current = 0
     }
     const onMessage = (e: MessageEvent) => {
-      if (e.origin !== window.location.origin || e.data?.type !== 'rp-preview-follow') return
+      if (e.origin !== window.location.origin) return
       const strings = (v: unknown) => (Array.isArray(v) ? v.map(String) : [])
-      follow(String(e.data.text ?? ''), strings(e.data.hints), strings(e.data.path))
+      const args = [String(e.data?.text ?? ''), strings(e.data?.hints), strings(e.data?.path)] as const
+      if (e.data?.type === 'rp-preview-type') return type(...args)
+      if (e.data?.type !== 'rp-preview-follow') return
+      if (!e.data.note) return follow(...args)
+      waiting.current = null
+      track(null, '')
+      say(String(e.data.note))
     }
     window.history.scrollRestoration = 'manual'
     const saved = read()
@@ -143,11 +223,22 @@ export function RefreshPreview() {
     const y = window.scrollY
     router.refresh()
     hold(y)
-    if (waiting.current) {
-      const { text, hints, path } = waiting.current
-      setTimeout(() => follow(text, hints, path), 1200)
+    // The redraw has no finished signal, so look again a few times for what it should have brought in.
+    for (const ms of [800, 2000, 4000]) {
+      setTimeout(() => {
+        if (waiting.current) follow(waiting.current.text, waiting.current.hints, waiting.current.path)
+      }, ms)
     }
   }
 
-  return origin ? <RefreshRouteOnSave refresh={refresh} serverURL={origin} /> : null
+  return (
+    <>
+      {origin && <RefreshRouteOnSave refresh={refresh} serverURL={origin} />}
+      {note && (
+        <div data-preview-note role="status" style={NOTE_STYLE}>
+          {note}
+        </div>
+      )}
+    </>
+  )
 }
