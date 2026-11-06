@@ -132,6 +132,15 @@
   opacity: 1;
   transform: none;
 }
+/* Just clicked a link in this menu: stays shut until the pointer has left it. */
+.nav__item.is-dismissed > .mega,
+.nav__item.is-dismissed > .dropdown {
+  visibility: hidden;
+  opacity: 0;
+}
+.nav__item.is-dismissed .nav__trigger {
+  border-bottom-color: transparent;
+}
 .mega {
   left: 0;
   right: 0;

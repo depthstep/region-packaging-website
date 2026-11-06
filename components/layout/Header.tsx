@@ -5,6 +5,7 @@ import { Chevron } from '@/components/ui/glyphs'
 import { Icon } from '@/components/ui/Media'
 import { ButtonLink } from '@/components/ui/Button'
 import { MobileMenu, type MenuGroup } from './MobileMenu'
+import { NavList } from './NavList'
 
 const telHref = (phone?: string) => `tel:${(phone || '').replace(/[^\d+]/g, '')}`
 
@@ -96,7 +97,7 @@ export function Header({ data }: { data: SiteData }) {
             <img src={withBase('/brand/logo.svg')} alt="Region Packaging" width={157} height={52} />
           </Link>
           <nav aria-label="Main">
-            <ul className="nav">
+            <NavList>
               <MegaMenu label="Custom Boxes" cats={boxes} data={data} />
               <MegaMenu label="Boxes By Industry" cats={industries} data={data} />
               <li className="nav__item nav__item--small">
@@ -111,7 +112,7 @@ export function Header({ data }: { data: SiteData }) {
                   ))}
                 </ul>
               </li>
-            </ul>
+            </NavList>
           </nav>
           {settings.phone && (
             <a href={telHref(settings.phone)} className="phone">
