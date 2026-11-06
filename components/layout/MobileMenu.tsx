@@ -55,7 +55,15 @@ export function MobileMenu({ groups, resources, phone, phoneHref }: Props) {
         <MenuDots />
       </button>
       <div className={`drawer-overlay ${open ? 'is-open' : ''}`} onClick={() => setOpen(false)} aria-hidden="true" />
-      <div id="mobile-menu" className={`drawer ${open ? 'is-open' : ''}`} role="dialog" aria-modal="true" aria-label="Menu" inert={!open}>
+      <div
+        id="mobile-menu"
+        className={`drawer ${open ? 'is-open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        inert={!open}
+        onClick={(e) => (e.target as HTMLElement).closest('a') && setOpen(false)}
+      >
         <div className="drawer__head">
           <p className="drawer__title">Menu</p>
           <button type="button" className="menu-btn" aria-label="Close menu" onClick={() => setOpen(false)}>
