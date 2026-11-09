@@ -460,66 +460,22 @@ a.photo-card:hover .photo-card__image img {
   }
 }
 
-/* ---------- CTA + coupon ---------- */
+/* ---------- CTA ---------- */
+/* Centred on every page, at every screen size. */
 .cta__inner {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-.cta__copy {
-  max-width: 540px;
-}
-.cta__copy p {
-  margin: 12px 0 34px;
-  font-size: var(--p2);
-}
-.coupon-wrap {
+  justify-content: center;
   text-align: center;
 }
-.coupon {
-  background: var(--sky);
-  border-radius: 20px;
-  padding: 24px 28px;
-  outline: 2px dashed var(--blue);
-  outline-offset: -8px;
-  text-align: left;
-  color: var(--blue);
+.cta__copy {
+  max-width: 640px;
 }
-.coupon__amount {
-  font-size: 40px;
-  font-weight: 700;
-  line-height: 1;
-}
-.coupon__label {
-  margin: 4px 0 14px;
+.cta__copy p {
+  margin: 12px auto 34px;
   font-size: var(--p2);
 }
-.coupon__code {
-  display: flex;
-  gap: 8px;
-}
-.coupon__code span,
-.coupon__code button {
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: var(--p2);
-}
-.coupon__code span {
-  background: var(--white);
-  color: var(--text);
-  letter-spacing: 0.03em;
-}
-.coupon__code button {
-  background: var(--blue);
-  color: var(--white);
-  border: 0;
-}
-.coupon__note {
-  margin-top: 14px;
-  color: var(--blue);
-  font-size: var(--p2);
+.cta__copy .button-row {
+  justify-content: center;
 }
 
 /* ---------- Pills ---------- */

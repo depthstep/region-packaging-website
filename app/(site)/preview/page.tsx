@@ -4,8 +4,7 @@ import { redirect } from 'next/navigation'
 import { RefreshPreview } from '@/components/admin/RefreshPreview'
 import { getSiteData } from '@/lib/data'
 import { parsePreview, PREVIEW_COOKIE } from '@/lib/preview'
-import CategoryPage from '../[category]/page'
-import ProductPage from '../[category]/[product]/page'
+import SlugPage from '../[slug]/page'
 import { QuoteBody } from '@/components/product/QuotePageBody'
 import AboutPage from '../about/page'
 import ArtworkPage from '../artwork-guidelines/page'
@@ -48,12 +47,12 @@ export default async function PreviewPage({ searchParams }: Props) {
     switch (view) {
       case 'category': {
         const cat = data.categories.find((c) => c.kind !== 'industry')
-        return cat && <CategoryPage params={Promise.resolve({ category: cat.slug })} />
+        return cat && <SlugPage params={Promise.resolve({ slug: cat.slug })} />
       }
       case 'sub-product': {
         const cat = data.categories.find((c) => c.kind === 'industry' && data.products.some((p) => p.categoryIds.includes(c.id)))
         const prod = cat && data.products.find((p) => p.categoryIds.includes(cat.id))
-        return prod && <ProductPage params={Promise.resolve({ category: cat.slug, product: prod.slug })} />
+        return prod && <SlugPage params={Promise.resolve({ slug: prod.slug })} />
       }
       case 'post':
         return data.posts[0] && <BlogPostPage params={Promise.resolve({ slug: data.posts[0].slug })} />
@@ -86,18 +85,18 @@ export default async function PreviewPage({ searchParams }: Props) {
     switch (type) {
       case 'categories': {
         const cat = has(data.categories) as (typeof data.categories)[number] | undefined
-        return cat ? <CategoryPage params={Promise.resolve({ category: cat.slug })} /> : <Hint text="Start typing on the left and your page will appear here." />
+        return cat ? <SlugPage params={Promise.resolve({ slug: cat.slug })} /> : <Hint text="Start typing on the left and your page will appear here." />
       }
       case 'pages': {
         const doc = has(data.pages) as (typeof data.pages)[number] | undefined
-        return doc ? <CategoryPage params={Promise.resolve({ category: doc.slug })} /> : <Hint text="Start typing on the left and your page will appear here." />
+        return doc ? <SlugPage params={Promise.resolve({ slug: doc.slug })} /> : <Hint text="Start typing on the left and your page will appear here." />
       }
       case 'products': {
         const prod = has(data.products) as (typeof data.products)[number] | undefined
         const cat = prod && data.categories.find((c) => prod.categoryIds.includes(c.id))
         if (!prod) return <Hint text="Start typing on the left and your page will appear here." />
         if (!cat) return <Hint text="Choose a category on the left to see this page." />
-        return <ProductPage params={Promise.resolve({ category: cat.slug, product: prod.slug })} />
+        return <SlugPage params={Promise.resolve({ slug: prod.slug })} />
       }
       case 'posts': {
         const post = has(data.posts) as (typeof data.posts)[number] | undefined

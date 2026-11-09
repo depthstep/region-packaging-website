@@ -1,7 +1,7 @@
 import type { Access, CollectionConfig, Field } from 'payload'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { img, orderField, slugField, str, txt } from './fields'
+import { img, orderField, slugField, str, topLevelSlugField, txt } from './fields'
 import { pageTabs } from './pageFields'
 import { revalidateOnChange } from './hooks'
 
@@ -89,7 +89,7 @@ export const Categories: CollectionConfig = {
       // Kept for its saved values: the menu now lists each category by its title.
       { name: 'menuLabel', type: 'text', admin: { hidden: true } },
     ]),
-    slugField(),
+    topLevelSlugField(),
     orderField(),
     { name: 'visible', label: 'Show on site', type: 'checkbox', defaultValue: true, admin: { position: 'sidebar' } },
   ],
@@ -112,10 +112,10 @@ export const Products: CollectionConfig = {
         required: true,
         minRows: 1,
         maxDepth: 0,
-        admin: { description: 'The first category sets the URL (/category/product).' },
+        admin: { description: 'The first category sets the breadcrumb and the related boxes. The page address is your-domain/slug.' },
       },
     ], ['explore']),
-    slugField(),
+    topLevelSlugField(),
     orderField(),
     {
       name: 'status',
@@ -159,7 +159,7 @@ export const Pages: CollectionConfig = {
     { name: 'body', type: 'richText', label: 'Page text' },
     str('seoTitle', 'Title shown in Google (SEO title)'),
     txt('seoDescription', 'Description shown in Google (SEO description)', 2),
-    slugField(),
+    topLevelSlugField(),
   ],
   hooks: revalidateOnChange,
 }
