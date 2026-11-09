@@ -277,7 +277,6 @@ export const settings: SiteSettings = {
     text: 'Your first order comes with 10% off. Tell us the box, the size and the quantity, and we will send a fast, no-obligation quote.',
     primary: { label: 'Get a Quote', href: '/quote' },
     secondary: { label: 'Choose Your Box', href: '/products' },
-    coupon: { amount: '20% OFF', label: 'Your first order', code: 'FIRST10', buttonLabel: 'Copy code', note: 'New customers only' },
   },
   footer: {
     blurb:

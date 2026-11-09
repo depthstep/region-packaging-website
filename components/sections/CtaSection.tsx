@@ -19,7 +19,7 @@ export function CtaSection({ cta }: { cta: SiteSettings['cta'] }) {
             )}
           </div>
         </div>
-        {cta.coupon && (
+        {cta.coupon?.code && (
           <div className="coupon-wrap">
             <div className="coupon">
               <p className="coupon__amount">{cta.coupon.amount}</p>
