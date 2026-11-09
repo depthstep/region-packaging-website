@@ -274,7 +274,7 @@ export const settings: SiteSettings = {
   },
   cta: {
     heading: 'Ready to manufacture your packaging?',
-    text: 'Your first order comes with 10% off. Tell us the box, the size and the quantity, and we will send a fast, no-obligation quote.',
+    text: 'Tell us the box, the size and the quantity, and we will send a fast, no-obligation quote.',
     primary: { label: 'Get a Quote', href: '/quote' },
     secondary: { label: 'Choose Your Box', href: '/products' },
   },

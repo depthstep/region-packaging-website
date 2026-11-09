@@ -1,6 +1,5 @@
 import type { SiteSettings } from '@/lib/types'
 import { ButtonLink } from '@/components/ui/Button'
-import { CopyCode } from './CopyCode'
 
 export function CtaSection({ cta }: { cta: SiteSettings['cta'] }) {
   if (!cta.heading) return null
@@ -19,16 +18,6 @@ export function CtaSection({ cta }: { cta: SiteSettings['cta'] }) {
             )}
           </div>
         </div>
-        {cta.coupon?.code && (
-          <div className="coupon-wrap">
-            <div className="coupon">
-              <p className="coupon__amount">{cta.coupon.amount}</p>
-              <p className="coupon__label">{cta.coupon.label}</p>
-              <CopyCode code={cta.coupon.code} label={cta.coupon.buttonLabel} />
-            </div>
-            <p className="coupon__note">{cta.coupon.note}</p>
-          </div>
-        )}
       </div>
     </section>
   )

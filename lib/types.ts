@@ -76,7 +76,6 @@ export type BlogPage = {
 
 export type Card = { title: string; kicker?: string; text?: string; linkLabel?: string; href?: string; image?: Img }
 
-export type Coupon = { amount: string; label: string; code: string; buttonLabel: string; note: string }
 
 export type SiteSettings = {
   announcement?: string
@@ -94,7 +93,7 @@ export type SiteSettings = {
   productDefaults: ProductDefaults
   subProductDefaults: SubProductDefaults
   pageIntros: Partial<Record<'products' | 'faqs' | 'howToOrder' | 'quote' | 'sample', PageIntroText>>
-  cta: { heading?: string; text?: string; primary?: Link; secondary?: Link; coupon?: Coupon }
+  cta: { heading?: string; text?: string; primary?: Link; secondary?: Link }
   footer: {
     blurb?: string
     columns: { title: string; links: Link[] }[]

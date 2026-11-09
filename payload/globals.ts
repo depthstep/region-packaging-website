@@ -117,7 +117,8 @@ export const SiteSettings: GlobalConfig = {
                 txt('text', 'Text', 2),
                 link('primary', 'Primary button'),
                 link('secondary', 'Secondary button'),
-                { name: 'coupon', type: 'group', fields: [str('amount', 'Amount (e.g. 20% OFF)'), str('label'), str('code'), str('buttonLabel', 'Button label'), str('note')] },
+                // Coupons are off for now. Hidden rather than removed, so the database doesn't change and they can come back.
+                { name: 'coupon', type: 'group', admin: { hidden: true }, fields: [str('amount', 'Amount (e.g. 20% OFF)'), str('label'), str('code'), str('buttonLabel', 'Button label'), str('note')] },
               ],
             },
             {
