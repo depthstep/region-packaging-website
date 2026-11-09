@@ -30,6 +30,12 @@ function withDefaults<T extends { heading?: string; eyebrow?: string; text?: str
     Record<K, TitleText[]>
 }
 
+/** The page's own FAQ wording over the defaults. Anything left empty keeps the default. */
+export function mergeFaqs(defaults?: PageContent['faqs'], own?: PageContent['faqs']) {
+  const filled = Object.entries(own ?? {}).filter(([, v]) => (Array.isArray(v) ? v.length : v))
+  return { items: [], ...defaults, ...Object.fromEntries(filled) } as NonNullable<PageContent['faqs']>
+}
+
 export function formOptions(page: PageContent, defaults: FormOptions): FormOptions {
   const own = page.formOptions ?? {}
   const pick = (k: keyof FormOptions) => (own[k]?.length ? own[k]! : defaults[k])
@@ -52,7 +58,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
   const howToOrder = withDefaults(page.howToOrder, d.howToOrder, 'steps')
   const pricing = withDefaults(page.pricing, d.pricing, 'cards')
   const whyUs = withDefaults(page.whyUs, d.whyUs, 'cards')
-  const faqs = page.faqs?.items?.length ? { ...d.faqs, ...page.faqs } : d.faqs
+  const faqs = mergeFaqs(d.faqs, page.faqs)
   const related = resolveRelated(data, page.relatedIds ?? [])
   const relatedCards: Card[] = (related.length ? related : fallbackRelated).map((r) => toCard(data, r, 'Explore Product'))
 
@@ -73,7 +79,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
 
       {/* 4. Explore styles (category pages list their sub-products) */}
       {explore.length > 0 && (
-        <section data-section="explore" className="section">
+        <section data-section="explore exploreEyebrow" className="section">
           <div className="container">
             <SectionHeader
               eyebrow={page.explore?.eyebrow || d.exploreEyebrow}

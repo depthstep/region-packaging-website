@@ -7,7 +7,7 @@ import { CtaSection } from '@/components/sections/CtaSection'
 import { FaqSection } from '@/components/sections/FaqSection'
 import { ProductTabs } from './ProductTabs'
 import { ProductTop } from './ProductTop'
-import { formOptions } from './ProductTemplate'
+import { formOptions, mergeFaqs } from './ProductTemplate'
 
 // Industry sub-product pages (e.g. /custom-cosmetic-boxes/cream-boxes), from the Figma
 // "Sub-Products Pages" design: the shared top, then the details in five tabs.
@@ -36,7 +36,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
     printing: pick(page.printing, def.printing, name),
     whyUs: pick(page.whyUs?.cards?.length ? page.whyUs : undefined, def.whyUs, name),
   }
-  const faqs = page.faqs?.items?.length ? { ...settings.productDefaults.faqs, ...page.faqs } : settings.productDefaults.faqs
+  const faqs = mergeFaqs(settings.productDefaults.faqs, page.faqs)
   const label = def.tabs ?? {}
 
   const overview = (

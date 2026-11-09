@@ -17,7 +17,7 @@ export default async function ContactPage() {
   const c = settings.contact
   return (
     <>
-      <section className="contact-hero">
+      <section data-section="image heading text" className="contact-hero">
         <Media img={c.image} fallback="Contact banner photo" sizes="100vw" className="contact-hero__media" priority />
         <div className="container contact-hero__copy">
           <h1>{c.heading || 'Contact Us'}</h1>
@@ -25,7 +25,7 @@ export default async function ContactPage() {
         </div>
       </section>
 
-      <section className="contact">
+      <section data-section="callLabel emailLabel card formHeading formText buttonLabel" className="contact">
         <div className="container contact__grid">
           <div className="contact__info">
             {settings.phone && (

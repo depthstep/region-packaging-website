@@ -28,7 +28,7 @@ export function ProductTop({ data, title, category, isCategory, ratingText, shor
   const d = settings.productDefaults
   return (
     <>
-      <section data-section="ratingText shortDescription highlights gallery formOptions" className="product-top">
+      <section data-section="ratingText shortDescription highlights gallery formOptions formDefaults formNote sampleLinkLabel" className="product-top">
         <div className="container">
           <nav className="breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link> / <Link href="/products">{groupLabel(category.kind)}</Link> /{' '}

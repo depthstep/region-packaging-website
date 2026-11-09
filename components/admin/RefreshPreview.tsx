@@ -15,9 +15,10 @@ function findText(root: ParentNode, text: string) {
   const needle = clean(text).slice(0, 60)
   if (needle.length < 2) return null
   const hits = [...root.querySelectorAll<HTMLElement>(TEXT_TAGS)].filter((el) => clean(el.textContent ?? '').includes(needle))
-  // Closed dropdown menus are in the page but out of sight. Closed tabs can be opened.
-  const usable = hits.filter((el) => !el.closest('.mega, .dropdown, .drawer'))
-  return usable.sort((a, b) => (a.textContent?.length ?? 0) - (b.textContent?.length ?? 0))[0] ?? null
+  // The phone menu copies the main one. Dropdown menus can be opened, but the page itself comes first.
+  const usable = hits.filter((el) => !el.closest('.drawer'))
+  const inMenu = (el: HTMLElement) => (el.closest('.mega, .dropdown') ? 1 : 0)
+  return usable.sort((a, b) => inMenu(a) - inMenu(b) || (a.textContent?.length ?? 0) - (b.textContent?.length ?? 0))[0] ?? null
 }
 
 /** The field's section, from its marker or else its headings, then the field's own text inside it. */
@@ -34,11 +35,23 @@ function locate(text: string, hints: string[], path: string[]) {
       break
     }
   }
-  if (section) return (text && findText(section, text)) || section
+  if (section) return (text && (findText(section, text) || findText(document, text))) || section
   return text ? findText(document, text) : null
 }
 
+/** Site-wide fields show up on other pages, so the preview opens the page the field belongs to. */
+function viewFor(path: string[]) {
+  const type = new URLSearchParams(window.location.search).get('type')
+  const [top, sub] = path
+  if (type === 'blog-page') return top === 'post' ? 'post' : ''
+  if (type !== 'site-settings') return ''
+  if (top === 'pageIntros') return ({ products: 'products', faqs: 'faqs', howToOrder: 'how-to-order', quote: 'quote', sample: 'sample' } as Record<string, string>)[sub] ?? ''
+  return ({ productDefaults: 'category', formDefaults: 'category', trustStrip: 'category', subProductDefaults: 'sub-product', contact: 'contact' } as Record<string, string>)[top] ?? ''
+}
+
 function reveal(el: HTMLElement) {
+  document.querySelectorAll('.is-preview-open').forEach((m) => m.classList.remove('is-preview-open'))
+  if (el.closest('.mega, .dropdown') || el.matches('.nav__item')) el.closest('.nav__item')?.classList.add('is-preview-open')
   const panel = el.closest<HTMLElement>('[role="tabpanel"][hidden]')
   if (panel) document.getElementById(panel.id.replace('panel-', 'tab-'))?.click()
   const details = el.closest('details')
@@ -104,6 +117,7 @@ export function RefreshPreview() {
   // The text being typed into, changed straight away rather than after the autosave and redraw.
   const live = useRef<{ node: Text; text: string; at: number } | null>(null)
   const watcher = useRef<MutationObserver | null>(null)
+  const opening = useRef<string | null>(null)
   const [note, setNote] = useState('')
   const noteTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
@@ -137,7 +151,35 @@ export function RefreshPreview() {
     step()
   }
 
+  // The redraw has no finished signal, so look again a few times for what it should have brought in.
+  const retry = () => {
+    for (const ms of [800, 2000, 4000, 7000]) {
+      setTimeout(() => {
+        if (waiting.current) follow(waiting.current.text, waiting.current.hints, waiting.current.path)
+      }, ms)
+    }
+  }
+
   const follow = (text: string, hints: string[], path: string[]) => {
+    const view = viewFor(path)
+    const url = new URL(window.location.href)
+    if (view !== (url.searchParams.get('view') ?? '')) {
+      waiting.current = { text, hints, path }
+      // The address only changes once the new page arrives. Asking again meanwhile would pile up requests.
+      if (opening.current === view) return
+      opening.current = view
+      setTimeout(() => {
+        if (opening.current === view) opening.current = null
+      }, 8000)
+      track(null, '')
+      say('')
+      if (view) url.searchParams.set('view', view)
+      else url.searchParams.delete('view')
+      router.replace(url.pathname + url.search, { scroll: false })
+      retry()
+      return
+    }
+    opening.current = null
     const el = locate(text, hints, path)
     waiting.current = el ? null : { text, hints, path }
     track(textOf(el, text), text)
@@ -150,6 +192,7 @@ export function RefreshPreview() {
       // Instant, as anything else moving on the page can interrupt a smooth scroll part way.
       el.scrollIntoView({ block: 'center', behavior: 'instant' })
       flash(el)
+      if (!onScreen(el)) say('This part of the page is hidden at this preview size. Change the size above the preview to Desktop to see it.')
     })
   }
 
@@ -223,12 +266,7 @@ export function RefreshPreview() {
     const y = window.scrollY
     router.refresh()
     hold(y)
-    // The redraw has no finished signal, so look again a few times for what it should have brought in.
-    for (const ms of [800, 2000, 4000]) {
-      setTimeout(() => {
-        if (waiting.current) follow(waiting.current.text, waiting.current.hints, waiting.current.path)
-      }, ms)
-    }
+    retry()
   }
 
   return (

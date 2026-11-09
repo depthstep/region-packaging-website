@@ -13,7 +13,7 @@ export function RelatedCarousel({ heading, cards }: { heading?: SectionHeading; 
     if (el) el.scrollBy({ left: dir * (el.clientWidth / 3 + 10), behavior: 'smooth' })
   }
   return (
-    <section className="section section--rule">
+    <section data-section="related relatedHeading" className="section section--rule">
       <div className="container">
         <SectionHeader
           {...heading}

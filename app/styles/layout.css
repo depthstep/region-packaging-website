@@ -127,7 +127,9 @@
 .nav__item:hover > .mega,
 .nav__item:focus-within > .mega,
 .nav__item:hover > .dropdown,
-.nav__item:focus-within > .dropdown {
+.nav__item:focus-within > .dropdown,
+.nav__item.is-preview-open > .mega,
+.nav__item.is-preview-open > .dropdown {
   visibility: visible;
   opacity: 1;
   transform: none;

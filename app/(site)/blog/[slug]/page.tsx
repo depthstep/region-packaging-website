@@ -60,7 +60,7 @@ export default async function BlogPostPage({ params }: Params) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
-      <section className="post-hero">
+      <section data-section="category topics excerpt image publishedAt readMinutes author title" className="post-hero">
         <div className="container post-hero__grid">
           <div className="post-hero__copy">
             {cat && (
@@ -89,14 +89,14 @@ export default async function BlogPostPage({ params }: Params) {
 
       <section className="post-body">
         <div className="container post-body__grid">
-          <article className="post-article">
+          <article data-section="body" className="post-article">
             {post.body?.root.children?.length ? (
               <RichText doc={post.body} />
             ) : (
               <p className="placeholder-text">[Placeholder] Article text to be added in the CMS.</p>
             )}
           </article>
-          <aside className="post-aside">
+          <aside data-section="help tocHeading followLabel" className="post-aside">
             <Toc heading={blog.post.tocHeading || 'Contents'} items={toc} />
             {help.heading && (
               <div className="post-help">
@@ -138,7 +138,7 @@ export default async function BlogPostPage({ params }: Params) {
       </section>
 
       {more.length > 0 && (
-        <section className="section section--rule post-more">
+        <section data-section="relatedEyebrow relatedHeading relatedButton" className="section section--rule post-more">
           <div className="container">
             <SectionHeader
               eyebrow={blog.post.relatedEyebrow}

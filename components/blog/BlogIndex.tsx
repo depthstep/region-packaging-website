@@ -36,7 +36,7 @@ export function BlogIndex({ page, posts, categories, topics }: Props) {
 
   return (
     <>
-      <section className="section blog-featured">
+      <section data-section="searchPlaceholder" className="section blog-featured">
         <div className="container">
           <header className="blog-featured__head">
             <h2>{q ? `Results for “${query.trim()}”` : page.featuredHeading || 'Featured posts'}</h2>
