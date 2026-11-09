@@ -182,10 +182,15 @@ export function findProduct(data: SiteData, category: Category, slug: string) {
   return productsIn(data, category.id).find((p) => p.slug === slug)
 }
 
+/** The category a sub-product sits under for its breadcrumb and related boxes: the first one listed that is shown on the site. */
+export function primaryCategory(data: SiteData, product: Product) {
+  return product.categoryIds.map((id) => data.categories.find((c) => c.id === id)).find((c): c is Category => !!c)
+}
+
+/** Every category, sub-product and simple page is at your-domain/slug. */
 export function hrefFor(data: SiteData, item: Category | Product) {
   if ('kind' in item) return `/${item.slug}`
-  const cat = data.categories.find((c) => c.id === item.categoryIds[0])
-  return cat ? `/${cat.slug}/${item.slug}` : '/products'
+  return primaryCategory(data, item) ? `/${item.slug}` : '/products'
 }
 
 /** A category or product as a card (explore grid, related carousel, industry tabs). */

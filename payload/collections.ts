@@ -1,7 +1,7 @@
 import type { Access, CollectionConfig, Field } from 'payload'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { img, orderField, slugField, str, txt } from './fields'
+import { img, orderField, slugField, str, topLevelSlugField, txt } from './fields'
 import { pageTabs } from './pageFields'
 import { revalidateOnChange } from './hooks'
 
@@ -88,7 +88,7 @@ export const Categories: CollectionConfig = {
       },
       str('menuLabel', 'Mega menu column heading', { description: 'Empty = title.' }),
     ]),
-    slugField(),
+    topLevelSlugField(),
     orderField(),
     { name: 'visible', label: 'Show on site', type: 'checkbox', defaultValue: true, admin: { position: 'sidebar' } },
   ],
@@ -111,10 +111,10 @@ export const Products: CollectionConfig = {
         required: true,
         minRows: 1,
         maxDepth: 0,
-        admin: { description: 'The first category sets the URL (/category/product).' },
+        admin: { description: 'The first category sets the breadcrumb and the related boxes. The page address is your-domain/slug.' },
       },
     ]),
-    slugField(),
+    topLevelSlugField(),
     orderField(),
     {
       name: 'status',
@@ -158,7 +158,7 @@ export const Pages: CollectionConfig = {
     { name: 'body', type: 'richText', label: 'Page text' },
     str('seoTitle', 'SEO title'),
     txt('seoDescription', 'SEO description', 2),
-    slugField(),
+    topLevelSlugField(),
   ],
   hooks: revalidateOnChange,
 }

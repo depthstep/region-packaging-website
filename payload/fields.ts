@@ -1,4 +1,4 @@
-import type { Field } from 'payload'
+import type { Field, PayloadRequest, Where } from 'payload'
 
 // Small builders so the schemas stay readable. Field names match lib/types.ts exactly;
 // lib/cms/normalize.ts turns Payload documents into those types by walking these same fields.
@@ -125,5 +125,30 @@ export const slugField = (): Field => ({
     ],
   },
 })
+
+/** Addresses the site already uses for its own pages (app/(site)) or the admin. */
+const RESERVED_SLUGS = ['about', 'admin', 'api', 'artwork-guidelines', 'blog', 'contact', 'faqs', 'how-to-order', 'preview', 'products', 'quote', 'sitemap-xml', 'robots-txt']
+/** Categories, sub-products and simple pages all live at your-domain/slug. */
+const TOP_LEVEL = ['categories', 'products', 'pages'] as const
+const TOP_LEVEL_NAMES: Record<(typeof TOP_LEVEL)[number], string> = { categories: 'a category', products: 'a sub-product', pages: 'a simple page' }
+
+/** A slug for a page at your-domain/slug: it must not be used by another category, sub-product or simple page. */
+export const topLevelSlugField = (): Field => ({
+  ...slugField(),
+  admin: { position: 'sidebar', description: 'The page address: your-domain/slug. Empty = made from the title.' },
+  validate: async (value: unknown, { req, id, collectionSlug, event }: { req: PayloadRequest; id?: number | string; collectionSlug?: string; event?: string }) => {
+    if (!value) return 'This field is required.'
+    if (event === 'onChange') return true
+    const slug = String(value)
+    if (RESERVED_SLUGS.includes(slug)) return `"${slug}" is already used by one of the site's own pages. Please choose another slug.`
+    for (const c of TOP_LEVEL) {
+      const where: Where = { slug: { equals: slug } }
+      if (c === collectionSlug && id !== undefined) where.id = { not_equals: id }
+      const { totalDocs } = await req.payload.count({ collection: c, where, req })
+      if (totalDocs) return `"${slug}" is already the address of ${TOP_LEVEL_NAMES[c]}. Please choose another slug.`
+    }
+    return true
+  },
+} as Field)
 
 export const orderField = (): Field => ({ name: 'order', type: 'number', defaultValue: 0, admin: { position: 'sidebar', description: 'Lower numbers show first.' } })

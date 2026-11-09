@@ -328,7 +328,7 @@ const shippingCard = {
   title: 'Shipping Boxes',
   text: 'Heavy-duty, ECT-rated corrugated shipping boxes printed with your logo, in any size.',
   linkLabel: 'Explore shipping boxes',
-  href: '/custom-mailer-boxes/corrugated-mailer-boxes',
+  href: '/corrugated-mailer-boxes',
   image: img('/images/shipping-studio-binky.jpg', 'Blue printed corrugated shipping boxes'),
 }
 const giftCard = {

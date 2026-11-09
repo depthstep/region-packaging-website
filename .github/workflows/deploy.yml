@@ -68,7 +68,8 @@ jobs:
       - name: Static preview build
         if: github.event_name != 'pull_request'
         run: |
-          rm -rf app/api "app/(payload)" .next
+          # Plain files can't redirect, so the old /category/product addresses only redirect on the real server.
+          rm -rf app/api "app/(payload)" "app/(site)/[slug]/[product]" .next
           npx next build
         env:
           STATIC_EXPORT: '1'
