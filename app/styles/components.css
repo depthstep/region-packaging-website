@@ -461,19 +461,21 @@ a.photo-card:hover .photo-card__image img {
 }
 
 /* ---------- CTA ---------- */
+/* Centred on every page, at every screen size. */
 .cta__inner {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 40px;
-  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
 }
 .cta__copy {
-  max-width: 540px;
+  max-width: 640px;
 }
 .cta__copy p {
-  margin: 12px 0 34px;
+  margin: 12px auto 34px;
   font-size: var(--p2);
+}
+.cta__copy .button-row {
+  justify-content: center;
 }
 
 /* ---------- Pills ---------- */
