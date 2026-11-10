@@ -64,13 +64,15 @@
 .mp-tabs .pill { background: var(--white); cursor: pointer; font-family: var(--font); font-weight: 500; padding: 12px 26px; font-size: var(--p2); }
 .mp-tabs .pill:hover { background: #e6e1d3; }
 .mp-tabs .pill[aria-selected='true'] { background: var(--blue); color: var(--white); }
-.mp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+/* Flex rather than grid, so a tab with fewer than 4 cards stays centred. */
+.mp-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; }
+.mp-grid > .material { flex: 0 0 calc((100% - 72px) / 4); min-width: 0; }
 .mp-grid .material h4 { font-size: var(--h4); font-weight: 600; }
 .mp-grid .material p { font-size: var(--p2); }
 .mp-panel .note { margin-top: 50px; }
 
 @media (max-width: 900px) {
-  .mp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mp-grid > .material { flex-basis: calc((100% - 24px) / 2); }
 }
 @media (max-width: 700px) {
   .pdp-ovc__imgs { grid-template-columns: 1fr 1fr; }
