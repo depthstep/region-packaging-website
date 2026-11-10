@@ -65,10 +65,48 @@ export const settings: SiteSettings = {
   },
   // Sample copy from the Figma sub-product design (written for rigid boxes); editors replace it per product.
   subProductDefaults: {
-    tabs: { overview: 'Overview', specs: 'Specs', materials: 'Materials & Finishes', why: 'Sustainability & Why Us', faq: 'FAQ' },
+    tabs: {
+      overview: 'Overview',
+      specs: 'Specifications',
+      materials: 'Materials & Finishes',
+      why: 'Sustainability & Why Us',
+      faq: 'FAQ',
+      optionMaterial: 'Material',
+      optionPrinting: 'Printing',
+      optionFinishes: 'Finishes',
+      optionAddons: 'Add-ons',
+    },
     shortDescription:
       "Premium two-piece and magnetic-closure setup boxes, wrapped in your artwork. Free design help and low minimums. Send your inquiry and we'll reply with your price.",
     highlights: ['Lid-and-base, magnetic, book-style and drawer styles', 'Thick greyboard that holds its shape', 'Full-colour print, inside & out'],
+    badges: ['Low MOQ', 'Free design', 'Free proof', 'Fast ship'],
+    construction: {
+      eyebrow: 'Construction',
+      heading: 'Lid & Base Construction',
+      body: [
+        'The classic two-piece rigid box is made in two parts: a base that holds your product and a lid that lifts cleanly off it. Both are built from thick greyboard, typically 1.5–3 mm, wrapped in printed paper, so the box keeps its shape through retail handling and e-commerce fulfillment.',
+        'Because the lid and base are made separately, each can carry its own artwork and finish, and fitted inserts sit neatly inside the base to hold the product in place.',
+      ],
+      list: [
+        { title: 'Lift-off lid', text: 'A clean, deliberate reveal every time the box is opened.' },
+        { title: 'Thick greyboard', text: 'A rigid, non-collapsible structure that holds its shape.' },
+        { title: 'Fitted inserts', text: 'Foam, EVA or paperboard inserts keep the product in place.' },
+      ],
+    },
+    sustainability: {
+      eyebrow: 'Sustainability',
+      heading: 'Sustainable {product}',
+      text: 'A premium box can still be a responsible one. Our boxes use recyclable board, and recycled-content and kraft paper wraps keep the footprint low while still printing beautifully. FSC-certified board is available from responsibly managed forests, and we print with lower-impact inks where possible. We only make eco claims we can stand behind, and help you choose a genuinely recyclable box and describe it honestly to your customers.',
+    },
+    addons: {
+      items: [
+        { name: 'Debossing', badge: 'Pressed Effect', description: 'Presses your design into the box for a subtle, tactile impression.' },
+        { name: 'Embossing', badge: 'Raised Effect', description: 'Raises your design above the surface for a bold, dimensional effect.' },
+        { name: 'Foil Stamping', badge: 'Premium Effect', description: 'Adds a metallic foil accent for a luxurious, eye-catching finish.' },
+        { name: 'Spot UV Coating', badge: 'Selective Shine', description: 'Highlights specific design elements with a glossy, raised coating.' },
+      ],
+      note: 'Whichever options you choose, we print your boxes to a consistent standard and can brand every panel, inside and out.',
+    },
     gallery: [
       img('/images/mailer-glowries.jpg', 'Kraft box with printed skincare packaging'),
       img('/images/mailer-dream-big.jpg', 'Blue and pink printed box'),
@@ -144,9 +182,9 @@ export const settings: SiteSettings = {
       note: 'Dimensions are measured internally as length by width by height, so your product fits perfectly. Any dimension, depth or insert can be made to fit a specific product or a multi-item set, with free dieline help. Custom sizing and tooling can raise the minimum slightly and add a little lead time, which we confirm up front with your quote.',
     },
     materials: {
-      eyebrow: 'Materials',
-      heading: 'Materials & board options',
-      text: 'Pick the board that matches your product, weight and sustainability goals.',
+      eyebrow: 'Materials & Print',
+      heading: 'Materials, Printing & Finishing Options',
+      text: 'Pick the board that matches your product, budget and sustainability goals, then choose how it is printed and finished.',
       items: [
         {
           name: 'Greyboard / Chipboard',
@@ -178,16 +216,19 @@ export const settings: SiteSettings = {
       image: img('/images/printing-rigid-box.jpg', 'Kraft rigid box with a dark tray'),
       methodsHeading: 'Printing Methods',
       methods: [
-        { name: 'Full-colour digital', description: 'Photographic, full-colour artwork with no plate cost, perfect for short runs.' },
-        { name: 'Flexographic printing', description: 'Cost-effective spot-colour printing for larger, repeat production runs.' },
+        { name: 'CMYK Printing', badge: 'Great for Branding', description: 'Full color printing method ideal for detailed graphics, images and vibrant packaging designs.' },
+        { name: 'Pantone Printing', badge: 'Accurate Color Match', description: 'Match your brand colors with precise Pantone shades for a consistent and premium look.' },
+        { name: 'Offset Printing', badge: 'Best for Bulk Orders', description: 'High quality printing method for large orders with sharp details and consistent results.' },
+        { name: 'Digital Printing', badge: 'Ideal for Custom Designs', description: 'Modern printing method ideal for short runs, custom designs and fast turnaround times.' },
       ],
       finishesHeading: 'Finishes & Add-ons',
       finishes: [
-        { name: 'Matte or gloss', description: 'Choose a finish that matches your brand, from understated matte to a premium sheen.' },
-        { name: 'Custom inserts', description: 'Die-cut pads and trays hold products in place and lift the presentation.' },
-        { name: 'Inside printing', description: 'Brand the interior for a reveal that makes the unboxing experience feel considered.' },
-        { name: 'Free design support', description: 'Download a dieline or let our designers prepare a print-ready file for you.' },
+        { name: 'Matte', badge: 'Hides Fingerprints', description: 'Provides a smooth, non-reflective finish for a clean and elegant packaging appearance.' },
+        { name: 'Gloss', badge: 'Enhances Colors', description: 'Adds a shiny and vibrant finish that makes colors and graphics stand out.' },
+        { name: 'Aqueous Coating', badge: 'Water-based Coating', description: 'A water-based coating that adds a thin layer of protection and a subtle finish.' },
+        { name: 'Anti Scratch Lamination', badge: 'Scratch Resistant', description: 'Adds a protective layer that helps resist scratches, scuffs and surface damage.' },
       ],
+      finishesNote: 'Choose a finish that matches your brand, from understated matte to a premium sheen. Finishes also add a light protective layer, so your box looks good on arrival.',
     },
     whyUs: {
       eyebrow: 'WHY US',

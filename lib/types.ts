@@ -8,6 +8,8 @@ export type Link = { label: string; href: string }
 export type TitleText = { title: string; text: string }
 export type IconItem = TitleText & { icon?: Img }
 export type NameDescription = { name: string; description: string }
+/** A card in the options section of product pages: name, small tag, text and photo. */
+export type OptionCard = NameDescription & { badge?: string; image?: Img }
 
 export type SectionHeading = { eyebrow?: string; heading?: string; text?: string }
 
@@ -154,8 +156,21 @@ export type ProductDefaults = {
 export type Faq = { question: string; answer?: string }
 
 /** What industry sub-product pages show when the product has no content of its own. "{product}" in a heading becomes the product name. */
-export type SubProductDefaults = Pick<PageContent, 'shortDescription' | 'highlights' | 'gallery' | 'overview' | 'benefits' | 'useCases' | 'specs' | 'materials' | 'printing' | 'whyUs'> & {
-  tabs?: { overview?: string; specs?: string; materials?: string; why?: string; faq?: string }
+export type SubProductDefaults = Pick<
+  PageContent,
+  'shortDescription' | 'highlights' | 'badges' | 'gallery' | 'construction' | 'overview' | 'benefits' | 'useCases' | 'specs' | 'materials' | 'printing' | 'whyUs' | 'sustainability' | 'addons'
+> & {
+  tabs?: {
+    overview?: string
+    specs?: string
+    materials?: string
+    why?: string
+    faq?: string
+    optionMaterial?: string
+    optionPrinting?: string
+    optionFinishes?: string
+    optionAddons?: string
+  }
 }
 
 /** Fields shared by category pages and sub-product pages. Every section is optional. */
@@ -163,6 +178,8 @@ export type PageContent = {
   ratingText?: string
   shortDescription?: string
   highlights: string[]
+  /** Small tags under the quote form (product pages). */
+  badges?: string[]
   gallery: Img[]
   formOptions?: Partial<FormOptions>
   explore?: SectionHeading
@@ -170,7 +187,13 @@ export type PageContent = {
   benefits?: SectionHeading & { body: string[]; items: IconItem[] }
   specs?: SectionHeading & { rows: { label: string; value: string }[]; stockSizesHeading?: string; stockSizes: StockSize[]; note?: string }
   materials?: SectionHeading & { items: (NameDescription & { badge?: string; image?: Img })[]; note?: string }
-  printing?: SectionHeading & { body: string[]; image?: Img; methodsHeading?: string; methods: NameDescription[]; finishesHeading?: string; finishes: NameDescription[] }
+  printing?: SectionHeading & { body: string[]; image?: Img; methodsHeading?: string; methods: OptionCard[]; finishesHeading?: string; finishes: OptionCard[]; finishesNote?: string }
+  /** Product pages: beside a photo under the top. */
+  construction?: SectionHeading & { body: string[]; image?: Img; list: TitleText[] }
+  /** Product pages: in the "Sustainability & Why Us" tab. */
+  sustainability?: { eyebrow?: string; heading?: string; text?: string; badge?: Img }
+  /** Product pages: the Add-ons tab of the options section. */
+  addons?: { items: OptionCard[]; note?: string }
   useCases?: SectionHeading & { pills: string[]; note?: string }
   howToOrder?: SectionHeading & { steps: TitleText[]; note?: string }
   pricing?: SectionHeading & { body: string[]; cards: TitleText[]; image?: Img }

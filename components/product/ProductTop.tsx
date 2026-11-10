@@ -15,6 +15,8 @@ type Props = {
   ratingText?: string
   shortDescription?: string
   highlights: string[]
+  /** Small tags under the quote form (product pages). */
+  badges?: string[]
   gallery: Img[]
   options: FormOptions
   fields?: (keyof FormOptions)[]
@@ -23,12 +25,12 @@ type Props = {
 }
 
 /** Breadcrumb, sticky gallery + quote card, and the trust strip: the top of every product page. */
-export function ProductTop({ data, title, category, isCategory, ratingText, shortDescription, highlights, gallery, options, fields, trustIconSize = 30 }: Props) {
+export function ProductTop({ data, title, category, isCategory, ratingText, shortDescription, highlights, badges = [], gallery, options, fields, trustIconSize = 30 }: Props) {
   const { settings } = data
   const d = settings.productDefaults
   return (
     <>
-      <section data-section="ratingText shortDescription highlights gallery formOptions formDefaults formNote sampleLinkLabel" className="product-top">
+      <section data-section="ratingText shortDescription highlights badges gallery formOptions formDefaults formNote sampleLinkLabel" className="product-top">
         <div className="container">
           <nav className="breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link> / <Link href="/products">{groupLabel(category.kind)}</Link> /{' '}
@@ -62,6 +64,15 @@ export function ProductTop({ data, title, category, isCategory, ratingText, shor
                 </ul>
               )}
               <QuoteForm product={title} options={options} fields={fields} sampleLinkLabel={d.sampleLinkLabel} note={d.formNote} />
+              {badges.length > 0 && (
+                <ul className="pill-row pdp-mini">
+                  {badges.map((b) => (
+                    <li key={b} className="pill">
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>

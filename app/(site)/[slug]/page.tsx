@@ -64,10 +64,8 @@ export default async function SlugPage({ params }: Params) {
 
   if (hit.type === 'product') {
     const { prod, cat } = hit
-    // Pages under "Boxes By Industry" use the tabbed sub-product design.
-    if (cat.kind === 'industry') return <SubProductTemplate data={data} page={prod} category={cat} />
-    const siblings = productsIn(data, cat.id).filter((p) => p.id !== prod.id)
-    return <ProductTemplate data={data} page={prod} category={cat} explore={[]} fallbackRelated={siblings} />
+    // Every product page, in both menus, uses the same tabbed product design.
+    return <SubProductTemplate data={data} page={prod} category={cat} />
   }
 
   // A text page from Content > Simple pages.

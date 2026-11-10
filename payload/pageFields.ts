@@ -1,5 +1,9 @@
 import type { Field, Tab } from 'payload'
-import { faqList, formOptionFields, heading, iconItems, img, imgs, list, nameDesc, paragraphs, section, str, strings, titleText, txt } from './fields'
+import { faqList, formOptionFields, heading, iconItems, img, imgs, list, paragraphs, section, str, strings, titleText, txt } from './fields'
+
+/** Option cards (printing, finishes, add-ons): name, small tag, text and photo. */
+const optionCards = (name: string, label: string) =>
+  list(name, label, [str('name'), str('badge', 'Small tag on the card (e.g. Best for Bulk Orders)'), txt('description', 'Description', 2), img('image', 'Photo')])
 
 // Product-page content shared by categories (/custom-mailer-boxes) and sub-products
 // (/custom-mailer-boxes/kraft-mailer-boxes). Leave a section's heading empty to hide it on the site.
@@ -8,7 +12,8 @@ import { faqList, formOptionFields, heading, iconItems, img, imgs, list, nameDes
 export const galleryTab: Field[] = [
   str('ratingText', 'Star rating text', { description: 'e.g. "4.9 based (127 reviews)". Empty = Google rating from Site settings.' }),
   txt('shortDescription', 'Short description (under the title)', 3),
-  strings('highlights', 'Three bullet points with tick marks', 'Type one, then press Enter to add the next.'),
+  strings('highlights', 'Three bullet points with tick marks', 'Category pages only. Type one, then press Enter to add the next.'),
+  strings('badges', 'Small tags under the quote form', 'Product pages only, e.g. "Low MOQ". Type one, then press Enter to add the next.'),
   imgs('gallery', 'Photos beside the quote form'),
   section('formOptions', 'Quote form options', formOptionFields, 'Leave a list empty to use the defaults from Site settings.'),
 ]
@@ -34,9 +39,10 @@ export const sectionsTab: Field[] = [
     paragraphs(),
     img('image', 'Photo'),
     str('methodsHeading', 'Printing methods heading'),
-    nameDesc('methods', 'Printing methods'),
+    optionCards('methods', 'Printing methods'),
     str('finishesHeading', 'Finishes heading'),
-    nameDesc('finishes', 'Finishes & add-ons'),
+    optionCards('finishes', 'Finishes'),
+    txt('finishesNote', 'Text under the finishes (product pages)', 4),
   ]),
   section('useCases', '10. Industries & use cases', [...heading, strings('pills', 'Tags (small rounded labels)', 'Type one, then press Enter to add the next.'), txt('note', 'Text under the tags', 6)]),
   section('howToOrder', '11. How to order', [...heading, titleText('steps', 'Steps', 'Empty = defaults from Site settings.'), txt('note', 'Text under the steps', 6)]),
@@ -54,6 +60,38 @@ export const sectionsTab: Field[] = [
   },
 ]
 
+/** Takes a section off the form while keeping its place in the database, so nothing has to move. */
+const hideFields = (f: Field, names: string[]): Field => ('name' in f && names.includes(f.name) ? ({ ...f, admin: { ...f.admin, hidden: true } } as Field) : f)
+
+/** Product pages only: the construction section under the photos, sustainability and add-ons. */
+const construction = section('construction', 'Construction', [
+  ...heading,
+  paragraphs(),
+  img('image', 'Photo'),
+  titleText('list', 'Three short points beside the photo'),
+])
+const sustainability = section('sustainability', 'Sustainability', [str('eyebrow', 'Small label above the heading'), str('heading'), txt('text', 'Text', 6), img('badge', 'Badge or logo (e.g. FSC)')])
+const addons = section('addons', 'Add-ons', [optionCards('items', 'Add-ons'), txt('note', 'Text under the add-ons', 4)])
+
+/** The page sections of a product page, in the order they appear on the page. */
+const byName = (name: string) => sectionsTab.find((f) => 'name' in f && f.name === name)!
+const relabel = (f: Field, label: string): Field => ({ ...f, label } as Field)
+export const productSectionsTab: Field[] = [
+  relabel(construction, 'Construction (beside a photo, under the top)'),
+  relabel(byName('overview'), 'Overview tab: Overview (text and 3 photos)'),
+  relabel(byName('benefits'), 'Overview tab: Benefits (heading and paragraphs)'),
+  relabel(byName('useCases'), 'Overview tab: Industries & use cases (heading and "Text under the tags")'),
+  relabel(byName('specs'), 'Specifications tab'),
+  relabel(sustainability, 'Sustainability & Why Us tab: Sustainability'),
+  relabel(byName('whyUs'), 'Sustainability & Why Us tab: Why choose us'),
+  relabel(byName('faqs'), 'FAQ tab'),
+  relabel(byName('materials'), 'Options section: heading, and the Material tab'),
+  relabel(byName('printing'), 'Options section: Printing and Finishes tabs'),
+  relabel(addons, 'Options section: Add-ons tab'),
+  // Not on product pages: kept, hidden, so nothing in the database has to move.
+  ...['explore', 'howToOrder', 'pricing', 'related'].map((n) => hideFields(byName(n), [n])),
+]
+
 const seoTab: Field[] = [str('seoTitle', 'Title shown in Google (SEO title)'), txt('seoDescription', 'Description shown in Google (SEO description)', 2)]
 
 /** Card + menu fields used when this page appears in grids and the mega menu. */
@@ -63,16 +101,14 @@ export const listingFields: Field[] = [
   img('menuIcon', 'Icon in the website menu'),
 ]
 
-/** Takes a section off the form while keeping its place in the database, so nothing has to move. */
-const hideFields = (f: Field, names: string[]): Field => ('name' in f && names.includes(f.name) ? ({ ...f, admin: { ...f.admin, hidden: true } } as Field) : f)
 
 /** The editor tabs for a category or sub-product: its own main fields first, then the shared page content. */
-export const pageTabs = (main: Field[], notUsed: string[] = []): Field => ({
+export const pageTabs = (main: Field[], notUsed: string[] = [], sections: Field[] = sectionsTab): Field => ({
   type: 'tabs',
   tabs: [
     { label: 'Main', fields: [...main, ...listingFields] },
-    { label: 'Photos & quote form', description: 'The top of the page: the photos, and the text and choices beside them.', fields: galleryTab },
-    { label: 'Page sections', description: 'The sections of the page, from top to bottom. To hide a section, leave its heading empty.', fields: sectionsTab.map((f) => hideFields(f, notUsed)) },
+    { label: 'Photos & quote form', description: 'The top of the page: the photos, and the text and choices beside them.', fields: galleryTab.map((f) => hideFields(f, notUsed)) },
+    { label: 'Page sections', description: 'The sections of the page, from top to bottom. To hide a section, leave its heading empty.', fields: sections.map((f) => hideFields(f, notUsed)) },
     { label: 'Google (SEO)', description: 'How this page appears in Google search results.', fields: seoTab },
   ] satisfies Tab[],
 })
@@ -84,8 +120,19 @@ export const subProductDefaultFields: Field[] = [
     name: 'tabs',
     label: 'Tab labels',
     type: 'group',
-    fields: ['overview', 'specs', 'materials', 'why', 'faq'].map((n) => ({ name: n, type: 'text' as const })),
+    fields: [
+      ...['overview', 'specs', 'materials', 'why', 'faq'].map((n) => ({ name: n, type: 'text' as const })),
+      ...[
+        ['optionMaterial', 'Options section: Material tab'],
+        ['optionPrinting', 'Options section: Printing tab'],
+        ['optionFinishes', 'Options section: Finishes tab'],
+        ['optionAddons', 'Options section: Add-ons tab'],
+      ].map(([name, label]) => ({ name, label, type: 'text' as const })),
+    ],
   },
-  ...named(galleryTab, ['shortDescription', 'highlights', 'gallery']),
+  ...named(galleryTab, ['shortDescription', 'highlights', 'badges', 'gallery']),
+  construction,
   ...named(sectionsTab, ['overview', 'benefits', 'useCases', 'specs', 'materials', 'printing', 'whyUs']),
+  sustainability,
+  addons,
 ]
