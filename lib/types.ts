@@ -8,7 +8,7 @@ export type Link = { label: string; href: string }
 export type TitleText = { title: string; text: string }
 export type IconItem = TitleText & { icon?: Img }
 export type NameDescription = { name: string; description: string }
-/** A card in the options section of product pages: name, small tag, text and photo. */
+/** A card in the options section of product pages: name, text and photo (a material's tag is not shown there). */
 export type OptionCard = NameDescription & { badge?: string; image?: Img }
 
 export type SectionHeading = { eyebrow?: string; heading?: string; text?: string }

@@ -19,7 +19,6 @@ import '../styles/about.css'
 import '../styles/artwork.css'
 import '../styles/blog.css'
 import '../styles/product-sub.css'
-import '../styles/product-sub-legacy.css'
 
 const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', display: 'swap' })
 

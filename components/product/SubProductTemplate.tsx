@@ -5,14 +5,11 @@ import { FaqSection } from '@/components/sections/FaqSection'
 import { OptionTabs, ProductTabs, type TabItem } from './ProductTabs'
 import { ProductTop } from './ProductTop'
 import { formOptions, mergeFaqs } from './ProductTemplate'
-import { NEW_LAYOUT_DEFAULTS as NL } from '@/lib/newLayout'
 
-// The new product layout (the pages listed in lib/newLayout.ts): the shared top, a construction
+// Every product page (e.g. /black-mailer-boxes, /cream-boxes): the shared top, a construction
 // section, four tabs (Overview, Specifications, Sustainability & Why Us, FAQ), then the options
 // section with its own tabs (Material, Printing, Finishes, Add-ons).
 // Each section uses the product's own content, or Site settings > Sub-product pages when empty.
-// Parts the admin has no fields for yet (tags, construction, sustainability, add-ons, the option
-// cards) come from lib/newLayout.ts.
 
 const FIELDS = ['style', 'finish', 'productionSpeed', 'quantity'] as const
 
@@ -61,7 +58,6 @@ function OptionGrid({ items, note }: { items: OptionCard[]; note?: string }) {
           <div key={m.name} className="material">
             <div className="material__image">
               <Media img={m.image} fallback={`${m.name} photo`} sizes="(max-width: 900px) 50vw, 290px" />
-              {m.badge && <span className="material__badge">{m.badge}</span>}
             </div>
             <h4>{m.name}</h4>
             <p>{m.description}</p>
@@ -76,27 +72,25 @@ function OptionGrid({ items, note }: { items: OptionCard[]; note?: string }) {
 export function SubProductTemplate({ data, page, category }: { data: SiteData; page: Product; category: Category }) {
   const { settings } = data
   const def = settings.subProductDefaults
-  // Materials keeps the default cards under the new heading; printing uses the new option cards.
-  const materials = { ...def.materials, ...NL.materials!, items: def.materials?.items ?? [] }
   const name = page.title
   const s: Partial<PageContent> = {
-    construction: pick(page.construction, NL.construction, name),
+    construction: pick(page.construction, def.construction, name),
     overview: pick(page.overview, def.overview, name),
     benefits: pick(page.benefits, def.benefits, name),
     useCases: pick(page.useCases, def.useCases, name),
     specs: pick(page.specs, def.specs, name),
-    sustainability: pick(page.sustainability, NL.sustainability, name),
+    sustainability: pick(page.sustainability, def.sustainability, name),
     whyUs: pick(page.whyUs?.cards?.length ? page.whyUs : undefined, def.whyUs, name),
-    materials: pick(page.materials, materials, name),
-    printing: pick(page.printing, NL.printing && { ...NL.printing, body: def.printing?.body ?? [] }, name),
+    materials: pick(page.materials, def.materials, name),
+    printing: pick(page.printing, def.printing, name),
   }
   // Photo spots the product hasn't filled show its own gallery photos, so each page shows its own box.
   const own = page.gallery
   if (s.construction && !page.construction?.image && own.length > 1) s.construction = { ...s.construction, image: own[4] ?? own[0] }
   if (s.overview && !page.overview?.images?.length && own.length > 1) s.overview = { ...s.overview, images: own.slice(1, 4) }
-  const addons = page.addons?.items?.length ? page.addons : NL.addons
+  const addons = page.addons?.items?.length ? page.addons : def.addons
   const faqs = mergeFaqs(settings.productDefaults.faqs, page.faqs)
-  const label = { ...def.tabs, ...NL.tabs }
+  const label = def.tabs ?? {}
 
   const construction = s.construction && (
     <section data-section="construction" className="section">
@@ -225,7 +219,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
         ratingText={page.ratingText}
         shortDescription={page.shortDescription || def.shortDescription}
         highlights={[]}
-        badges={page.badges?.length ? page.badges : (NL.badges ?? [])}
+        badges={page.badges?.length ? page.badges : (def.badges ?? [])}
         gallery={page.gallery.length ? page.gallery : def.gallery}
         options={formOptions(page, settings.formDefaults)}
         fields={[...FIELDS]}
