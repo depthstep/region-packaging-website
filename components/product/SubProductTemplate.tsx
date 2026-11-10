@@ -87,7 +87,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
   }
   // Photo spots the product hasn't filled show its own gallery photos, so each page shows its own box.
   const own = page.gallery
-  if (s.construction && !page.construction?.image && own.length > 1) s.construction = { ...s.construction, image: own[4] ?? own[1] }
+  if (s.construction && !page.construction?.image && own.length > 1) s.construction = { ...s.construction, image: own[4] ?? own[0] }
   if (s.overview && !page.overview?.images?.length && own.length > 1) s.overview = { ...s.overview, images: own.slice(1, 4) }
   const addons = page.addons?.items?.length ? page.addons : def.addons
   const faqs = mergeFaqs(settings.productDefaults.faqs, page.faqs)
