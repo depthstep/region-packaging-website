@@ -22,31 +22,6 @@ const ELSEWHERE: Record<string, string> = {
   href: 'This is where the link goes. The address itself isn\'t shown on the page.',
 }
 
-// Fields product pages don't show (category pages still do), by their place in the form.
-const NOT_ON_PRODUCT_PAGES: Record<string, string> = {
-  printing__eyebrow: "Product pages don't show this. The options section uses the Materials heading instead.",
-  printing__heading: "Product pages don't show this. The options section uses the Materials heading instead.",
-  printing__text: "Product pages don't show this. The options section uses the Materials heading instead.",
-  printing__image: "Product pages don't show this photo. It is only used on category pages.",
-  printing__methodsHeading: "Product pages don't show this. The Printing tab label is used instead.",
-  printing__finishesHeading: "Product pages don't show this. The Finishes tab label is used instead.",
-  benefits__items: "Product pages don't show the benefit cards, only the heading and paragraphs. They are used on category pages.",
-  useCases__pills: "Product pages don't show these tags, only the heading and the text under them. They are used on category pages.",
-  specs__stockSizesHeading: "Product pages don't show the sizes table. It is used on category pages.",
-  specs__stockSizes: "Product pages don't show the sizes table. It is used on category pages.",
-  highlights: "Product pages don't show these. They are used on category pages.",
-  tabs__materials: "Product pages don't use this tab any more. The options section has its own tabs below.",
-}
-
-/** The note for a field product pages leave out, when a product (or its defaults) is being edited. */
-function productNote(path: string[]) {
-  const onProduct = window.location.pathname.includes('/collections/products/') || path[0] === 'subProductDefaults'
-  if (!onProduct) return undefined
-  const key = path.filter((p) => !/^\d+$/.test(p)).join('__').replace(/^subProductDefaults__/, '')
-  const hit = Object.keys(NOT_ON_PRODUCT_PAGES).find((k) => key === k || key.startsWith(k + '__'))
-  return hit && NOT_ON_PRODUCT_PAGES[hit]
-}
-
 const BLOCKS = 'p, h1, h2, h3, h4, h5, h6, li, blockquote'
 
 const valueOf = (id: string) => (document.getElementById(id) as HTMLInputElement | null)?.value?.trim() ?? ''
@@ -84,7 +59,7 @@ function describe(el: HTMLElement) {
       text: String(text).trim(),
       path,
       hints: field ? clues(field.id) : [],
-      note: productNote(path) ?? ELSEWHERE[path[path.length - 1]?.split('-')[0]],
+      note: ELSEWHERE[path[path.length - 1]?.split('-')[0]],
     },
   }
 }

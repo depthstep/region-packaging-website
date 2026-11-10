@@ -2,7 +2,7 @@ import type { Access, CollectionConfig, Field } from 'payload'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { img, orderField, slugField, str, topLevelSlugField, txt } from './fields'
-import { pageTabs, productSectionsTab } from './pageFields'
+import { pageTabs } from './pageFields'
 import { revalidateOnChange } from './hooks'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -88,7 +88,7 @@ export const Categories: CollectionConfig = {
       },
       // Kept for its saved values: the menu now lists each category by its title.
       { name: 'menuLabel', type: 'text', admin: { hidden: true } },
-    ], ['badges']),
+    ]),
     topLevelSlugField(),
     orderField(),
     { name: 'visible', label: 'Show on site', type: 'checkbox', defaultValue: true, admin: { position: 'sidebar' } },
@@ -114,7 +114,7 @@ export const Products: CollectionConfig = {
         maxDepth: 0,
         admin: { description: 'The first category sets the breadcrumb and the related boxes. The page address is your-domain/slug.' },
       },
-    ], ['highlights'], productSectionsTab),
+    ], ['explore']),
     topLevelSlugField(),
     orderField(),
     {

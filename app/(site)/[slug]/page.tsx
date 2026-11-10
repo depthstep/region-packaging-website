@@ -5,7 +5,9 @@ import type { Category, Product, SiteData } from '@/lib/types'
 import { RichText } from '@/components/blog/RichText'
 import { PageIntro } from '@/components/layout/PageIntro'
 import { ProductTemplate } from '@/components/product/ProductTemplate'
+import { LegacySubProductTemplate } from '@/components/product/LegacySubProductTemplate'
 import { SubProductTemplate } from '@/components/product/SubProductTemplate'
+import { NEW_LAYOUT_PRODUCTS } from '@/lib/newLayout'
 
 export const revalidate = 3600
 
@@ -64,8 +66,12 @@ export default async function SlugPage({ params }: Params) {
 
   if (hit.type === 'product') {
     const { prod, cat } = hit
-    // Every product page, in both menus, uses the same tabbed product design.
-    return <SubProductTemplate data={data} page={prod} category={cat} />
+    // The new product layout, for the pages moved to it so far (see lib/newLayout.ts).
+    if (NEW_LAYOUT_PRODUCTS.includes(prod.slug)) return <SubProductTemplate data={data} page={prod} category={cat} />
+    // The rest keep their earlier design: Boxes By Industry pages use the tabbed design.
+    if (cat.kind === 'industry') return <LegacySubProductTemplate data={data} page={prod} category={cat} />
+    const siblings = productsIn(data, cat.id).filter((p) => p.id !== prod.id)
+    return <ProductTemplate data={data} page={prod} category={cat} explore={[]} fallbackRelated={siblings} />
   }
 
   // A text page from Content > Simple pages.
