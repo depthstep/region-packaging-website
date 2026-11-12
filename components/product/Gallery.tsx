@@ -40,11 +40,13 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
 
   /** Fetch a full-size photo once; the zoom appears when it is in. */
   const started = useRef(new Set<string>())
-  const fetchFull = (url: string | undefined, then?: () => void) => {
+  const fetchFull = (url: string | undefined, then?: () => void, low = false) => {
     if (!url || started.current.has(url)) return then?.()
     started.current.add(url)
     setLoaded((l) => ({ ...l, [url]: false }))
     const img = new window.Image()
+    img.decoding = 'async'
+    if (low) img.fetchPriority = 'low'
     img.onload = () => {
       setLoaded((l) => ({ ...l, [url]: true }))
       then?.()
@@ -54,15 +56,28 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
   }
   const preload = () => fetchFull(src)
 
-  // Computers: load the shown photo's full-size version straight away, then the others in turn.
+  // Computers: once the page has finished loading and the browser is idle, fetch the shown
+  // photo's full-size version, then the others one at a time, at low priority, so nothing the
+  // visitor sees or clicks waits for them. Skipped when the visitor has "data saver" on.
   useEffect(() => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData) return
     const rest = list.map((i) => (i.src ? withBase(i.src) : undefined)).filter((u) => u && u !== src)
     const next = () => {
       const url = rest.shift()
-      if (url) fetchFull(url, next)
+      if (url) fetchFull(url, next, true)
     }
-    fetchFull(src, next)
+    let idle: number | undefined
+    const start = () => {
+      const run = () => fetchFull(src, next, true)
+      idle = typeof window.requestIdleCallback === 'function' ? window.requestIdleCallback(run, { timeout: 3000 }) : window.setTimeout(run, 500)
+    }
+    if (document.readyState === 'complete') start()
+    else window.addEventListener('load', start, { once: true })
+    return () => {
+      window.removeEventListener('load', start)
+      if (idle !== undefined) (typeof window.cancelIdleCallback === 'function' ? window.cancelIdleCallback(idle) : window.clearTimeout(idle))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src])
 
