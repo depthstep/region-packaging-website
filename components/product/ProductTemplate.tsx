@@ -6,6 +6,7 @@ import { Paragraphs, SectionHeader } from '@/components/ui/SectionHeader'
 import { CtaSection } from '@/components/sections/CtaSection'
 import { FaqSection } from '@/components/sections/FaqSection'
 import { ReviewsSection } from '@/components/sections/ReviewsSection'
+import { OptionsSection } from './OptionsSection'
 import { ProductTop } from './ProductTop'
 import { RelatedCarousel } from './RelatedCarousel'
 
@@ -178,64 +179,14 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
         </section>
       )}
 
-      {/* 8. Materials */}
-      {page.materials?.heading && (
-        <section data-section="materials" className="section section--beige" id="materials">
-          <div className="container">
-            <SectionHeader eyebrow={page.materials.eyebrow} heading={page.materials.heading} text={page.materials.text} />
-            <div className="grid-3">
-              {(page.materials.items ?? []).map((m) => (
-                <div key={m.name} className="material">
-                  <div className="material__image">
-                    <Media img={m.image} fallback={`${m.name} photo`} sizes="380px" />
-                    {m.badge && <span className="material__badge">{m.badge}</span>}
-                  </div>
-                  <h4>{m.name}</h4>
-                  <p>{m.description}</p>
-                </div>
-              ))}
-            </div>
-            {page.materials.note && <p className="note">{page.materials.note}</p>}
-          </div>
-        </section>
-      )}
-
-      {/* 9. Printing & finishing */}
-      {page.printing?.heading && (
-        <section data-section="printing" className={`section section--beige printing ${page.materials?.heading ? 'printing--joined' : ''}`}>
-          <div className="container">
-            <div className="split printing__top">
-              <div>
-                <SectionHeader eyebrow={page.printing.eyebrow} heading={page.printing.heading} align="left" className="section-header--tight" />
-                <Paragraphs items={page.printing.body} className="prose prose--sm" />
-              </div>
-              <div className="rounded-media printing__image">
-                <Media img={page.printing.image} fallback="Printing & finishing photo" sizes="600px" />
-              </div>
-            </div>
-            <div className="split printing__lists">
-              {[
-                { title: page.printing.methodsHeading, items: page.printing.methods },
-                { title: page.printing.finishesHeading, items: page.printing.finishes },
-              ].map((col, i) =>
-                col.items?.length ? (
-                  <div key={i}>
-                    {col.title && <h4 className="printing__list-title">{col.title}</h4>}
-                    <ul className="dot-list dot-list--compact">
-                      {col.items.map((m) => (
-                        <li key={m.name}>
-                          <h4>{m.name}</h4>
-                          <p>{m.description}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null,
-              )}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* 8-9. Options: Material, Printing, Finishes and Add-ons tabs, the same section as on box pages.
+          Add-ons come from Site settings > Sub-product pages when the category has none of its own. */}
+      <OptionsSection
+        materials={page.materials?.heading ? page.materials : undefined}
+        printing={page.printing}
+        addons={page.addons?.items?.length ? page.addons : settings.subProductDefaults.addons}
+        labels={settings.subProductDefaults.tabs}
+      />
 
       {/* 10. Industries & use cases */}
       {page.useCases?.heading && (

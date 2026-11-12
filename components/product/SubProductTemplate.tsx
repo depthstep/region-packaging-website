@@ -1,8 +1,9 @@
-import type { Category, OptionCard, PageContent, Product, SectionHeading, SiteData } from '@/lib/types'
+import type { Category, PageContent, Product, SectionHeading, SiteData } from '@/lib/types'
 import { Media } from '@/components/ui/Media'
 import { Paragraphs, SectionHeader } from '@/components/ui/SectionHeader'
 import { FaqSection } from '@/components/sections/FaqSection'
-import { OptionTabs, ProductTabs, type TabItem } from './ProductTabs'
+import { ProductTabs, type TabItem } from './ProductTabs'
+import { OptionsSection } from './OptionsSection'
 import { ProductTop } from './ProductTop'
 import { formOptions, mergeFaqs } from './ProductTemplate'
 
@@ -48,25 +49,6 @@ function OverviewBlock({ s, paragraphs, field, first = false }: { s?: SectionHea
     </>
   )
   return first ? body : <div data-section={field} className="pdp-ovc__block">{body}</div>
-}
-
-function OptionGrid({ items, note }: { items: OptionCard[]; note?: string }) {
-  return (
-    <>
-      <div className="mp-grid">
-        {items.map((m) => (
-          <div key={m.name} className="material">
-            <div className="material__image">
-              <Media img={m.image} fallback={`${m.name} photo`} sizes="(max-width: 900px) 50vw, 290px" />
-            </div>
-            <h4>{m.name}</h4>
-            <p>{m.description}</p>
-          </div>
-        ))}
-      </div>
-      {note && <p className="note">{note}</p>}
-    </>
-  )
 }
 
 export function SubProductTemplate({ data, page, category }: { data: SiteData; page: Product; category: Category }) {
@@ -199,16 +181,6 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
     { id: 'faq', label: label.faq || 'FAQ', icon: ICONS.faq, content: <FaqSection section={faqs} /> },
   ].filter((t) => t.content) as TabItem[]
 
-  // The options section: the materials heading on top, then one tab per kind of option.
-  const options = [
-    { id: 'material', label: label.optionMaterial || 'Material', field: 'materials', items: s.materials?.items, note: s.materials?.note },
-    { id: 'printing', label: label.optionPrinting || 'Printing', field: 'printing', items: s.printing?.methods, note: s.printing?.body?.join(' ') },
-    { id: 'finishes', label: label.optionFinishes || 'Finishes', field: 'printing', items: s.printing?.finishes, note: s.printing?.finishesNote },
-    { id: 'addons', label: label.optionAddons || 'Add-ons', field: 'addons', items: addons?.items, note: addons?.note },
-  ]
-    .filter((o) => o.items?.length)
-    .map((o) => ({ id: o.id, label: o.label, content: <div data-section={o.field}><OptionGrid items={o.items!} note={o.note} /></div> }))
-
   return (
     <>
       <ProductTop
@@ -226,14 +198,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
       />
       {construction}
       {tabs.length > 0 && <ProductTabs tabs={tabs} />}
-      {options.length > 0 && (
-        <section data-section="materials" className="section section--beige" id="materials">
-          <div className="container">
-            {s.materials && <SectionHeader eyebrow={s.materials.eyebrow} heading={s.materials.heading} text={s.materials.text} />}
-            <OptionTabs tabs={options} label="Box options" />
-          </div>
-        </section>
-      )}
+      <OptionsSection materials={s.materials} printing={s.printing} addons={addons} labels={label} underTabBar />
     </>
   )
 }

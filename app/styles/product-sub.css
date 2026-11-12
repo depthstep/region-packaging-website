@@ -77,6 +77,7 @@
 .mp-tabs .pill { background: var(--white); cursor: pointer; font-family: var(--font); font-weight: 500; padding: 12px 26px; font-size: var(--p2); }
 .mp-tabs .pill:hover { background: #e6e1d3; }
 .mp-tabs .pill[aria-selected='true'] { background: var(--blue); color: var(--white); }
+.options--alone .mp-tabs { top: var(--sticky-top); }
 /* Flex rather than grid, so a tab with fewer than 4 cards stays centred. */
 .mp-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; }
 .mp-grid > .material { flex: 0 0 calc((100% - 72px) / 4); min-width: 0; }
