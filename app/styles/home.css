@@ -315,7 +315,11 @@
 .sample-wrap {
   padding-top: 0;
 }
+/* Blue card with the faded logo pattern behind the text (Figma). */
 .sample {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   background: var(--blue);
   border-radius: var(--radius-card);
   padding: 28px 28px 28px 58px;
@@ -324,6 +328,16 @@
   gap: 40px;
   align-items: center;
   color: var(--text-on-dark);
+}
+.sample::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url('../../public/brand/pattern-hex.svg') 0 0 / 179.45px 97.67px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 110% at 25% 0%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 60% 110% at 25% 0%, #000 20%, transparent 75%);
+  pointer-events: none;
 }
 .sample h2 {
   color: var(--white);

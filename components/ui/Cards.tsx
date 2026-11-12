@@ -4,13 +4,26 @@ import type { Card, IconItem, Review } from '@/lib/types'
 import { ArrowRight, Stars } from './glyphs'
 import { Icon, Media } from './Media'
 
-/** Photo card with title, text and an "Explore ... →" link (Choose your box, Explore styles, Related). */
+/** Photo card with title, text and an "Explore ... →" link (Choose your box, Explore styles, Related).
+ *  On hover (Figma): the photo fades under a beige layer with a box icon and a ↗ arrow in the corner.
+ *  Article cards (with a kicker line) show the layer and arrow without the box icon. */
 export function PhotoCard({ card, headingLevel = 'h3' }: { card: Card; headingLevel?: 'h3' | 'h4' }) {
   const H = headingLevel
   const body = (
     <>
       <div className="photo-card__image">
         <Media img={card.image} fallback={`${card.title} photo`} sizes="(max-width: 900px) 100vw, 380px" />
+        {card.href && (
+          <span className="photo-card__hover" aria-hidden="true">
+            {!card.kicker && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={withBase('/icons/step-choose-box.svg')} alt="" width={100} height={100} className="photo-card__icon" />
+            )}
+            <svg className="photo-card__arrow" width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M5 17 17 5M8 5h9v9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+        )}
       </div>
       {card.kicker && <p className="photo-card__kicker">{card.kicker}</p>}
       <H className="photo-card__title">{card.title}</H>
