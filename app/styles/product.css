@@ -55,29 +55,6 @@
     opacity: 0;
   }
 }
-.gallery__zoom {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  display: flex;
-  gap: 10px;
-}
-.gallery__zoom button {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 0;
-  background: var(--white);
-  color: var(--black);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-.gallery__zoom button:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
 .gallery__thumbs {
   display: grid;
   grid-template-columns: repeat(4, 135px);

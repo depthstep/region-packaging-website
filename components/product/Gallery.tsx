@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { withBase } from '@/lib/asset'
 import type { Img } from '@/lib/types'
-import { Minus, Plus } from '@/components/ui/glyphs'
 import { Media } from '@/components/ui/Media'
 
 /** The zoom never goes past this, and never below MIN even for a small photo. */
@@ -13,12 +12,15 @@ const MIN_SCALE = 1.6
 /**
  * Product photos with a thumbnail strip.
  * Zoom works like Amazon's: on a computer, moving the mouse over the photo shows the spot
- * under the pointer enlarged. On phones the + button zooms in and a finger drag looks around.
+ * under the pointer enlarged. On phones and tablets a tap zooms in, a drag looks around and
+ * another tap zooms out (no zoom buttons, as requested).
  *
  * Quality: the zoom uses the full-size original and enlarges it only as far as the photo has
  * real detail for this screen (one photo pixel per screen pixel), so it is never stretched and
- * blurry. Larger originals automatically allow a deeper zoom. The original starts loading when
- * the pointer comes near, and the zoom only shows once it has fully loaded.
+ * blurry. Larger originals automatically allow a deeper zoom. On computers the full-size photo
+ * loads with the page (then the other gallery photos, one at a time), so the zoom is ready before
+ * the mouse arrives. On phones it loads on the first tap, to spare mobile data.
+ * The zoom only shows once the full-size photo has fully loaded.
  */
 export function Gallery({ images, title }: { images: Img[]; title: string }) {
   const list = images.length ? images : [{ alt: '', label: `${title} photo` }]
@@ -29,20 +31,40 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
   const [scale, setScale] = useState(2)
   const [loaded, setLoaded] = useState<Record<string, boolean>>({})
   const box = useRef<HTMLDivElement>(null)
+  const lastPointer = useRef('mouse')
   const current = list[index]
   const src = current.src ? withBase(current.src) : undefined
   const canZoom = !!src
   const ready = !!src && loaded[src]
   const active = canZoom && (zoom || hover)
 
-  /** Fetch the full-size photo once; the zoom appears when it is in. */
-  const preload = () => {
-    if (!src || loaded[src] !== undefined) return
-    setLoaded((l) => ({ ...l, [src]: false }))
+  /** Fetch a full-size photo once; the zoom appears when it is in. */
+  const started = useRef(new Set<string>())
+  const fetchFull = (url: string | undefined, then?: () => void) => {
+    if (!url || started.current.has(url)) return then?.()
+    started.current.add(url)
+    setLoaded((l) => ({ ...l, [url]: false }))
     const img = new window.Image()
-    img.onload = () => setLoaded((l) => ({ ...l, [src]: true }))
-    img.src = src
+    img.onload = () => {
+      setLoaded((l) => ({ ...l, [url]: true }))
+      then?.()
+    }
+    img.onerror = () => then?.()
+    img.src = url
   }
+  const preload = () => fetchFull(src)
+
+  // Computers: load the shown photo's full-size version straight away, then the others in turn.
+  useEffect(() => {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    const rest = list.map((i) => (i.src ? withBase(i.src) : undefined)).filter((u) => u && u !== src)
+    const next = () => {
+      const url = rest.shift()
+      if (url) fetchFull(url, next)
+    }
+    fetchFull(src, next)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src])
 
   // How far to enlarge: as far as the photo's real detail allows on this screen.
   useEffect(() => {
@@ -67,7 +89,7 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
   const isMouse = (e: PointerEvent) => e.pointerType === 'mouse'
 
   return (
-    <div className="gallery" onPointerEnter={preload}>
+    <div className="gallery">
       <div
         ref={box}
         className={`gallery__main ${active ? 'is-zoomed' : ''} ${active && !ready ? 'is-loading' : ''}`}
@@ -80,7 +102,18 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
         }}
         onPointerLeave={(e) => isMouse(e) && setHover(false)}
         onPointerMove={(e) => (isMouse(e) || zoom) && follow(e)}
-        onPointerDown={(e) => zoom && follow(e)}
+        onPointerDown={(e) => {
+          lastPointer.current = e.pointerType
+          if (zoom) follow(e)
+        }}
+        onClick={(e) => {
+          // Phones and tablets: a tap zooms in at that spot, another tap zooms out.
+          if (lastPointer.current === 'mouse' || !canZoom) return
+          const r = e.currentTarget.getBoundingClientRect()
+          setPos({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 })
+          preload()
+          setZoom((z) => !z)
+        }}
       >
         <Media img={current} fallback={`${title} photo`} sizes="(max-width: 900px) 100vw, 630px" priority />
         {active && ready && (
@@ -93,24 +126,6 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
               backgroundPosition: `${pos.x}% ${pos.y}%`,
             }}
           />
-        )}
-        {canZoom && (
-          <div className="gallery__zoom">
-            <button
-              type="button"
-              onClick={() => {
-                preload()
-                setZoom(true)
-              }}
-              disabled={zoom}
-              aria-label="Zoom in"
-            >
-              <Plus />
-            </button>
-            <button type="button" onClick={() => setZoom(false)} disabled={!zoom} aria-label="Zoom out">
-              <Minus />
-            </button>
-          </div>
         )}
       </div>
       {list.length > 1 && (
