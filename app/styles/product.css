@@ -39,12 +39,21 @@
   cursor: crosshair;
   touch-action: none;
 }
+.gallery__main.is-loading {
+  cursor: progress;
+}
 .gallery__lens {
   position: absolute;
   inset: 0;
   background-repeat: no-repeat;
   background-color: var(--white);
   pointer-events: none;
+  animation: lens-in 0.18s ease-out;
+}
+@keyframes lens-in {
+  from {
+    opacity: 0;
+  }
 }
 .gallery__zoom {
   position: absolute;
