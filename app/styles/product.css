@@ -31,11 +31,20 @@
   overflow: hidden;
   background: var(--beige);
 }
-.gallery__main img {
-  transition: transform 0.35s ease;
+/* Zoom: an enlarged copy of the full-size photo that follows the pointer (Amazon style). */
+.gallery__main {
+  cursor: zoom-in;
 }
-.gallery__main.is-zoomed img {
-  transform: scale(1.6);
+.gallery__main.is-zoomed {
+  cursor: crosshair;
+  touch-action: none;
+}
+.gallery__lens {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-color: var(--white);
+  pointer-events: none;
 }
 .gallery__zoom {
   position: absolute;

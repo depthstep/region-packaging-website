@@ -34,7 +34,6 @@ export const settings: SiteSettings = {
     { label: 'Blogs', href: '/blog' },
     { label: 'FAQs', href: '/faqs' },
     { label: 'How To Order', href: '/how-to-order' },
-    { label: 'Paper Weight Chart', href: '/paper-weight-chart' },
   ],
   stats: [
     { value: '10+', label: 'Years manufacturing' },
@@ -322,24 +321,35 @@ export const settings: SiteSettings = {
   footer: {
     blurb:
       'Mailer boxes, shipping boxes and retail packaging, printed in full colour and built to your exact dimensions. Low minimums, fast turnaround.',
+    // The three link columns from the Figma home page.
     columns: [
       {
         title: 'Company',
         links: [
-          { label: 'How It Works', href: '/how-to-order' },
-          { label: 'Design Services', href: '/#design' },
-          { label: 'Sustainability', href: '/#eco' },
-          { label: 'Reviews', href: '/#reviews' },
-          { label: 'Folding Cartons', href: '/custom-folding-cartons' },
+          { label: 'About Us', href: '/about' },
+          { label: 'Why Choose Us', href: '/#why' },
+          { label: 'How It Works', href: '/#how-it-works' },
+          { label: 'Contact', href: '/contact' },
+          { label: 'Testimonials', href: '/#reviews' },
+        ],
+      },
+      {
+        title: 'Products',
+        links: [
+          { label: 'Custom Mailer Boxes', href: '/custom-mailer-boxes' },
+          { label: 'Custom Folding Cartons', href: '/custom-folding-cartons' },
+          { label: 'Custom Shipping Boxes', href: '/custom-shipping-boxes' },
+          { label: 'Custom Rigid Boxes', href: '/custom-rigid-boxes' },
+          { label: 'View All Products', href: '/products' },
         ],
       },
       {
         title: 'Support',
         links: [
-          { label: 'Get a Quote', href: '/quote' },
+          { label: 'Blog', href: '/blog' },
           { label: 'Artwork Guidelines', href: '/artwork-guidelines' },
           { label: 'FAQs', href: '/faqs' },
-          { label: 'Materials & Finishes', href: '/custom-mailer-boxes#materials' },
+          { label: 'How to Order', href: '/how-to-order' },
         ],
       },
     ],
@@ -429,7 +439,7 @@ export const home: HomePage = {
       { title: 'Choose Your Box', text: 'Select your box style and material, from corrugated mailers to paperboard cartons.', icon: img('/icons/step-choose-box.svg', '') },
       { title: 'Set Size & Quantity', text: 'Pick a stock or custom size and the quantity that fits your run, with low minimums.', icon: img('/icons/step-size-box.svg', '') },
       { title: 'Brand It Free', text: 'Upload your logo and artwork or use our free design support to bring your brand to life.', icon: img('/icons/step-brand-logo.svg', '') },
-      { title: 'Approve & Receive', text: 'Approve your digital proof, we produce it and deliver it to your door.', icon: ph('Approved icon') },
+      { title: 'Approve & Receive', text: 'Approve your digital proof, we produce it and deliver it to your door.', icon: img('/icons/step-approve.svg', '') },
     ],
   },
   industries: {
@@ -486,7 +496,7 @@ export const home: HomePage = {
     body: "We're committed to offsetting our world's carbon footprint, contributing to reforestation, and sustainability. Not only do we offer packaging that's FSC™ certified, all of our premium product boxes is made from recycled materials and printed with soy-based ink.",
     linkText: 'FSC™ certified',
     linkHref: '',
-    badge: ph('FSC badge'),
+    badge: img('/images/fsc-badge.png', 'FSC certified'),
   },
   logo: {
     eyebrow: 'Branding & Materials',
@@ -649,7 +659,6 @@ export const artwork: ArtworkPage = {
 
 const placeholderPage = (slug: string, title: string, note: string): SimplePage => ({ id: `page-${slug}`, slug, title, body: doc(p(`[Placeholder] ${note}`)) })
 export const pages: SimplePage[] = [
-  placeholderPage('paper-weight-chart', 'Paper Weight Chart', 'The paper weight chart has not been supplied yet.'),
   placeholderPage('privacy-policy', 'Privacy Policy', 'The privacy policy has not been supplied yet.'),
   placeholderPage('terms-of-service', 'Terms of Service', 'The terms of service have not been supplied yet.'),
 ]

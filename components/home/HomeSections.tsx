@@ -7,6 +7,7 @@ import { FeatureCard, PhotoCard } from '@/components/ui/Cards'
 import { Star } from '@/components/ui/glyphs'
 import { Icon, Media } from '@/components/ui/Media'
 import { Paragraphs, SectionHeader } from '@/components/ui/SectionHeader'
+import { ViewAllMenu } from '@/components/ui/ViewAllMenu'
 import { HeroSlider } from './HeroSlider'
 import { IndustryTabs } from './IndustryTabs'
 
@@ -46,24 +47,40 @@ export function TrustedBy({ settings }: { settings: SiteData['settings'] }) {
     <section data-section="trustedHeading trustedBrands" className="trusted">
       <div className="container trusted__inner">
         <p className="trusted__heading">{settings.trustedHeading}</p>
-        <ul className="trusted__logos">
-          {settings.trustedBrands.map((b) => (
-            <li key={b.name}>
-              {b.logo?.src ? (
-                <Image src={withBase(b.logo.src)} alt={b.name} width={b.logo.width ?? 160} height={b.logo.height ?? 40} className="trusted__logo" />
-              ) : (
-                <span className="trusted__name">{b.name}</span>
-              )}
-            </li>
+        {/* The logos scroll slowly from right to left. The list is drawn twice so the loop has no gap;
+            the copy is hidden from screen readers. Motion stops for visitors who ask for less motion. */}
+        <div className="trusted__marquee">
+          {[0, 1].map((copy) => (
+            <ul key={copy} className="trusted__logos" aria-hidden={copy === 1 || undefined}>
+              {settings.trustedBrands.map((b) => (
+                <li key={b.name}>
+                  {b.logo?.src ? (
+                    <Image src={withBase(b.logo.src)} alt={copy ? '' : b.name} width={b.logo.width ?? 160} height={b.logo.height ?? 40} className="trusted__logo" />
+                  ) : (
+                    <span className="trusted__name">{b.name}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   )
 }
 
-export function ChooseBox({ s }: { s: HomePage['chooseBox'] }) {
+export function ChooseBox({ s, data }: { s: HomePage['chooseBox']; data: SiteData }) {
   if (!s.cards.length) return null
+  // "View all" opens the list of box categories (Custom Boxes menu), then the full products page.
+  const more = (className = '') =>
+    s.button && (
+      <ViewAllMenu
+        label={s.button.label}
+        className={className}
+        items={data.categories.filter((c) => c.kind !== 'industry').map((c) => ({ label: c.title, href: `/${c.slug}` }))}
+        all={{ label: s.button.label, href: s.button.href }}
+      />
+    )
   return (
     <section data-section="chooseBox products" className="section choose-box" id="products">
       <div className="container">
@@ -72,7 +89,7 @@ export function ChooseBox({ s }: { s: HomePage['chooseBox'] }) {
           heading={s.heading}
           text={s.text}
           align="left"
-          aside={s.button && <ButtonLink href={s.button.href} variant="outline" size="sm">{s.button.label}</ButtonLink>}
+          aside={more()}
         />
         <div className="grid-3 card-grid">
           {s.cards.map((c) => (
@@ -80,11 +97,7 @@ export function ChooseBox({ s }: { s: HomePage['chooseBox'] }) {
           ))}
         </div>
         {/* On phones the button sits under the cards (Figma mobile). */}
-        {s.button && (
-          <ButtonLink href={s.button.href} variant="outline" size="sm" className="choose-box__more">
-            {s.button.label}
-          </ButtonLink>
-        )}
+        {more('choose-box__more')}
       </div>
     </section>
   )
@@ -93,7 +106,7 @@ export function ChooseBox({ s }: { s: HomePage['chooseBox'] }) {
 export function Steps({ s }: { s: HomePage['steps'] }) {
   if (!s.steps.length) return null
   return (
-    <section data-section="steps" className="section section--beige">
+    <section data-section="steps" className="section section--beige" id="how-it-works">
       <div className="container">
         <SectionHeader eyebrow={s.eyebrow} heading={s.heading} text={s.text} />
         <ol className="steps">
@@ -131,7 +144,7 @@ export function Industries({ s, data }: { s: HomePage['industries']; data: SiteD
 
 export function AnyQuantity({ s }: { s: HomePage['quantity'] }) {
   return (
-    <section data-section="quantity" className="section section--rule">
+    <section data-section="quantity" className="section section--rule" id="why">
       <div className="container split quantity">
         <div>
           <SectionHeader eyebrow={s.eyebrow} heading={s.heading} text={s.text} align="left" />
@@ -266,8 +279,14 @@ export function BlogTeasers({ s, data, rule = true }: { s: HomePage['blog']; dat
   if (!posts.length) return null
   return (
     <section data-section="blog" className={`section ${rule ? 'section--rule' : ''}`}>
-      <div className="container">
+      <div className="container blog-teasers">
         <SectionHeader eyebrow={s.eyebrow} heading={s.heading} text={s.text} />
+        <ViewAllMenu
+          label={data.blog.viewAllLabel || 'View all'}
+          className="blog-teasers__more"
+          items={data.posts.map((p) => ({ label: p.title, href: `/blog/${p.slug}` }))}
+          all={{ label: 'All guides & ideas', href: '/blog' }}
+        />
         <div className="grid-3 card-grid">
           {posts.map((p) => (
             <PhotoCard

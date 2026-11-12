@@ -13,7 +13,7 @@
 /* Sticky tab bar */
 .pdp-tabbar {
   position: sticky;
-  top: 0;
+  top: var(--sticky-top);
   z-index: 20;
   background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(8px);
@@ -59,8 +59,21 @@
 .pdp-why .section-header { margin-bottom: 30px; }
 .pdp-why .note { margin-top: 30px; }
 
+/* Height of the pinned tab bar above (79px; 72px on phones), so the option buttons sit right under it. */
+:root { --pdp-tabbar-h: 79px; }
+@media (max-width: 700px) { :root { --pdp-tabbar-h: 72px; } }
+
 /* Options section: Material, Printing, Finishes, Add-ons */
-.mp-tabs { margin: 0 auto 50px; }
+/* All four buttons always show, and they stay pinned below the tab bar while the visitor
+   scrolls through this section (sticky inside the section's container, so they leave with it). */
+.mp-tabs {
+  position: sticky;
+  top: calc(var(--sticky-top) + var(--pdp-tabbar-h));
+  z-index: 15;
+  margin: 0 auto 50px;
+  padding-block: 12px;
+  background: var(--beige);
+}
 .mp-tabs .pill { background: var(--white); cursor: pointer; font-family: var(--font); font-weight: 500; padding: 12px 26px; font-size: var(--p2); }
 .mp-tabs .pill:hover { background: #e6e1d3; }
 .mp-tabs .pill[aria-selected='true'] { background: var(--blue); color: var(--white); }
@@ -81,6 +94,6 @@
   .pdp-tab { padding: 10px 16px; font-size: var(--p3); }
 }
 @media (max-width: 560px) {
-  .mp-tabs { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; }
-  .mp-tabs .pill { white-space: nowrap; }
+  .mp-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 32px; }
+  .mp-tabs .pill { padding: 10px 4px; font-size: 13px; white-space: nowrap; text-align: center; }
 }

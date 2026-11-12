@@ -266,6 +266,11 @@
     gap: 10px;
     margin-left: auto;
   }
+  /* Phones and tablets: the bar with the logo and menu button stays pinned at the top. */
+  .site-header {
+    position: sticky;
+    top: 0;
+  }
 }
 
 /* Drawer: slides in from the right over a dimmed page. */
@@ -376,9 +381,10 @@ html.menu-open {
   color: var(--text-on-dark);
   padding-top: 110px;
 }
+/* Figma: logo and contact details, then three link columns (Company, Products, Support). */
 .footer__top {
   display: grid;
-  grid-template-columns: 1.45fr 0.75fr 0.85fr 1.15fr;
+  grid-template-columns: 2.3fr 1fr 1.3fr minmax(230px, 1fr);
   gap: 40px;
   padding-bottom: 60px;
 }
@@ -431,14 +437,31 @@ html.menu-open {
 .footer__rule {
   border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
-.footer__middle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  padding-block: 40px;
+/* Follow us, newsletter and payments, lined up with the columns above, over the faded
+   logo pattern that grows stronger towards the bottom (Figma). */
+.footer__middle-wrap {
+  position: relative;
+  overflow: hidden;
 }
-.footer__middle > div:last-child {
-  justify-self: stretch;
+.footer__middle-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('../../public/brand/pattern-hex.svg') 0 0 / 179.45px 97.67px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 120% at 45% 110%, #000 25%, transparent 80%);
+  mask-image: radial-gradient(ellipse 70% 120% at 45% 110%, #000 25%, transparent 80%);
+  pointer-events: none;
+}
+.footer__middle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.3fr 1fr 1.3fr minmax(230px, 1fr);
+  gap: 40px;
+  padding-block: 44px 64px;
+}
+.footer__newsletter {
+  grid-column: span 2;
+  max-width: 320px;
 }
 .socials {
   display: flex;
@@ -462,6 +485,7 @@ html.menu-open {
 .footer__payments {
   width: 360px;
   max-width: 100%;
+  min-width: 230px;
   height: auto;
 }
 .footer__bottom {
@@ -478,6 +502,13 @@ html.menu-open {
 @media (max-width: 1000px) {
   .footer__top {
     grid-template-columns: 1fr 1fr;
+  }
+  .footer__middle {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer__newsletter {
+    grid-column: 1 / -1;
+    max-width: 420px;
   }
   .footer__bottom ul {
     gap: 30px;

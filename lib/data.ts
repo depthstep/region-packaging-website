@@ -197,6 +197,27 @@ export const getSiteData = cache(async (): Promise<SiteData> => loadSiteData(cms
 export const getPublishedData = cache(async (): Promise<SiteData> => loadSiteData(null))
 
 /** Page title + description from Site settings > Other pages. */
+/**
+ * Where to send a visitor who opens a sub-product that is switched to Hidden in the admin:
+ * its first shown category page (or the products page). Undefined when no hidden box has that address.
+ */
+export async function hiddenProductHome(slug: string): Promise<string | undefined> {
+  if (!cmsEnabled) return undefined
+  const [{ getPayload }, { default: config }] = await Promise.all([import('payload'), import('@payload-config')])
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'products',
+    where: { and: [{ slug: { equals: slug } }, { status: { equals: 'hidden' } }, { _status: { equals: 'published' } }] },
+    depth: 0,
+    limit: 1,
+  })
+  if (!docs[0]) return undefined
+  const data = await getPublishedData()
+  const ids = ((docs[0] as { categories?: unknown[] }).categories ?? []).map((id) => cmsId('categories', id))
+  const cat = ids.map((id) => data.categories.find((c) => c.id === id)).find((c) => !!c)
+  return cat ? `/${cat.slug}` : '/products'
+}
+
 export function introMetadata(intro: PageIntroText | undefined, fallback: string) {
   return { title: intro?.seoTitle ? { absolute: intro.seoTitle } : intro?.heading || fallback, description: intro?.seoDescription }
 }

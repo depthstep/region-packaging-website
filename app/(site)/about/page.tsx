@@ -100,7 +100,7 @@ export default async function AboutPage() {
       )}
 
       <div className="about-products">
-        <ChooseBox s={{ ...home.chooseBox, ...about.products }} />
+        <ChooseBox s={{ ...home.chooseBox, ...about.products }} data={data} />
       </div>
 
       {values.items.length > 0 && (

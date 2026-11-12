@@ -49,3 +49,17 @@
     --section-y: 64px;
   }
 }
+
+/* Height of whatever is pinned at the top of the screen, so other pinned bars and
+   jump links sit just below it. On phones and tablets the header (logo + menu) is pinned. */
+:root {
+  --sticky-top: 0px;
+}
+@media (max-width: 1100px) {
+  :root {
+    --sticky-top: 74px;
+  }
+  html {
+    scroll-padding-top: var(--sticky-top);
+  }
+}

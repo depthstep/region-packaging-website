@@ -461,7 +461,23 @@ a.photo-card:hover .photo-card__image img {
 }
 
 /* ---------- CTA ---------- */
-/* Centred on every page, at every screen size. */
+/* Centred on every page, at every screen size, over the faded logo pattern (Figma). */
+.cta {
+  position: relative;
+  overflow: hidden;
+}
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('../../public/brand/pattern-hex.svg') 0 0 / 179.45px 97.67px;
+  -webkit-mask-image: radial-gradient(ellipse 34% 62% at 50% 50%, transparent 35%, #000 100%);
+  mask-image: radial-gradient(ellipse 34% 62% at 50% 50%, transparent 35%, #000 100%);
+  pointer-events: none;
+}
+.cta .container {
+  position: relative;
+}
 .cta__inner {
   display: flex;
   justify-content: center;
@@ -569,4 +585,61 @@ button.pill:hover {
 .article__image {
   aspect-ratio: 16 / 9;
   margin: 12px 0;
+}
+
+/* ---------- "View all" button with a short list ---------- */
+.viewall {
+  position: relative;
+  display: inline-block;
+}
+.viewall__button {
+  gap: 10px;
+}
+.viewall__button svg {
+  transition: transform 0.2s ease;
+}
+.viewall.is-open .viewall__button svg {
+  transform: rotate(180deg);
+}
+.viewall__menu {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 10px);
+  right: 0;
+  width: max-content;
+  min-width: 100%;
+  max-width: min(360px, calc(100vw - 32px));
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 8px;
+  background: var(--white);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(1, 47, 141, 0.12);
+  text-align: left;
+}
+.viewall__menu[hidden] {
+  display: none;
+}
+.viewall__menu a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--black);
+  font-size: var(--p3, 15px);
+  line-height: 1.35;
+}
+.viewall__menu a:hover,
+.viewall__menu a:focus-visible {
+  background: var(--beige);
+  color: var(--blue);
+}
+.viewall__all {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--stroke);
+}
+.viewall__all a {
+  color: var(--blue);
+  font-weight: 600;
 }

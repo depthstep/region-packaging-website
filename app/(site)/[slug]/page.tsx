@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import { findCategory, getPublishedData, getSiteData, primaryCategory, productsIn } from '@/lib/data'
+import { notFound, redirect } from 'next/navigation'
+import { findCategory, getPublishedData, getSiteData, hiddenProductHome, primaryCategory, productsIn } from '@/lib/data'
 import type { Category, Product, SiteData } from '@/lib/types'
 import { RichText } from '@/components/blog/RichText'
 import { PageIntro } from '@/components/layout/PageIntro'
@@ -54,7 +54,12 @@ export default async function SlugPage({ params }: Params) {
   const { slug } = await params
   const data = await getSiteData()
   const hit = find(data, slug)
-  if (!hit) notFound()
+  if (!hit) {
+    // A box page switched to Hidden in the admin: send the visitor to its category instead.
+    const home = await hiddenProductHome(slug)
+    if (home) redirect(home)
+    notFound()
+  }
 
   if (hit.type === 'category') {
     const { cat } = hit

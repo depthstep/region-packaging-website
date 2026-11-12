@@ -31,7 +31,7 @@ export default async function HomePage() {
     <>
       <Hero hero={home.hero} stats={settings.stats} />
       <TrustedBy settings={settings} />
-      <ChooseBox s={home.chooseBox} />
+      <ChooseBox s={home.chooseBox} data={data} />
       <Steps s={home.steps} />
       <Industries s={home.industries} data={data} />
       <AnyQuantity s={home.quantity} />

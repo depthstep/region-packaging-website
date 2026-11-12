@@ -41,47 +41,50 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             </ul>
           </div>
         ))}
-        <div className="footer__newsletter">
-          <p className="footer__heading">{f.newsletterTitle}</p>
-          <p>{f.newsletterText}</p>
-          {/* Newsletter sign-up is not connected to an email service yet. */}
-          <form className="newsletter" aria-label="Newsletter (not active yet)">
-            <label className="sr-only" htmlFor="newsletter-email">
-              Email address
-            </label>
-            <input id="newsletter-email" type="email" placeholder={f.newsletterPlaceholder} disabled title="Not active yet" />
-            <button type="button" className="btn btn--sky btn--sm" aria-disabled="true" title="Not active yet">
-              {f.newsletterButton}
-            </button>
-          </form>
-        </div>
       </div>
       <div className="footer__rule" />
-      <div className="container footer__middle">
-        <div>
-          <p className="footer__heading">{f.followLabel}</p>
-          <ul className="socials">
-            {settings.socials.map((s) => (
-              <li key={s.label}>
-                {s.url ? (
-                  <a href={s.url} target="_blank" rel="noreferrer" aria-label={s.label}>
-                    <Social name={s.label} />
-                  </a>
-                ) : (
-                  <span aria-label={`${s.label} (link not set)`} title="Add the link in Site settings">
-                    <Social name={s.label} />
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-        {f.paymentLogos?.src && (
+      {/* Follow us, newsletter and payments, over the faded logo pattern (Figma). */}
+      <div className="footer__middle-wrap">
+        <div className="container footer__middle">
           <div>
-            <p className="footer__heading">{f.paymentsLabel}</p>
-            <Image src={withBase(f.paymentLogos.src)} alt={f.paymentLogos.alt} width={244} height={30} className="footer__payments" />
+            <p className="footer__heading">{f.followLabel}</p>
+            <ul className="socials">
+              {settings.socials.map((s) => (
+                <li key={s.label}>
+                  {s.url ? (
+                    <a href={s.url} target="_blank" rel="noreferrer" aria-label={s.label}>
+                      <Social name={s.label} />
+                    </a>
+                  ) : (
+                    <span aria-label={`${s.label} (link not set)`} title="Add the link in Site settings">
+                      <Social name={s.label} />
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
-        )}
+          <div className="footer__newsletter">
+            <p className="footer__heading">{f.newsletterTitle}</p>
+            <p>{f.newsletterText}</p>
+            {/* Newsletter sign-up is not connected to an email service yet. */}
+            <form className="newsletter" aria-label="Newsletter (not active yet)">
+              <label className="sr-only" htmlFor="newsletter-email">
+                Email address
+              </label>
+              <input id="newsletter-email" type="email" placeholder={f.newsletterPlaceholder} disabled title="Not active yet" />
+              <button type="button" className="btn btn--sky btn--sm" aria-disabled="true" title="Not active yet">
+                {f.newsletterButton}
+              </button>
+            </form>
+          </div>
+          {f.paymentLogos?.src && (
+            <div>
+              <p className="footer__heading">{f.paymentsLabel}</p>
+              <Image src={withBase(f.paymentLogos.src)} alt={f.paymentLogos.alt} width={244} height={30} className="footer__payments" />
+            </div>
+          )}
+        </div>
       </div>
       <div className="footer__rule" />
       <div className="container footer__bottom">
