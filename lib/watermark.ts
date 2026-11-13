@@ -1,37 +1,47 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
-import { LOGO_PATHS, LOGO_VIEWBOX } from './watermarkLogo'
+import { MARK_BOX, MARK_PATHS, WORD_BOX, WORD_PATHS } from './watermarkLogo'
 
 /**
- * Stamps a photo with repeating diagonal strips of the RP logo (white with a soft dark edge, so it
- * shows on light and dark photos). Copies are made the first time they are asked for and kept in
- * <uploads>/media-watermarked; a new or replaced upload gets a fresh copy automatically.
+ * Stamps a photo with the RP watermark (see overlay below). Copies are made the first time they
+ * are asked for and kept in
+ * <uploads>/media-watermarked-<style>; a new or replaced upload gets a fresh copy automatically.
  * The original upload is never changed.
  */
+/** Change this when the watermark's look changes, so every photo gets a fresh copy in the new style. */
+const STYLE = 'v2'
+
 const uploads = () => path.resolve(process.env.UPLOADS_DIR || path.resolve(process.cwd(), 'uploads'))
 
 function overlay(width: number, height: number) {
-  // Logo width is about a fifth of the photo; rows of logos run diagonally across it.
-  const logoW = Math.max(120, Math.round(width / 5))
-  const scale = logoW / LOGO_VIEWBOX.width
-  const logoH = Math.round(LOGO_VIEWBOX.height * scale)
-  const gapX = Math.round(logoW * 0.55)
-  const gapY = Math.round(logoH * 2.2)
-  const tileW = logoW + gapX
-  const tileH = logoH + gapY
-  // Every other strip is shifted by half a logo, so the strips read as a woven pattern.
-  const logo = (x: number, y: number) =>
-    `<g transform="translate(${x} ${y}) scale(${scale})"><g fill="#000" fill-opacity="0.35" transform="translate(1.2 1.2)">${LOGO_PATHS}</g><g fill="#fff" fill-opacity="0.55">${LOGO_PATHS}</g></g>`
+  // Stock-photo style, flat white with no shadow: large diagonal "REGION PACKAGING" wordmarks,
+  // spaced out and staggered, plus a regular grid of small RP hexagon icons in between.
+  const parts: string[] = []
+  const wordW = Math.round(width / 4.2)
+  const wordScale = wordW / WORD_BOX.width
+  const colGap = width / 2.4
+  const rowGap = height / 2.7
+  for (let row = -1; row <= 3; row++) {
+    for (let col = -1; col <= 3; col++) {
+      const x = col * colGap + (row % 2 ? colGap / 2 : 0) + colGap * 0.15
+      const y = row * rowGap + rowGap * 0.45
+      parts.push(
+        `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(-30) scale(${wordScale.toFixed(3)}) translate(${-WORD_BOX.x} 0)">${WORD_PATHS}</g>`,
+      )
+    }
+  }
+  const markH = Math.max(18, Math.round(width / 40))
+  const markScale = markH / MARK_BOX.height
+  const gridX = width / 7
+  const gridY = height / 5.5
+  for (let y = gridY / 2; y < height; y += gridY) {
+    for (let x = gridX / 2; x < width; x += gridX) {
+      parts.push(`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${markScale.toFixed(3)})">${MARK_PATHS}</g>`)
+    }
+  }
   return Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-      <defs>
-        <pattern id="strip" width="${tileW}" height="${tileH * 2}" patternUnits="userSpaceOnUse" patternTransform="rotate(-28)">
-          ${logo(0, 0)}${logo(Math.round(tileW / 2), tileH)}${logo(Math.round(tileW / 2) - tileW, tileH)}
-        </pattern>
-      </defs>
-      <rect width="${width}" height="${height}" fill="url(#strip)" opacity="0.9"/>
-    </svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><g fill="#ffffff" fill-opacity="0.5">${parts.join('')}</g></svg>`,
   )
 }
 
@@ -40,7 +50,7 @@ export async function watermarked(file: string): Promise<{ body: Buffer; type: s
   const name = path.basename(file)
   if (name !== file || !/\.(jpe?g|png|webp)$/i.test(name)) return undefined
   const source = path.join(uploads(), 'media', name)
-  const cached = path.join(uploads(), 'media-watermarked', name)
+  const cached = path.join(uploads(), `media-watermarked-${STYLE}`, name)
   const stat = await fs.stat(source).catch(() => undefined)
   if (!stat) return undefined
   const type = /\.png$/i.test(name) ? 'image/png' : /\.webp$/i.test(name) ? 'image/webp' : 'image/jpeg'

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Archivo } from 'next/font/google'
 import { Footer } from '@/components/layout/Footer'
 import { Header } from '@/components/layout/Header'
+import { SaveShortcutGuard } from '@/components/ui/SaveShortcutGuard'
 import { draftMode } from 'next/headers'
 import { PreviewGuard } from '@/components/admin/PreviewGuard'
 import { noIndex } from '@/lib/asset'
@@ -38,6 +39,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <body>
         <Header data={data} />
         <main>{children}</main>
+        <SaveShortcutGuard />
         <Footer settings={data.settings} />
         {previewing && <PreviewGuard />}
       </body>

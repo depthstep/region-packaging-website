@@ -22,6 +22,7 @@ export function WatermarkGuard({ src, alt }: { src: string; alt: string }) {
       src={armed ? watermarkedUrl(src) : EMPTY}
       alt={alt}
       aria-hidden="true"
+      data-wm={watermarkedUrl(src)}
       decoding="async"
       onPointerEnter={arm}
       onTouchStart={arm}
