@@ -10,7 +10,7 @@ const UPLOAD = '/api/media/file/'
  * The watermark's look. Change it whenever the look changes: the style is part of every
  * watermarked address, so no stored copy (server, Cloudflare or browser) can show an old look.
  */
-export const WATERMARK_STYLE = 'v3'
+export const WATERMARK_STYLE = 'v4'
 const WATERMARKED = `/api/media/wm/${WATERMARK_STYLE}/`
 
 export function isProtected(src?: string): src is string {

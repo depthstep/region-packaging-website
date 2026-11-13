@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
-import { LOGO_PATHS, LOGO_VIEWBOX, MARK_BOX, MARK_PATHS } from './watermarkLogo'
+import { LOGO_PATHS, LOGO_VIEWBOX } from './watermarkLogo'
 import { WATERMARK_STYLE } from './watermarkUrls'
 
 /**
@@ -14,8 +14,7 @@ const uploads = () => path.resolve(process.env.UPLOADS_DIR || path.resolve(proce
 
 function overlay(width: number, height: number) {
   // Stock-photo style, flat white with no shadow: the full logo (hexagon icon beside
-  // "REGION PACKAGING", as in the real logo) set diagonally, spaced out and staggered, plus a
-  // regular grid of small RP hexagon icons in between.
+  // "REGION PACKAGING", as in the real logo) set diagonally, spaced out and staggered.
   const parts: string[] = []
   const logoW = Math.round(width / 3.6)
   const logoScale = logoW / LOGO_VIEWBOX.width
@@ -28,15 +27,6 @@ function overlay(width: number, height: number) {
       parts.push(
         `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(-30) scale(${logoScale.toFixed(3)})">${LOGO_PATHS}</g>`,
       )
-    }
-  }
-  const markH = Math.max(18, Math.round(width / 40))
-  const markScale = markH / MARK_BOX.height
-  const gridX = width / 7
-  const gridY = height / 5.5
-  for (let y = gridY / 2; y < height; y += gridY) {
-    for (let x = gridX / 2; x < width; x += gridX) {
-      parts.push(`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${markScale.toFixed(3)})">${MARK_PATHS}</g>`)
     }
   }
   return Buffer.from(
