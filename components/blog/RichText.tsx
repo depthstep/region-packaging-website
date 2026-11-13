@@ -3,6 +3,8 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { withBase } from '@/lib/asset'
 import type { Img, RichText as RichTextDoc, RichTextNode } from '@/lib/types'
+import { isProtected } from '@/lib/watermarkUrls'
+import { WatermarkGuard } from '@/components/ui/WatermarkGuard'
 
 // Renders Payload rich text (Lexical JSON) as plain HTML. Covers what the editor offers for
 // articles: headings, paragraphs, lists, quotes, links, bold/italic/underline and images.
@@ -89,6 +91,7 @@ function node(n: RichTextNode, key: number): ReactNode {
       return (
         <figure key={key} className="rich-text__image">
           <Image src={withBase(img.src)} alt={img.alt} width={img.width ?? 1200} height={img.height ?? 900} sizes="(max-width: 900px) 100vw, 750px" />
+          {isProtected(img.src) && <WatermarkGuard src={img.src} alt={img.alt} />}
         </figure>
       )
     }

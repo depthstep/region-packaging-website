@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { withBase } from '@/lib/asset'
+import { isProtected, zoomUrl } from '@/lib/watermarkUrls'
 import type { Img } from '@/lib/types'
 import { Media } from '@/components/ui/Media'
 
@@ -33,7 +34,8 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
   const box = useRef<HTMLDivElement>(null)
   const lastPointer = useRef('mouse')
   const current = list[index]
-  const src = current.src ? withBase(current.src) : undefined
+  const big = (i: Img) => (i.src ? (isProtected(i.src) ? zoomUrl(i.src) : withBase(i.src)) : undefined)
+  const src = big(current)
   const canZoom = !!src
   const ready = !!src && loaded[src]
   const active = canZoom && (zoom || hover)
@@ -62,7 +64,7 @@ export function Gallery({ images, title }: { images: Img[]; title: string }) {
   useEffect(() => {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
     if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData) return
-    const rest = list.map((i) => (i.src ? withBase(i.src) : undefined)).filter((u) => u && u !== src)
+    const rest = list.map(big).filter((u) => u && u !== src)
     const next = () => {
       const url = rest.shift()
       if (url) fetchFull(url, next, true)

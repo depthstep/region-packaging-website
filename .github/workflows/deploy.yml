@@ -69,7 +69,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           # Plain files can't redirect or run the admin preview, so these only exist on the real server.
-          rm -rf app/api "app/(payload)" "app/(site)/preview" "app/(site)/[slug]/[product]" .next
+          rm -rf app/api "app/(payload)" "app/(site)/preview" "app/(site)/[slug]/[product]" proxy.ts .next
           npx next build
         env:
           STATIC_EXPORT: '1'

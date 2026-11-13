@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import { withBase } from '@/lib/asset'
 import type { Img } from '@/lib/types'
+import { isProtected } from '@/lib/watermarkUrls'
+import { WatermarkGuard } from './WatermarkGuard'
 
 type Props = {
   img?: Img
@@ -25,6 +27,7 @@ export function Media({ img, fallback, sizes, className = '', priority }: Props)
   return (
     <div className={`media ${className}`}>
       <Image src={withBase(img.src)} alt={img.alt} fill sizes={sizes} priority={priority} style={{ objectFit: 'cover' }} />
+      {isProtected(img.src) && <WatermarkGuard src={img.src} alt={img.alt} />}
     </div>
   )
 }

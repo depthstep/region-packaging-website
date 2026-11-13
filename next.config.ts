@@ -21,10 +21,12 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: staticExport,
     // Uploads served by Payload, plus the starter photos/icons in public/.
-    localPatterns: [{ pathname: '/api/media/file/**' }, { pathname: '/images/**' }, { pathname: '/brands/**' }, { pathname: '/icons/**' }],
+    localPatterns: [{ pathname: '/api/media/file/**' }, { pathname: '/api/media/wm/**' }, { pathname: '/images/**' }, { pathname: '/brands/**' }, { pathname: '/icons/**' }],
     // "Open image in new tab" shows the photo instead of downloading it (Next.js defaults to download).
     // SVGs are never optimised here, and the security headers on images stay in place.
     contentDispositionType: 'inline',
+    // 90 is the sharper copy used by the product photo zoom.
+    qualities: [75, 90],
   },
   turbopack: { root: dirname },
 }
