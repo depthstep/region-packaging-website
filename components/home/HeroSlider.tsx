@@ -5,7 +5,7 @@ import type { Img } from '@/lib/types'
 import { Chevron } from '@/components/ui/glyphs'
 import { Media } from '@/components/ui/Media'
 
-const EVERY_MS = 5000
+const EVERY_MS = 3500
 
 /**
  * The home page banner photos. They move on by themselves every few seconds; the
