@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { WATERMARK_STYLE } from '@/lib/watermarkUrls'
 
 /**
  * Photo watermark, file addresses: when someone opens an uploaded photo's own address in the
@@ -14,7 +15,7 @@ export function proxy(request: NextRequest) {
   const isPageVisit = request.headers.get('sec-fetch-dest') === 'document'
   const isAdmin = request.cookies.has('payload-token')
   if (isPageVisit && !isAdmin && /\.(jpe?g|png|webp)$/i.test(file)) {
-    const to = new URL(`/api/media/wm/${file}`, request.url)
+    const to = new URL(`/api/media/wm/${WATERMARK_STYLE}/${file}`, request.url)
     const res = NextResponse.redirect(to, 307)
     res.headers.set('Cache-Control', 'no-store')
     return res

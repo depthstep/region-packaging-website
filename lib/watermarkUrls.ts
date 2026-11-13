@@ -6,7 +6,12 @@ import { withBase } from './asset'
  * Only photos uploaded through the admin (/api/media/file/...) are protected, never SVG icons or logos.
  */
 const UPLOAD = '/api/media/file/'
-const WATERMARKED = '/api/media/wm/'
+/**
+ * The watermark's look. Change it whenever the look changes: the style is part of every
+ * watermarked address, so no stored copy (server, Cloudflare or browser) can show an old look.
+ */
+export const WATERMARK_STYLE = 'v2'
+const WATERMARKED = `/api/media/wm/${WATERMARK_STYLE}/`
 
 export function isProtected(src?: string): src is string {
   return !!src && src.startsWith(UPLOAD) && /\.(jpe?g|png|webp)$/i.test(src)

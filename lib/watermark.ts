@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
 import { MARK_BOX, MARK_PATHS, WORD_BOX, WORD_PATHS } from './watermarkLogo'
+import { WATERMARK_STYLE } from './watermarkUrls'
 
 /**
  * Stamps a photo with the RP watermark (see overlay below). Copies are made the first time they
@@ -9,9 +10,6 @@ import { MARK_BOX, MARK_PATHS, WORD_BOX, WORD_PATHS } from './watermarkLogo'
  * <uploads>/media-watermarked-<style>; a new or replaced upload gets a fresh copy automatically.
  * The original upload is never changed.
  */
-/** Change this when the watermark's look changes, so every photo gets a fresh copy in the new style. */
-const STYLE = 'v2'
-
 const uploads = () => path.resolve(process.env.UPLOADS_DIR || path.resolve(process.cwd(), 'uploads'))
 
 function overlay(width: number, height: number) {
@@ -50,7 +48,7 @@ export async function watermarked(file: string): Promise<{ body: Buffer; type: s
   const name = path.basename(file)
   if (name !== file || !/\.(jpe?g|png|webp)$/i.test(name)) return undefined
   const source = path.join(uploads(), 'media', name)
-  const cached = path.join(uploads(), `media-watermarked-${STYLE}`, name)
+  const cached = path.join(uploads(), `media-watermarked-${WATERMARK_STYLE}`, name)
   const stat = await fs.stat(source).catch(() => undefined)
   if (!stat) return undefined
   const type = /\.png$/i.test(name) ? 'image/png' : /\.webp$/i.test(name) ? 'image/webp' : 'image/jpeg'
