@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
-import { MARK_BOX, MARK_PATHS, WORD_BOX, WORD_PATHS } from './watermarkLogo'
+import { LOGO_PATHS, LOGO_VIEWBOX, MARK_BOX, MARK_PATHS } from './watermarkLogo'
 import { WATERMARK_STYLE } from './watermarkUrls'
 
 /**
@@ -13,11 +13,12 @@ import { WATERMARK_STYLE } from './watermarkUrls'
 const uploads = () => path.resolve(process.env.UPLOADS_DIR || path.resolve(process.cwd(), 'uploads'))
 
 function overlay(width: number, height: number) {
-  // Stock-photo style, flat white with no shadow: large diagonal "REGION PACKAGING" wordmarks,
-  // spaced out and staggered, plus a regular grid of small RP hexagon icons in between.
+  // Stock-photo style, flat white with no shadow: the full logo (hexagon icon beside
+  // "REGION PACKAGING", as in the real logo) set diagonally, spaced out and staggered, plus a
+  // regular grid of small RP hexagon icons in between.
   const parts: string[] = []
-  const wordW = Math.round(width / 4.2)
-  const wordScale = wordW / WORD_BOX.width
+  const logoW = Math.round(width / 3.6)
+  const logoScale = logoW / LOGO_VIEWBOX.width
   const colGap = width / 2.4
   const rowGap = height / 2.7
   for (let row = -1; row <= 3; row++) {
@@ -25,7 +26,7 @@ function overlay(width: number, height: number) {
       const x = col * colGap + (row % 2 ? colGap / 2 : 0) + colGap * 0.15
       const y = row * rowGap + rowGap * 0.45
       parts.push(
-        `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(-30) scale(${wordScale.toFixed(3)}) translate(${-WORD_BOX.x} 0)">${WORD_PATHS}</g>`,
+        `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(-30) scale(${logoScale.toFixed(3)})">${LOGO_PATHS}</g>`,
       )
     }
   }
