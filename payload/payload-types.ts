@@ -113,6 +113,7 @@ export interface Config {
     'home-page': HomePage;
     'about-page': AboutPage;
     'artwork-page': ArtworkPage;
+    'paper-weight-page': PaperWeightPage;
     'blog-page': BlogPage;
     'site-settings': SiteSetting;
   };
@@ -120,6 +121,7 @@ export interface Config {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
     'artwork-page': ArtworkPageSelect<false> | ArtworkPageSelect<true>;
+    'paper-weight-page': PaperWeightPageSelect<false> | PaperWeightPageSelect<true>;
     'blog-page': BlogPageSelect<false> | BlogPageSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
@@ -172,9 +174,13 @@ export interface Category {
   ratingText?: string | null;
   shortDescription?: string | null;
   /**
-   * Type one, then press Enter to add the next.
+   * Category pages only. Type one, then press Enter to add the next.
    */
   highlights?: string[] | null;
+  /**
+   * Product pages only, e.g. "Low MOQ". Type one, then press Enter to add the next.
+   */
+  badges?: string[] | null;
   gallery?: (number | Media)[] | null;
   /**
    * Leave a list empty to use the defaults from Site settings.
@@ -296,6 +302,7 @@ export interface Category {
       | {
           name?: string | null;
           description?: string | null;
+          image?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -304,9 +311,11 @@ export interface Category {
       | {
           name?: string | null;
           description?: string | null;
+          image?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
+    finishesNote?: string | null;
   };
   useCases?: {
     /**
@@ -420,7 +429,7 @@ export interface Category {
   seoTitle?: string | null;
   seoDescription?: string | null;
   /**
-   * The last part of the web address, such as custom-mailer-boxes. Leave it empty and it is made from the title.
+   * The web address of the page: your-domain/slug, such as custom-mailer-boxes. Leave it empty and it is made from the title. It must not be used by another page.
    */
   slug: string;
   /**
@@ -462,7 +471,7 @@ export interface Product {
   id: number;
   title: string;
   /**
-   * The first category sets the URL (/category/product).
+   * The first category sets the breadcrumb and the related boxes. The page address is your-domain/slug.
    */
   categories: (number | Category)[];
   cardText?: string | null;
@@ -477,9 +486,13 @@ export interface Product {
   ratingText?: string | null;
   shortDescription?: string | null;
   /**
-   * Type one, then press Enter to add the next.
+   * Category pages only. Type one, then press Enter to add the next.
    */
   highlights?: string[] | null;
+  /**
+   * Product pages only, e.g. "Low MOQ". Type one, then press Enter to add the next.
+   */
+  badges?: string[] | null;
   gallery?: (number | Media)[] | null;
   /**
    * Leave a list empty to use the defaults from Site settings.
@@ -494,13 +507,27 @@ export interface Product {
     quantity?: string[] | null;
     design?: string[] | null;
   };
-  explore?: {
+  construction?: {
     /**
      * The small blue word above the big heading, for example "Overview". You can leave it blank.
      */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
+    body?:
+      | {
+          paragraph: string;
+          id?: string | null;
+        }[]
+      | null;
+    image?: (number | null) | Media;
+    list?:
+      | {
+          title?: string | null;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   overview?: {
     /**
@@ -539,6 +566,19 @@ export interface Product {
         }[]
       | null;
   };
+  useCases?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    /**
+     * Type one, then press Enter to add the next.
+     */
+    pills?: string[] | null;
+    note?: string | null;
+  };
   specs?: {
     /**
      * The small blue word above the big heading, for example "Overview". You can leave it blank.
@@ -563,6 +603,49 @@ export interface Product {
         }[]
       | null;
     note?: string | null;
+  };
+  sustainability?: {
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    badge?: (number | null) | Media;
+  };
+  whyUs?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    /**
+     * Empty = defaults from Site settings.
+     */
+    cards?:
+      | {
+          title?: string | null;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    note?: string | null;
+  };
+  faqs?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    /**
+     * Empty = defaults from Site settings.
+     */
+    items?:
+      | {
+          question?: string | null;
+          answer?: string | null;
+          id?: string | null;
+        }[]
+      | null;
   };
   materials?: {
     /**
@@ -601,6 +684,7 @@ export interface Product {
       | {
           name?: string | null;
           description?: string | null;
+          image?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -609,22 +693,30 @@ export interface Product {
       | {
           name?: string | null;
           description?: string | null;
+          image?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
+    finishesNote?: string | null;
   };
-  useCases?: {
+  addons?: {
+    items?:
+      | {
+          name?: string | null;
+          description?: string | null;
+          image?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+    note?: string | null;
+  };
+  explore?: {
     /**
      * The small blue word above the big heading, for example "Overview". You can leave it blank.
      */
     eyebrow?: string | null;
     heading?: string | null;
     text?: string | null;
-    /**
-     * Type one, then press Enter to add the next.
-     */
-    pills?: string[] | null;
-    note?: string | null;
   };
   howToOrder?: {
     /**
@@ -670,43 +762,6 @@ export interface Product {
       | null;
     image?: (number | null) | Media;
   };
-  whyUs?: {
-    /**
-     * The small blue word above the big heading, for example "Overview". You can leave it blank.
-     */
-    eyebrow?: string | null;
-    heading?: string | null;
-    text?: string | null;
-    /**
-     * Empty = defaults from Site settings.
-     */
-    cards?:
-      | {
-          title?: string | null;
-          text?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-    note?: string | null;
-  };
-  faqs?: {
-    /**
-     * The small blue word above the big heading, for example "Overview". You can leave it blank.
-     */
-    eyebrow?: string | null;
-    heading?: string | null;
-    text?: string | null;
-    /**
-     * Empty = defaults from Site settings.
-     */
-    items?:
-      | {
-          question?: string | null;
-          answer?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
   /**
    * Empty = other products in the same category.
    */
@@ -725,7 +780,7 @@ export interface Product {
   seoTitle?: string | null;
   seoDescription?: string | null;
   /**
-   * The last part of the web address, such as custom-mailer-boxes. Leave it empty and it is made from the title.
+   * The web address of the page: your-domain/slug, such as custom-mailer-boxes. Leave it empty and it is made from the title. It must not be used by another page.
    */
   slug: string;
   /**
@@ -765,7 +820,7 @@ export interface Page {
   seoTitle?: string | null;
   seoDescription?: string | null;
   /**
-   * The last part of the web address, such as custom-mailer-boxes. Leave it empty and it is made from the title.
+   * The web address of the page: your-domain/slug, such as custom-mailer-boxes. Leave it empty and it is made from the title. It must not be used by another page.
    */
   slug: string;
   updatedAt: string;
@@ -1133,6 +1188,7 @@ export interface CategoriesSelect<T extends boolean = true> {
   ratingText?: T;
   shortDescription?: T;
   highlights?: T;
+  badges?: T;
   gallery?: T;
   formOptions?:
     | T
@@ -1248,6 +1304,7 @@ export interface CategoriesSelect<T extends boolean = true> {
           | {
               name?: T;
               description?: T;
+              image?: T;
               id?: T;
             };
         finishesHeading?: T;
@@ -1256,8 +1313,10 @@ export interface CategoriesSelect<T extends boolean = true> {
           | {
               name?: T;
               description?: T;
+              image?: T;
               id?: T;
             };
+        finishesNote?: T;
       };
   useCases?:
     | T
@@ -1356,6 +1415,7 @@ export interface ProductsSelect<T extends boolean = true> {
   ratingText?: T;
   shortDescription?: T;
   highlights?: T;
+  badges?: T;
   gallery?: T;
   formOptions?:
     | T
@@ -1369,12 +1429,26 @@ export interface ProductsSelect<T extends boolean = true> {
         quantity?: T;
         design?: T;
       };
-  explore?:
+  construction?:
     | T
     | {
         eyebrow?: T;
         heading?: T;
         text?: T;
+        body?:
+          | T
+          | {
+              paragraph?: T;
+              id?: T;
+            };
+        image?: T;
+        list?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
       };
   overview?:
     | T
@@ -1411,6 +1485,15 @@ export interface ProductsSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  useCases?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        pills?: T;
+        note?: T;
+      };
   specs?:
     | T
     | {
@@ -1434,6 +1517,43 @@ export interface ProductsSelect<T extends boolean = true> {
               id?: T;
             };
         note?: T;
+      };
+  sustainability?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        badge?: T;
+      };
+  whyUs?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        cards?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+        note?: T;
+      };
+  faqs?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        items?:
+          | T
+          | {
+              question?: T;
+              answer?: T;
+              id?: T;
+            };
       };
   materials?:
     | T
@@ -1471,6 +1591,7 @@ export interface ProductsSelect<T extends boolean = true> {
           | {
               name?: T;
               description?: T;
+              image?: T;
               id?: T;
             };
         finishesHeading?: T;
@@ -1479,17 +1600,30 @@ export interface ProductsSelect<T extends boolean = true> {
           | {
               name?: T;
               description?: T;
+              image?: T;
               id?: T;
             };
+        finishesNote?: T;
       };
-  useCases?:
+  addons?:
+    | T
+    | {
+        items?:
+          | T
+          | {
+              name?: T;
+              description?: T;
+              image?: T;
+              id?: T;
+            };
+        note?: T;
+      };
+  explore?:
     | T
     | {
         eyebrow?: T;
         heading?: T;
         text?: T;
-        pills?: T;
-        note?: T;
       };
   howToOrder?:
     | T
@@ -1526,35 +1660,6 @@ export interface ProductsSelect<T extends boolean = true> {
               id?: T;
             };
         image?: T;
-      };
-  whyUs?:
-    | T
-    | {
-        eyebrow?: T;
-        heading?: T;
-        text?: T;
-        cards?:
-          | T
-          | {
-              title?: T;
-              text?: T;
-              id?: T;
-            };
-        note?: T;
-      };
-  faqs?:
-    | T
-    | {
-        eyebrow?: T;
-        heading?: T;
-        text?: T;
-        items?:
-          | T
-          | {
-              question?: T;
-              answer?: T;
-              id?: T;
-            };
       };
   related?: T;
   seoTitle?: T;
@@ -2193,6 +2298,148 @@ export interface ArtworkPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paper-weight-page".
+ */
+export interface PaperWeightPage {
+  id: number;
+  hero?: {
+    heading?: string | null;
+    text?: string | null;
+    converterLabel?: string | null;
+    chartLabel?: string | null;
+    image?: (number | null) | Media;
+    scale?:
+      | {
+          gsm?: string | null;
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  measures?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    cards?:
+      | {
+          code?: string | null;
+          title?: string | null;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  /**
+   * The sums use standard factors, so they are not edited here.
+   */
+  converter?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    /**
+     * Shown with a blue tint.
+     */
+    image?: (number | null) | Media;
+    note?: string | null;
+  };
+  chart?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    rows?:
+      | {
+          pt?: string | null;
+          text?: string | null;
+          uncoated?: string | null;
+          c1s?: string | null;
+          c2s?: string | null;
+          thickness?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    note?: string | null;
+    poundsHeading?: string | null;
+    poundsText?: string | null;
+    poundsRows?:
+      | {
+          lb?: string | null;
+          text?: string | null;
+          cover?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  glance?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    bars?:
+      | {
+          gsm?: string | null;
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    note?: string | null;
+  };
+  boxes?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    photos?:
+      | {
+          image?: (number | null) | Media;
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    fluteHeading?: string | null;
+    flutes?:
+      | {
+          title?: string | null;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  faq?: {
+    /**
+     * The small blue word above the big heading, for example "Overview". You can leave it blank.
+     */
+    eyebrow?: string | null;
+    heading?: string | null;
+    text?: string | null;
+    items?:
+      | {
+          question?: string | null;
+          answer?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "blog-page".
  */
 export interface BlogPage {
@@ -2416,6 +2663,16 @@ export interface SiteSetting {
       seoDescription?: string | null;
     };
   };
+  quotePage?: {
+    eyebrow?: string | null;
+    points?:
+      | {
+          title?: string | null;
+          text?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   subProductDefaults?: {
     tabs?: {
       overview?: string | null;
@@ -2423,13 +2680,43 @@ export interface SiteSetting {
       materials?: string | null;
       why?: string | null;
       faq?: string | null;
+      optionMaterial?: string | null;
+      optionPrinting?: string | null;
+      optionFinishes?: string | null;
+      optionAddons?: string | null;
     };
     shortDescription?: string | null;
     /**
-     * Type one, then press Enter to add the next.
+     * Category pages only. Type one, then press Enter to add the next.
      */
     highlights?: string[] | null;
+    /**
+     * Product pages only, e.g. "Low MOQ". Type one, then press Enter to add the next.
+     */
+    badges?: string[] | null;
     gallery?: (number | Media)[] | null;
+    construction?: {
+      /**
+       * The small blue word above the big heading, for example "Overview". You can leave it blank.
+       */
+      eyebrow?: string | null;
+      heading?: string | null;
+      text?: string | null;
+      body?:
+        | {
+            paragraph: string;
+            id?: string | null;
+          }[]
+        | null;
+      image?: (number | null) | Media;
+      list?:
+        | {
+            title?: string | null;
+            text?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+    };
     overview?: {
       /**
        * The small blue word above the big heading, for example "Overview". You can leave it blank.
@@ -2529,6 +2816,7 @@ export interface SiteSetting {
         | {
             name?: string | null;
             description?: string | null;
+            image?: (number | null) | Media;
             id?: string | null;
           }[]
         | null;
@@ -2537,9 +2825,11 @@ export interface SiteSetting {
         | {
             name?: string | null;
             description?: string | null;
+            image?: (number | null) | Media;
             id?: string | null;
           }[]
         | null;
+      finishesNote?: string | null;
     };
     useCases?: {
       /**
@@ -2568,6 +2858,23 @@ export interface SiteSetting {
         | {
             title?: string | null;
             text?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      note?: string | null;
+    };
+    sustainability?: {
+      eyebrow?: string | null;
+      heading?: string | null;
+      text?: string | null;
+      badge?: (number | null) | Media;
+    };
+    addons?: {
+      items?:
+        | {
+            name?: string | null;
+            description?: string | null;
+            image?: (number | null) | Media;
             id?: string | null;
           }[]
         | null;
@@ -3045,6 +3352,138 @@ export interface ArtworkPageSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "paper-weight-page_select".
+ */
+export interface PaperWeightPageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        heading?: T;
+        text?: T;
+        converterLabel?: T;
+        chartLabel?: T;
+        image?: T;
+        scale?:
+          | T
+          | {
+              gsm?: T;
+              label?: T;
+              id?: T;
+            };
+      };
+  measures?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        cards?:
+          | T
+          | {
+              code?: T;
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  converter?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        image?: T;
+        note?: T;
+      };
+  chart?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        rows?:
+          | T
+          | {
+              pt?: T;
+              text?: T;
+              uncoated?: T;
+              c1s?: T;
+              c2s?: T;
+              thickness?: T;
+              id?: T;
+            };
+        note?: T;
+        poundsHeading?: T;
+        poundsText?: T;
+        poundsRows?:
+          | T
+          | {
+              lb?: T;
+              text?: T;
+              cover?: T;
+              id?: T;
+            };
+      };
+  glance?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        bars?:
+          | T
+          | {
+              gsm?: T;
+              label?: T;
+              id?: T;
+            };
+        note?: T;
+      };
+  boxes?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        photos?:
+          | T
+          | {
+              image?: T;
+              label?: T;
+              id?: T;
+            };
+        fluteHeading?: T;
+        flutes?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  faq?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        text?: T;
+        items?:
+          | T
+          | {
+              question?: T;
+              answer?: T;
+              id?: T;
+            };
+      };
+  seoTitle?: T;
+  seoDescription?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "blog-page_select".
  */
 export interface BlogPageSelect<T extends boolean = true> {
@@ -3279,6 +3718,18 @@ export interface SiteSettingsSelect<T extends boolean = true> {
               seoDescription?: T;
             };
       };
+  quotePage?:
+    | T
+    | {
+        eyebrow?: T;
+        points?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+      };
   subProductDefaults?:
     | T
     | {
@@ -3290,10 +3741,36 @@ export interface SiteSettingsSelect<T extends boolean = true> {
               materials?: T;
               why?: T;
               faq?: T;
+              optionMaterial?: T;
+              optionPrinting?: T;
+              optionFinishes?: T;
+              optionAddons?: T;
             };
         shortDescription?: T;
         highlights?: T;
+        badges?: T;
         gallery?: T;
+        construction?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              body?:
+                | T
+                | {
+                    paragraph?: T;
+                    id?: T;
+                  };
+              image?: T;
+              list?:
+                | T
+                | {
+                    title?: T;
+                    text?: T;
+                    id?: T;
+                  };
+            };
         overview?:
           | T
           | {
@@ -3389,6 +3866,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
                 | {
                     name?: T;
                     description?: T;
+                    image?: T;
                     id?: T;
                   };
               finishesHeading?: T;
@@ -3397,8 +3875,10 @@ export interface SiteSettingsSelect<T extends boolean = true> {
                 | {
                     name?: T;
                     description?: T;
+                    image?: T;
                     id?: T;
                   };
+              finishesNote?: T;
             };
         useCases?:
           | T
@@ -3420,6 +3900,27 @@ export interface SiteSettingsSelect<T extends boolean = true> {
                 | {
                     title?: T;
                     text?: T;
+                    id?: T;
+                  };
+              note?: T;
+            };
+        sustainability?:
+          | T
+          | {
+              eyebrow?: T;
+              heading?: T;
+              text?: T;
+              badge?: T;
+            };
+        addons?:
+          | T
+          | {
+              items?:
+                | T
+                | {
+                    name?: T;
+                    description?: T;
+                    image?: T;
                     id?: T;
                   };
               note?: T;

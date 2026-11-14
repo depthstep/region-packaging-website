@@ -46,7 +46,7 @@ function viewFor(path: string[]) {
   if (type === 'blog-page') return top === 'post' ? 'post' : ''
   if (type !== 'site-settings') return ''
   if (top === 'pageIntros') return ({ products: 'products', faqs: 'faqs', howToOrder: 'how-to-order', quote: 'quote', sample: 'sample' } as Record<string, string>)[sub] ?? ''
-  return ({ productDefaults: 'category', formDefaults: 'category', trustStrip: 'category', subProductDefaults: 'sub-product', contact: 'contact' } as Record<string, string>)[top] ?? ''
+  return ({ productDefaults: 'category', formDefaults: 'category', trustStrip: 'category', subProductDefaults: 'sub-product', contact: 'contact', quotePage: 'quote' } as Record<string, string>)[top] ?? ''
 }
 
 function reveal(el: HTMLElement) {

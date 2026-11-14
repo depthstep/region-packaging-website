@@ -111,6 +111,8 @@ export type SiteSettings = {
   }
   reviewsSection: SectionHeading & { buttonLabel?: string }
   contact: ContactPage
+  /** The Get a Quote page: the column beside the form. */
+  quotePage: { eyebrow?: string; points: TitleText[] }
 }
 
 /** The Contact Us page (Site settings > Contact page). */
@@ -275,6 +277,28 @@ export type ArtworkPage = {
   seoDescription?: string
 }
 
+/** "80 GSM" + "Inserts": a stop on the hero scale or a bar in the "light to heavy" chart. */
+export type GsmStop = { gsm: string; label: string }
+
+/** The Paper Weight Chart page (Content > Paper weight chart). */
+export type PaperWeightPage = {
+  hero: { heading?: string; text?: string; converterLabel?: string; chartLabel?: string; image?: Img; scale: GsmStop[] }
+  measures: SectionHeading & { cards: { code: string; title: string; text?: string }[] }
+  converter: SectionHeading & { image?: Img; note?: string }
+  chart: SectionHeading & {
+    rows: { pt: string; text?: string; uncoated?: string; c1s?: string; c2s?: string; thickness?: string }[]
+    note?: string
+    poundsHeading?: string
+    poundsText?: string
+    poundsRows: { lb: string; text?: string; cover?: string }[]
+  }
+  glance: SectionHeading & { bars: GsmStop[]; note?: string }
+  boxes: SectionHeading & { photos: { image?: Img; label: string }[]; fluteHeading?: string; flutes: TitleText[] }
+  faq: SectionHeading & { items: Faq[] }
+  seoTitle?: string
+  seoDescription?: string
+}
+
 /** A text page at /slug (Content > Simple pages). */
 export type SimplePage = { id: string; slug: string; title: string; intro?: string; body?: RichText; seoTitle?: string; seoDescription?: string }
 
@@ -283,6 +307,7 @@ export type SiteData = {
   home: HomePage
   about: AboutPage
   artwork: ArtworkPage
+  paperWeight: PaperWeightPage
   categories: Category[]
   products: Product[]
   reviews: Review[]

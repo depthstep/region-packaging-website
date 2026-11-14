@@ -6,9 +6,11 @@ import { getSiteData } from '@/lib/data'
 import { parsePreview, PREVIEW_COOKIE } from '@/lib/preview'
 import SlugPage from '../[slug]/page'
 import { QuoteBody } from '@/components/product/QuotePageBody'
+import { quoteProps } from '@/components/product/quoteProps'
 import AboutPage from '../about/page'
 import ArtworkPage from '../artwork-guidelines/page'
 import BlogPage from '../blog/page'
+import PaperWeightPage from '../paper-weight-chart/page'
 import BlogPostPage from '../blog/[slug]/page'
 import ContactPage from '../contact/page'
 import FaqsPage from '../faqs/page'
@@ -67,16 +69,7 @@ export default async function PreviewPage({ searchParams }: Props) {
       case 'contact':
         return <ContactPage />
       case 'sample':
-        return (
-          <QuoteBody
-            type="sample"
-            choices={[...data.categories.map((c) => c.title), ...data.products.map((p) => p.title)]}
-            options={settings.formDefaults}
-            formNote={settings.productDefaults.formNote}
-            ctaText={settings.cta.text}
-            intros={settings.pageIntros}
-          />
-        )
+        return <QuoteBody type="sample" {...quoteProps(data)} />
     }
   }
   const page = async () => {
@@ -106,6 +99,8 @@ export default async function PreviewPage({ searchParams }: Props) {
         return <AboutPage />
       case 'artwork-page':
         return <ArtworkPage />
+      case 'paper-weight-page':
+        return <PaperWeightPage />
       case 'blog-page':
         return <BlogPage />
       default:

@@ -2,8 +2,9 @@ import { cache } from 'react'
 import * as seedCatalog from '@/content/catalog'
 import * as seedSite from '@/content/site'
 import * as seedBlog from '@/content/blog'
+import { paperWeight as seedPaperWeight } from '@/content/paper-weight'
 import { cmsId, fromFields } from './cms/normalize'
-import type { AboutPage, ArtworkPage, BlogCategory, BlogPage, BlogPost, Card, Category, HomePage, PageContent, PageIntroText, Product, SiteData, SiteSettings } from './types'
+import type { AboutPage, ArtworkPage, PaperWeightPage, BlogCategory, BlogPage, BlogPost, Card, Category, HomePage, PageContent, PageIntroText, Product, SiteData, SiteSettings } from './types'
 
 /** The Payload database is only used when one is configured; otherwise the site runs from content/*.ts. */
 export const cmsEnabled = !!process.env.DATABASE_URI
@@ -30,6 +31,7 @@ const seed: SiteData = {
   home: seedSite.home,
   about: seedSite.about,
   artwork: seedSite.artwork,
+  paperWeight: seedPaperWeight,
   categories: seedCatalog.categories,
   products: seedCatalog.products,
   reviews: seedSite.reviews,
@@ -60,6 +62,7 @@ const emptySettings: SiteSettings = {
   footer: { columns: [], legal: [] },
   reviewsSection: {},
   contact: { topics: [] },
+  quotePage: { points: [] },
 }
 const emptyHome: HomePage = {
   hero: { heading: '', slides: [] },
@@ -87,6 +90,16 @@ const emptyArtwork: ArtworkPage = {
   formats: { items: [] },
   essentials: { items: [] },
   steps: { steps: [] },
+}
+
+const emptyPaperWeight: PaperWeightPage = {
+  hero: { scale: [] },
+  measures: { cards: [] },
+  converter: {},
+  chart: { rows: [], poundsRows: [] },
+  glance: { bars: [] },
+  boxes: { photos: [], flutes: [] },
+  faq: { items: [] },
 }
 
 /** One level deep: each top-level object keeps its empty defaults for keys the CMS lacks. */
@@ -126,13 +139,14 @@ async function loadSiteData(preview: { type: string; id?: string } | null): Prom
   const all = { depth: 1, pagination: false } as const
   const live = { _status: { equals: 'published' } } as const
   // In a preview only the page being edited shows its draft. Everything else stays as published.
-  const readGlobal = <S extends 'site-settings' | 'home-page' | 'about-page' | 'artwork-page' | 'blog-page'>(slug: S) =>
+  const readGlobal = <S extends 'site-settings' | 'home-page' | 'about-page' | 'artwork-page' | 'paper-weight-page' | 'blog-page'>(slug: S) =>
     payload.findGlobal({ slug, depth: 1, draft: preview?.type === slug })
-  const [settings, home, about, artwork, blog, liveCategories, liveProducts, reviews, livePosts, blogCategories, blogTopics, livePages] = await Promise.all([
+  const [settings, home, about, artwork, paperWeight, blog, liveCategories, liveProducts, reviews, livePosts, blogCategories, blogTopics, livePages] = await Promise.all([
     readGlobal('site-settings'),
     readGlobal('home-page'),
     readGlobal('about-page'),
     readGlobal('artwork-page'),
+    readGlobal('paper-weight-page'),
     readGlobal('blog-page'),
     payload.find({ collection: 'categories', where: { and: [live, { visible: { not_equals: false } }] }, sort: 'order', ...all }),
     payload.find({ collection: 'products', where: { and: [live, { status: { not_equals: 'hidden' } }] }, sort: 'order', ...all }),
@@ -166,6 +180,7 @@ async function loadSiteData(preview: { type: string; id?: string } | null): Prom
     settings: saved(settings) ? mergeOnto(emptySettings, fromFields(schema.SiteSettings.fields, settings as unknown as Record<string, unknown>)) : seed.settings,
     home: saved(home) ? homeFromCms(fromFields(schema.HomePage.fields, home as unknown as Record<string, unknown>) as RawHome) : seed.home,
     artwork: saved(artwork) ? mergeOnto(emptyArtwork, fromFields(schema.ArtworkPage.fields, artwork as unknown as Record<string, unknown>)) : seed.artwork,
+    paperWeight: saved(paperWeight) ? mergeOnto(emptyPaperWeight, fromFields(schema.PaperWeightPage.fields, paperWeight as unknown as Record<string, unknown>)) : seed.paperWeight,
     about: saved(about) ? mergeOnto(emptyAbout, fromFields(schema.AboutPage.fields, about as unknown as Record<string, unknown>)) : seed.about,
     categories: categories.docs
       .map(doc('categories', schema.Categories.fields))

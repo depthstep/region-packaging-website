@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { ActivityLog, ClaudeLog, withActivityLog, withGlobalActivityLog } from './payload/activityLog'
 import { Artwork, BlogCategories, BlogTopics, Categories, Media, Pages, Posts, Products, QuoteRequests, Reviews, Users } from './payload/collections'
-import { AboutPage, ArtworkPage, BlogPage, HomePage, SiteSettings } from './payload/globals'
+import { AboutPage, ArtworkPage, BlogPage, HomePage, PaperWeightPage, SiteSettings } from './payload/globals'
 import { migrations } from './payload/migrations'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -18,7 +18,7 @@ const env = process.env
 // Payload logs emails to the terminal instead of sending them.
 // Pages with a preview autosave a private draft as people type, and only Publish changes the public site.
 const previewCollections = [Categories, Products, Pages, Posts]
-const previewGlobals = [HomePage, AboutPage, ArtworkPage, BlogPage, SiteSettings]
+const previewGlobals = [HomePage, AboutPage, ArtworkPage, PaperWeightPage, BlogPage, SiteSettings]
 const drafts = { autosave: { interval: 800 }, validate: false }
 
 const smtpReady = !!(env.SMTP_HOST && env.SMTP_USER && env.SMTP_PASS && env.QUOTE_FROM_EMAIL)

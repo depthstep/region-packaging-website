@@ -1,0 +1,100 @@
+/* ---------- Get a Quote page (Figma 787:248) ---------- */
+.quote-hero {
+  padding-block: 88px 210px;
+}
+.quote-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 500px) minmax(0, 559px);
+  justify-content: space-between;
+  align-items: start;
+  gap: 40px;
+}
+.quote-hero__copy {
+  padding-top: 6px;
+}
+.quote-hero__copy .eyebrow {
+  margin-bottom: 8px;
+  font-size: var(--p1);
+}
+.quote-hero__text {
+  max-width: 480px;
+  margin-top: 14px;
+  font-size: var(--p1);
+  line-height: 1.28;
+}
+
+/* Reasons to ask: a sky dot on a beige circle, title and one line. */
+.quote-points {
+  display: grid;
+  gap: 40px;
+  margin-top: 70px;
+}
+.quote-points li {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  column-gap: 16px;
+  align-items: start;
+}
+.quote-points li::before {
+  content: '';
+  grid-row: span 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sky) 0 5.5px, var(--beige) 6px);
+}
+.quote-points h2 {
+  font-size: var(--h4);
+  line-height: 1.3;
+  text-transform: none;
+}
+.quote-points p {
+  margin-top: 6px;
+  color: var(--black);
+  font-size: var(--p1);
+}
+
+.quote-hero__card {
+  padding: 32px 24px 30px;
+}
+.quote-hero__card .quote-page__heading {
+  margin: 0 0 30px 6px;
+}
+.quote-hero__card .field__label {
+  font-size: 20px;
+}
+.quote-hero__card .quote-form__grid {
+  gap: 24px 10px;
+}
+
+@media (max-width: 1100px) {
+  .quote-hero {
+    padding-block: 64px var(--section-y);
+  }
+}
+@media (max-width: 900px) {
+  .quote-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .quote-points {
+    margin-top: 40px;
+    gap: 28px;
+  }
+}
+@media (max-width: 640px) {
+  .quote-hero {
+    padding-top: 40px;
+  }
+  .quote-hero__card {
+    padding: 24px 16px;
+  }
+  .quote-hero__card .field__label {
+    font-size: var(--p2);
+  }
+  .quote-points h2 {
+    font-size: 19px;
+  }
+  .quote-points p {
+    font-size: var(--p2);
+  }
+}

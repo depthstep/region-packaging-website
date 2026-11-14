@@ -139,7 +139,7 @@ export const slugField = (): Field => ({
 })
 
 /** Addresses the site already uses for its own pages (app/(site)) or the admin. */
-const RESERVED_SLUGS = ['about', 'admin', 'api', 'artwork-guidelines', 'blog', 'contact', 'faqs', 'how-to-order', 'preview', 'products', 'quote', 'sitemap-xml', 'robots-txt']
+const RESERVED_SLUGS = ['about', 'admin', 'api', 'artwork-guidelines', 'blog', 'contact', 'faqs', 'how-to-order', 'paper-weight-chart', 'preview', 'products', 'quote', 'sitemap-xml', 'robots-txt']
 /** Categories, sub-products and simple pages all live at your-domain/slug. */
 const TOP_LEVEL = ['categories', 'products', 'pages'] as const
 const TOP_LEVEL_NAMES: Record<(typeof TOP_LEVEL)[number], string> = { categories: 'a category', products: 'a sub-product', pages: 'a simple page' }

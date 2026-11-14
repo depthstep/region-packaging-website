@@ -79,6 +79,11 @@ export const SiteSettings: GlobalConfig = {
           ],
         },
         {
+          label: 'Get a Quote page',
+          description: 'The column beside the form on /quote. Its heading and text are under Other pages > Get a Quote.',
+          fields: [{ name: 'quotePage', label: 'Get a Quote page', type: 'group', fields: [str('eyebrow', 'Small label above the heading'), titleText('points', 'Points beside the form')] }],
+        },
+        {
           label: 'Sub-product pages',
           description: 'Industry sub-product pages (e.g. Cream Boxes) use these until the product has its own. {product} in a heading becomes the product name.',
           fields: [{ name: 'subProductDefaults', label: 'Sub-product page defaults', type: 'group', fields: subProductDefaultFields }],
@@ -192,6 +197,45 @@ export const ArtworkPage: GlobalConfig = {
       list('items', 'Cards', [str('title'), txt('text', 'Text', 2), img('icon', 'Icon'), str('iconText', 'Or text instead of an icon (e.g. Aa)')]),
     ]),
     section('steps', '4. What happens next', [...heading, titleText('steps', 'Steps'), txt('note', 'Note under the steps', 2)]),
+    str('seoTitle', 'Title shown in Google (SEO title)'),
+    txt('seoDescription', 'Description shown in Google (SEO description)', 2),
+  ],
+}
+
+const gsmStops = (name: string, label: string) => list(name, label, [str('gsm', 'Weight (e.g. 80 GSM)'), str('label', 'What it is used for')])
+
+export const PaperWeightPage: GlobalConfig = {
+  slug: 'paper-weight-page',
+  label: 'Paper weight chart',
+  admin: { group: 'Content' },
+  hooks: revalidateGlobal,
+  fields: [
+    section('hero', '1. Banner', [
+      str('heading'),
+      txt('text', 'Text', 3),
+      str('converterLabel', 'First button (jumps to the converter)'),
+      str('chartLabel', 'Second button (jumps to the chart)'),
+      img('image', 'Photo'),
+      gsmStops('scale', 'Weights under the blue line'),
+    ]),
+    section('measures', '2. Three ways to measure', [...heading, list('cards', 'Cards', [str('code', 'Big letters (e.g. GSM)'), str('title'), txt('text', 'Text', 3)])]),
+    section('converter', '3. Converter', [...heading, img('image', 'Photo behind the left side', 'Shown with a blue tint.'), txt('note', 'Text under the result', 2)], 'The sums use standard factors, so they are not edited here.'),
+    section('chart', '4. The chart', [
+      ...heading,
+      list('rows', 'Points to GSM rows', [str('pt', 'Points'), str('text', 'Text stock'), str('uncoated', 'Uncoated board'), str('c1s', 'C1S'), str('c2s', 'C2S'), str('thickness')]),
+      str('note', 'Note under the table'),
+      str('poundsHeading', 'Pounds table heading'),
+      txt('poundsText', 'Text above the pounds table', 2),
+      list('poundsRows', 'Pounds to GSM rows', [str('lb', 'Pounds'), str('text', 'Text stock'), str('cover', 'Cover stock')]),
+    ]),
+    section('glance', '5. From light to heavy', [...heading, gsmStops('bars', 'Bars (lightest first)'), str('note', 'Note under the bars')]),
+    section('boxes', '6. Which weight for which box', [
+      ...heading,
+      list('photos', 'Photos', [img('image', 'Photo'), str('label', 'What the photo shows')]),
+      str('fluteHeading', 'Flute guide heading'),
+      titleText('flutes', 'Flutes'),
+    ]),
+    section('faq', '7. FAQ', [...heading, faqList()]),
     str('seoTitle', 'Title shown in Google (SEO title)'),
     txt('seoDescription', 'Description shown in Google (SEO description)', 2),
   ],

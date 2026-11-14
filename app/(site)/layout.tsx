@@ -18,6 +18,8 @@ import '../styles/product.css'
 import '../styles/contact.css'
 import '../styles/about.css'
 import '../styles/artwork.css'
+import '../styles/paper-weight.css'
+import '../styles/quote.css'
 import '../styles/blog.css'
 import '../styles/product-sub.css'
 

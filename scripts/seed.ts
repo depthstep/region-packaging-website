@@ -9,8 +9,9 @@ import config from '../payload.config.ts'
 import * as catalog from '../content/catalog.ts'
 import * as site from '../content/site.ts'
 import * as blog from '../content/blog.ts'
+import { paperWeight } from '../content/paper-weight.ts'
 import { isParagraphList } from '../payload/fields.ts'
-import { AboutPage, ArtworkPage, BlogCategories, BlogPage, BlogTopics, Categories, HomePage, Pages, Posts, Products, Reviews, SiteSettings } from '../payload/schema.ts'
+import { AboutPage, ArtworkPage, PaperWeightPage, BlogCategories, BlogPage, BlogTopics, Categories, HomePage, Pages, Posts, Products, Reviews, SiteSettings } from '../payload/schema.ts'
 import type { Img } from '../lib/types.ts'
 
 type Raw = Record<string, unknown>
@@ -140,6 +141,7 @@ await payload.updateGlobal({
   } as unknown as Raw)) as never,
 })
 await payload.updateGlobal({ slug: 'artwork-page', data: (await toPayload(ArtworkPage.fields, site.artwork as unknown as Raw)) as never })
+await payload.updateGlobal({ slug: 'paper-weight-page', data: (await toPayload(PaperWeightPage.fields, paperWeight as unknown as Raw)) as never })
 await payload.updateGlobal({ slug: 'about-page', data: (await toPayload(AboutPage.fields, site.about as unknown as Raw)) as never })
 await payload.updateGlobal({ slug: 'site-settings', data: (await toPayload(SiteSettings.fields, site.settings as unknown as Raw)) as never })
 

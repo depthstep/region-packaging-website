@@ -5,7 +5,7 @@ import { getPublishedData, hrefFor } from '@/lib/data'
 export const dynamic = 'force-static'
 export const revalidate = 3600
 
-const STATIC_PATHS = ['/', '/about', '/contact', '/quote', '/products', '/blog', '/faqs', '/how-to-order', '/artwork-guidelines']
+const STATIC_PATHS = ['/', '/about', '/contact', '/quote', '/products', '/blog', '/faqs', '/how-to-order', '/artwork-guidelines', '/paper-weight-chart']
 
 /** Every public page, refreshed whenever an editor saves (see payload/hooks.ts). */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -34,6 +34,7 @@ export const settings: SiteSettings = {
     { label: 'Blogs', href: '/blog' },
     { label: 'FAQs', href: '/faqs' },
     { label: 'How To Order', href: '/how-to-order' },
+    { label: 'Paper Weight Chart', href: '/paper-weight-chart' },
   ],
   stats: [
     { value: '10+', label: 'Years manufacturing' },
@@ -59,7 +60,7 @@ export const settings: SiteSettings = {
     products: { heading: 'All Products' },
     faqs: {},
     howToOrder: { heading: 'How To Order' },
-    quote: { heading: 'Get a Quote' },
+    quote: { heading: 'Get your free quote.', text: 'Tell us the box, the size and the quantity. We will send a fast, no-obligation quote, and help with design if you need it.' },
     sample: { heading: 'Request Free Sample' },
   },
   // Sample copy from the Figma sub-product design (written for rigid boxes); editors replace it per product.
@@ -241,6 +242,16 @@ export const settings: SiteSettings = {
       note: 'We built Region Packaging to give growing brands the capability of a large manufacturer with the attention of a specialist partner. That means honest advice on specification, transparent pricing with no hidden setup fees, and a real person who picks up when you call. Whether you are ordering your first run of personalized mailer boxes or scaling up to custom mailer boxes wholesale, we treat every project with the same care from the first quote to the final delivery.',
     },
   },
+  // Get a Quote page, Figma 787:248. The design's eyebrow read "Design & Structure" (copied from a blog
+  // card), so it is left blank here; editors can set one in Site settings > Get a Quote page.
+  quotePage: {
+    points: [
+      { title: 'Fast replies', text: 'we get back to you on business days.' },
+      { title: 'Free design support', text: 'artwork check, dieline and visual proof included.' },
+      { title: 'No obligation', text: 'approve a sample before you commit to a run.' },
+      { title: 'Low minimums', text: 'from 100 units, so small brands can start.' },
+    ],
+  },
   contact: {
     heading: 'Talk to a real person.',
     text: "Questions about a box, an order, or artwork? Send a message and we'll get back to you.",
@@ -350,6 +361,7 @@ export const settings: SiteSettings = {
           { label: 'Artwork Guidelines', href: '/artwork-guidelines' },
           { label: 'FAQs', href: '/faqs' },
           { label: 'How to Order', href: '/how-to-order' },
+          { label: 'Paper weight chart', href: '/paper-weight-chart' },
         ],
       },
     ],
