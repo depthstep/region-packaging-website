@@ -641,3 +641,27 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* Phones: one step per row, with a small arrow pointing down to the next. */
+@media (max-width: 640px) {
+  .order-steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 56px;
+    padding: 36px 28px;
+  }
+  .order-steps li:not(:last-child)::after {
+    display: block;
+    content: '';
+    right: auto;
+    top: auto;
+    left: 4px;
+    bottom: -38px;
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid var(--white);
+    border-bottom: 2px solid var(--white);
+    transform: rotate(45deg);
+  }
+  .order-steps__num {
+    font-size: 38px;
+  }
+}

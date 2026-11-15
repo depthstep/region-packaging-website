@@ -88,6 +88,11 @@
 @media (max-width: 900px) {
   .mp-grid > .material { flex-basis: calc((100% - 24px) / 2); }
 }
+/* Phones: one option card per row. */
+@media (max-width: 640px) {
+  .mp-grid { gap: 36px; }
+  .mp-grid > .material { flex-basis: 100%; }
+}
 @media (max-width: 700px) {
   .pdp-ovc__imgs { grid-template-columns: 1fr 1fr; }
   .pdp-ovc__imgs .rounded-media:first-child { grid-column: 1 / -1; }

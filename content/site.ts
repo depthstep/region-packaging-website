@@ -31,9 +31,11 @@ export const settings: SiteSettings = {
     href: '/products',
   },
   resourcesMenu: [
+    { label: 'About Us', href: '/about' },
     { label: 'Blogs', href: '/blog' },
     { label: 'FAQs', href: '/faqs' },
     { label: 'How To Order', href: '/how-to-order' },
+    { label: 'Artwork Guidelines', href: '/artwork-guidelines' },
     { label: 'Paper Weight Chart', href: '/paper-weight-chart' },
   ],
   stats: [

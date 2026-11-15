@@ -11,7 +11,7 @@ function OptionGrid({ items, note }: { items: OptionCard[]; note?: string }) {
         {items.map((m) => (
           <div key={m.name} className="material">
             <div className="material__image">
-              <Media img={m.image} fallback={`${m.name} photo`} sizes="(max-width: 900px) 50vw, 290px" />
+              <Media img={m.image} fallback={`${m.name} photo`} sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, 290px" />
             </div>
             <h4>{m.name}</h4>
             <p>{m.description}</p>
