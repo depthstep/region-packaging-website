@@ -1,4 +1,4 @@
-import type { GlobalConfig } from 'payload'
+import type { Field, GlobalConfig } from 'payload'
 import { cards, faqList, formOptionFields, heading, iconItems, img, imgs, link, links, list, paragraphs, section, str, strings, titleText, txt } from './fields'
 import { revalidateGlobal } from './hooks'
 import { subProductDefaultFields } from './pageFields'
@@ -286,7 +286,7 @@ export const HomePage: GlobalConfig = {
     ]),
     section('quantity', '6. Order any quantity', [...heading, paragraphs(), iconItems('features', 'Feature cards')]),
     section('design', '7. Packaging design, done for you', [...heading, txt('lead', 'Bold opening sentence', 2), paragraphs(), titleText('bullets', 'Bullets'), link('button', 'Button'), img('image', 'Dieline illustration')]),
-    section('eco', '8. Eco-friendly / FSC banner', [...heading, txt('body', 'Text', 4), str('linkText', 'Linked words in the text'), str('linkHref', 'Link address'), img('badge', 'FSC badge')]),
+    section('eco', '8. Eco-friendly banner', [...heading, txt('body', 'Text', 4), str('linkText', 'Linked words in the text'), str('linkHref', 'Link address'), ({ ...img('badge', 'FSC badge'), admin: { hidden: true } }) as Field]),
     section('logo', '9. Custom boxes with your logo', [...heading, txt('lead', 'Bold opening sentence', 2), paragraphs(), titleText('bullets', 'Bullets'), img('image', 'Photo')]),
     section('sample', '11. Free sample pack', [...heading, link('button', 'Button'), str('note'), img('image', 'Photo')]),
     section('faq', '12. FAQ', [...heading, faqList()]),

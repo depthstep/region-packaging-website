@@ -84,7 +84,7 @@ const construction = section('construction', 'Construction', [
   img('image', 'Photo'),
   titleText('list', 'Three short points beside the photo'),
 ])
-const sustainability = section('sustainability', 'Sustainability', [str('eyebrow', 'Small label above the heading'), str('heading'), txt('text', 'Text', 6), img('badge', 'Badge or logo (e.g. FSC)')])
+const sustainability = section('sustainability', 'Sustainability', [str('eyebrow', 'Small label above the heading'), str('heading'), txt('text', 'Text', 6), ({ ...img('badge', 'Badge or logo'), admin: { hidden: true } }) as Field])
 const addons = section('addons', 'Add-ons', [optionCards('items', 'Add-ons'), txt('note', 'Text under the add-ons', 4)])
 
 /** The page sections of a product page, in the order they appear on the page. */

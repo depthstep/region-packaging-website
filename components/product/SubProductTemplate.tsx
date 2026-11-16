@@ -148,9 +148,6 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
                 <h2>{eco.heading}</h2>
                 {eco.text && <p>{eco.text}</p>}
               </div>
-              <div className="eco__badge">
-                <Media img={eco.badge} fallback="FSC badge" sizes="150px" />
-              </div>
             </div>
           </div>
         </section>

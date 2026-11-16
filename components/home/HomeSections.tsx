@@ -213,9 +213,6 @@ export function Eco({ s }: { s: HomePage['eco'] }) {
               )}
             </p>
           </div>
-          <div className="eco__badge">
-            <Media img={s.badge} fallback="FSC badge" sizes="150px" />
-          </div>
         </div>
       </div>
     </section>
