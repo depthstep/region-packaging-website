@@ -2494,7 +2494,7 @@ export interface BlogPage {
 export interface SiteSetting {
   id: number;
   /**
-   * Optional small label before the message, e.g. "THANKSGIVING DAY". Empty = no label.
+   * Optional words before the message, shown in capitals, e.g. "Thanksgiving Day". Empty = just the message.
    */
   announcementTag?: string | null;
   announcement?: string | null;
