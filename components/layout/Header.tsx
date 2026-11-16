@@ -67,12 +67,9 @@ export function Header({ data }: { data: SiteData }) {
         <div className="container topbar__inner">
           {(settings.announcement || settings.announcementTag) && (
             <p className="topbar__promo">
-              {settings.announcementTag ? (
-                <span className="topbar__tag">{settings.announcementTag}</span>
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={withBase('/icons/sparkle.svg')} alt="" width={18} height={18} />
-              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={withBase('/icons/sparkle.svg')} alt="" width={18} height={18} />
+              {settings.announcementTag && <span className="topbar__tag">{settings.announcementTag}</span>}
               {settings.announcement}
             </p>
           )}
