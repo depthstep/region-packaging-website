@@ -2493,6 +2493,10 @@ export interface BlogPage {
  */
 export interface SiteSetting {
   id: number;
+  /**
+   * Optional small label before the message, e.g. "THANKSGIVING DAY". Empty = no label.
+   */
+  announcementTag?: string | null;
   announcement?: string | null;
   phone?: string | null;
   email?: string | null;
@@ -3540,6 +3544,7 @@ export interface BlogPageSelect<T extends boolean = true> {
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
+  announcementTag?: T;
   announcement?: T;
   phone?: T;
   email?: T;

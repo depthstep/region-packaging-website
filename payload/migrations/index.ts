@@ -11,6 +11,7 @@ import * as migration_20261106_120000_mark_published from './20261106_120000_mar
 import * as migration_20261110_200323_product_layout from './20261110_200323_product_layout';
 import * as migration_20261114_054239_paper_weight_quote from './20261114_054239_paper_weight_quote';
 import * as migration_20261116_175406_overview_layout from './20261116_175406_overview_layout';
+import * as migration_20261116_193023_topbar_tag from './20261116_193023_topbar_tag';
 
 export const migrations = [
   {
@@ -76,6 +77,11 @@ export const migrations = [
   {
     up: migration_20261116_175406_overview_layout.up,
     down: migration_20261116_175406_overview_layout.down,
-    name: '20261116_175406_overview_layout'
+    name: '20261116_175406_overview_layout',
+  },
+  {
+    up: migration_20261116_193023_topbar_tag.up,
+    down: migration_20261116_193023_topbar_tag.down,
+    name: '20261116_193023_topbar_tag'
   },
 ];

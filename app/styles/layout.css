@@ -22,6 +22,18 @@
   gap: 10px;
   font-size: 17px;
 }
+/* Optional label before the message, e.g. a holiday offer. */
+.topbar__tag {
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--blue);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
 .topbar__actions {
   display: flex;
   align-items: center;
@@ -270,6 +282,34 @@
   .site-header {
     position: sticky;
     top: 0;
+  }
+  /* With a top bar message: a slim bar with just the message above the logo. It scrolls away
+     and the logo bar alone stays pinned, so --sticky-top is unchanged. */
+  .site-header.has-promo {
+    --topbar-h: 36px;
+    top: calc(-1 * var(--topbar-h));
+  }
+  .site-header.has-promo .topbar {
+    display: block;
+  }
+  .has-promo .topbar__inner {
+    height: var(--topbar-h);
+    min-height: 0;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+  .has-promo .topbar__actions {
+    display: none;
+  }
+  .has-promo .topbar__promo {
+    min-width: 0;
+    gap: 8px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .has-promo .topbar__tag {
+    padding: 3px 9px;
+    font-size: 11px;
   }
 }
 

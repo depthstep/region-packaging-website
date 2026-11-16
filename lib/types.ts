@@ -80,6 +80,8 @@ export type Card = { title: string; kicker?: string; text?: string; linkLabel?: 
 
 
 export type SiteSettings = {
+  /** Small label before the top bar message (e.g. a holiday offer). */
+  announcementTag?: string
   announcement?: string
   phone?: string
   email?: string

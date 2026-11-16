@@ -62,13 +62,17 @@ export function Header({ data }: { data: SiteData }) {
     items: g.cats.map((c) => ({ title: c.title, href: `/${c.slug}`, icon: c.menuIcon })),
   }))
   return (
-    <header data-section="announcement phone email" className="site-header">
+    <header data-section="announcement announcementTag phone email" className={`site-header ${settings.announcement || settings.announcementTag ? 'has-promo' : ''}`}>
       <div className="topbar">
         <div className="container topbar__inner">
-          {settings.announcement && (
+          {(settings.announcement || settings.announcementTag) && (
             <p className="topbar__promo">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={withBase('/icons/sparkle.svg')} alt="" width={18} height={18} />
+              {settings.announcementTag ? (
+                <span className="topbar__tag">{settings.announcementTag}</span>
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={withBase('/icons/sparkle.svg')} alt="" width={18} height={18} />
+              )}
               {settings.announcement}
             </p>
           )}

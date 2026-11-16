@@ -15,6 +15,7 @@ export const SiteSettings: GlobalConfig = {
         {
           label: 'Header & menu',
           fields: [
+            str('announcementTag', 'Top bar tag', { description: 'Optional small label before the message, e.g. "THANKSGIVING DAY". Empty = no label.' }),
             str('announcement', 'Top bar message'),
             str('phone', 'Phone (shown as written)'),
             str('email'),
