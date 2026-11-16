@@ -120,9 +120,6 @@ export const posts: Seed[] = [
   post('choosing-board-grades', 'Choosing Board Grades: Kraft, White and Corrugated', 'blogcat-materials', '2026-10-03', img('/images/board-kraft.jpg', 'Kraft corrugated board'), {
     topicIds: t('Corrugated Boxes'),
   }),
-  post('what-fsc-certification-means', 'What FSC Certification Means for Your Packaging', 'blogcat-sustainability', '2026-09-30', img('/images/blog-jewelry.jpg', 'Green jewellery boxes and pouches'), {
-    topicIds: t('Jewelry'),
-  }),
   post('kraft-vs-recycled-board', 'Kraft vs Recycled Board: A Practical Comparison', 'blogcat-sustainability', '2026-09-26', img('/images/blog-green-ribbons.jpg', 'Green gift boxes tied with ribbon'), {
     topicIds: t('Apparel & Fashion'),
   }),

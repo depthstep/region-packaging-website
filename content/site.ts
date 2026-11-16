@@ -98,7 +98,7 @@ export const settings: SiteSettings = {
     sustainability: {
       eyebrow: 'Sustainability',
       heading: 'Sustainable {product}',
-      text: 'A premium box can still be a responsible one. Our boxes use recyclable board, and recycled-content and kraft paper wraps keep the footprint low while still printing beautifully. FSC-certified board is available from responsibly managed forests, and we print with lower-impact inks where possible. We only make eco claims we can stand behind, and help you choose a genuinely recyclable box and describe it honestly to your customers.',
+      text: 'A premium box can still be a responsible one. Our boxes use recyclable board, and recycled-content and kraft paper wraps keep the footprint low while still printing beautifully. We print with lower-impact inks where possible. We only make eco claims we can stand behind, and help you choose a genuinely recyclable box and describe it honestly to your customers.',
     },
     addons: {
       items: [
@@ -484,7 +484,7 @@ export const home: HomePage = {
     ],
     features: [
       { title: 'Low Minimums', text: 'Order what you need with low minimum order packaging, ideal for small businesses and new launches.', icon: img('/icons/feature-boxes.svg', '') },
-      { title: 'Sustainable Options', text: 'Recyclable corrugated fiberboard, kraft paper and FSC certified board, with honest eco choices.', icon: img('/icons/feature-eco.svg', '') },
+      { title: 'Sustainable Options', text: 'Recyclable corrugated fiberboard, kraft paper and recycled board, with honest eco choices.', icon: img('/icons/feature-eco.svg', '') },
       { title: 'Fully Customizable', text: 'Any size, any colour, your logo. Bespoke box manufacturing with full-colour digital and flexographic printing.', icon: img('/icons/feature-layers.svg', '') },
       { title: 'Quick Turnaround', text: 'A fast, transparent process from digital proof to delivery, so your packaging arrives on schedule.', icon: img('/icons/feature-fast-2.svg', '') },
     ],
@@ -507,10 +507,9 @@ export const home: HomePage = {
   eco: {
     eyebrow: 'Why Region Packaging',
     heading: 'Eco-friendly packaging solutions',
-    body: "We're committed to offsetting our world's carbon footprint, contributing to reforestation, and sustainability. Not only do we offer packaging that's FSC™ certified, all of our premium product boxes is made from recycled materials and printed with soy-based ink.",
-    linkText: 'FSC™ certified',
+    body: "We're committed to offsetting our world's carbon footprint, contributing to reforestation, and sustainability. All of our premium product boxes are made from recycled materials and printed with soy-based ink.",
+    linkText: '',
     linkHref: '',
-    badge: img('/images/fsc-badge.png', 'FSC certified'),
   },
   logo: {
     eyebrow: 'Branding & Materials',
