@@ -129,27 +129,12 @@ h2 {
   font-size: var(--p1);
   line-height: 1.26;
 }
-/* A centred paragraph under a set of cards: an orange arrow points down at it and orange
-   quote marks sit either side (Figma). The text itself is --text-max wide. */
+/* A centred paragraph under a set of cards, --text-max wide like every centred paragraph. */
 .note {
-  --note-side: 64px;
-  max-width: calc(var(--text-max) + 2 * var(--note-side));
+  max-width: var(--text-max);
   margin: 50px auto 0;
-  padding: 78px var(--note-side) 0;
   text-align: center;
   font-size: var(--p2);
-  background:
-    url('../../public/icons/note-arrow.svg') center top / 56px no-repeat,
-    url('../../public/icons/note-quote-open.svg') left 0 top 68px / 40px no-repeat,
-    url('../../public/icons/note-quote-close.svg') right 0 top 46px / 40px no-repeat;
-}
-@media (max-width: 640px) {
-  .note {
-    --note-side: 36px;
-    padding-top: 60px;
-    background-size: 44px, 28px, 28px;
-    background-position: center top, left 0 top 54px, right 0 top 38px;
-  }
 }
 .placeholder-text {
   font-style: italic;
