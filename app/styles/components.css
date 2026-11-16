@@ -86,7 +86,7 @@ a:hover .text-link,
   text-align: center;
 }
 .section-header--center .section-header__copy {
-  max-width: 560px;
+  max-width: var(--text-max);
   margin-inline: auto;
 }
 .section-header--center h2 {
@@ -113,7 +113,7 @@ h2 {
   line-height: 1.26;
 }
 .section-header--center .section-header__text {
-  max-width: 480px;
+  max-width: var(--text-max);
   margin-inline: auto;
 }
 
@@ -129,11 +129,27 @@ h2 {
   font-size: var(--p1);
   line-height: 1.26;
 }
+/* A centred paragraph under a set of cards: an orange arrow points down at it and orange
+   quote marks sit either side (Figma). The text itself is --text-max wide. */
 .note {
-  max-width: 920px;
+  --note-side: 64px;
+  max-width: calc(var(--text-max) + 2 * var(--note-side));
   margin: 50px auto 0;
+  padding: 78px var(--note-side) 0;
   text-align: center;
   font-size: var(--p2);
+  background:
+    url('../../public/icons/note-arrow.svg') center top / 56px no-repeat,
+    url('../../public/icons/note-quote-open.svg') left 0 top 68px / 40px no-repeat,
+    url('../../public/icons/note-quote-close.svg') right 0 top 46px / 40px no-repeat;
+}
+@media (max-width: 640px) {
+  .note {
+    --note-side: 36px;
+    padding-top: 60px;
+    background-size: 44px, 28px, 28px;
+    background-position: center top, left 0 top 54px, right 0 top 38px;
+  }
 }
 .placeholder-text {
   font-style: italic;
@@ -430,12 +446,12 @@ a.photo-card:focus-visible .photo-card__hover {
 }
 
 /* ---------- FAQ accordion ---------- */
-.split--faq {
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
-}
+/* Every page: heading centred on top, then one centred column of questions (Figma). */
 .faq-list {
   display: grid;
   gap: 16px;
+  max-width: 820px;
+  margin-inline: auto;
 }
 .faq {
   border: 1px solid var(--stroke);
@@ -473,12 +489,7 @@ a.photo-card:focus-visible .photo-card__hover {
 }
 .faq__answer {
   padding-bottom: 30px;
-  max-width: 500px;
-}
-@media (max-width: 900px) {
-  .split--faq {
-    grid-template-columns: minmax(0, 1fr);
-  }
+  max-width: 600px;
 }
 @media (max-width: 640px) {
   .faq {

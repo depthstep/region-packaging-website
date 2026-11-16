@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
+import { NavLink } from '@/components/ui/NavLink'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import type { Img, Link as NavLink } from '@/lib/types'
+import type { Img, Link as MenuLink } from '@/lib/types'
 import { withBase } from '@/lib/asset'
 import { ButtonLink } from '@/components/ui/Button'
 import { Chevron } from '@/components/ui/glyphs'
@@ -14,7 +15,7 @@ export type MenuGroup = {
   items: { title: string; href: string; icon?: Img }[]
 }
 
-type Props = { groups: MenuGroup[]; resources: NavLink[]; phone?: string; phoneHref: string }
+type Props = { groups: MenuGroup[]; resources: MenuLink[]; phone?: string; phoneHref: string }
 
 /** The round blue menu button: four dots, turned 45° when the menu is open (the design's close state). */
 function MenuDots({ open }: { open?: boolean }) {
@@ -97,7 +98,7 @@ export function MobileMenu({ groups, resources, phone, phoneHref }: Props) {
               <ul className="drawer__plain">
                 {resources.map((l) => (
                   <li key={l.href}>
-                    <Link href={l.href}>{l.label}</Link>
+                    <NavLink href={l.href}>{l.label}</NavLink>
                   </li>
                 ))}
               </ul>

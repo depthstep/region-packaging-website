@@ -18,9 +18,23 @@ export const galleryTab: Field[] = [
   section('formOptions', 'Quote form options', formOptionFields, 'Leave a list empty to use the defaults from Site settings.'),
 ]
 
+const overviewFields: Field[] = [...heading, paragraphs(), imgs('images', 'Photos (3)')]
+/** Category pages: two layouts for the overview. Box pages show their overview in a tab instead. */
+const overviewLayout: Field = {
+  name: 'layout',
+  label: 'Layout',
+  type: 'select',
+  options: [
+    { label: 'Three photos on the left, text on the right (longer text)', value: 'side' },
+    { label: 'Text beside one photo, two photos underneath (shorter text)', value: 'compact' },
+  ],
+  admin: { isClearable: true, description: 'Empty = picked from the length of the text: short text uses the second layout.' },
+}
+const plainOverview = section('overview', '5. Overview', overviewFields)
+
 export const sectionsTab: Field[] = [
   section('explore', '4. Explore styles (category pages)', heading),
-  section('overview', '5. Overview', [...heading, paragraphs(), imgs('images', 'Photos (3)')]),
+  section('overview', '5. Overview', [...overviewFields, overviewLayout]),
   section('benefits', '6. Benefits', [...heading, paragraphs(), iconItems('items', 'Benefit cards')]),
   section('specs', '7. Specs, sizes & dimensions', [
     ...heading,
@@ -78,7 +92,7 @@ const byName = (name: string) => sectionsTab.find((f) => 'name' in f && f.name =
 const relabel = (f: Field, label: string): Field => ({ ...f, label } as Field)
 export const productSectionsTab: Field[] = [
   relabel(construction, 'Construction (beside a photo, under the top)'),
-  relabel(byName('overview'), 'Overview tab: Overview (text and 3 photos)'),
+  relabel(plainOverview, 'Overview tab: Overview (text and 3 photos)'),
   relabel(byName('benefits'), 'Overview tab: Benefits (heading and paragraphs)'),
   relabel(byName('useCases'), 'Overview tab: Industries & use cases (heading and "Text under the tags")'),
   relabel(byName('specs'), 'Specifications tab'),
@@ -132,7 +146,7 @@ export const subProductDefaultFields: Field[] = [
   },
   ...named(galleryTab, ['shortDescription', 'highlights', 'badges', 'gallery']),
   construction,
-  ...named(sectionsTab, ['overview', 'benefits', 'useCases', 'specs', 'materials', 'printing', 'whyUs']),
+  ...named(sectionsTab, ['overview', 'benefits', 'useCases', 'specs', 'materials', 'printing', 'whyUs']).map((f) => ('name' in f && f.name === 'overview' ? plainOverview : f)),
   sustainability,
   addons,
 ]

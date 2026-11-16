@@ -217,6 +217,10 @@ export interface Category {
         }[]
       | null;
     images?: (number | Media)[] | null;
+    /**
+     * Empty = picked from the length of the text: short text uses the second layout.
+     */
+    layout?: ('side' | 'compact') | null;
   };
   benefits?: {
     /**
@@ -1222,6 +1226,7 @@ export interface CategoriesSelect<T extends boolean = true> {
               id?: T;
             };
         images?: T;
+        layout?: T;
       };
   benefits?:
     | T

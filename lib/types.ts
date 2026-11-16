@@ -185,7 +185,8 @@ export type PageContent = {
   gallery: Img[]
   formOptions?: Partial<FormOptions>
   explore?: SectionHeading
-  overview?: SectionHeading & { body: string[]; images: Img[] }
+  /** Category pages: 'side' = three photos left, text right; 'compact' = text beside one photo, two below. Empty = by text length. */
+  overview?: SectionHeading & { body: string[]; images: Img[]; layout?: 'side' | 'compact' | null }
   benefits?: SectionHeading & { body: string[]; items: IconItem[] }
   specs?: SectionHeading & { rows: { label: string; value: string }[]; stockSizesHeading?: string; stockSizes: StockSize[]; note?: string }
   materials?: SectionHeading & { items: (NameDescription & { badge?: string; image?: Img })[]; note?: string }

@@ -29,6 +29,13 @@ const nextConfig: NextConfig = {
     qualities: [75, 90],
   },
   turbopack: { root: dirname },
+  // The How To Order page is hidden for now: old links go to the "How it works" steps on the home page.
+  // (Not in the static preview build, which cannot redirect.)
+  ...(!staticExport && {
+    async redirects() {
+      return [{ source: '/how-to-order', destination: '/#how-it-works', permanent: false }]
+    },
+  }),
 }
 
 // withPayload also applies to the static export: it keeps the database driver out of the bundle.

@@ -78,10 +78,6 @@
   padding-top: 160px;
   border-top: 1px solid var(--stroke);
 }
-.pw-block .section-header__text,
-.pw-wide-header .section-header__text {
-  max-width: 700px;
-}
 .pw-block .section-header__copy,
 .pw-wide-header .section-header__copy,
 .pw-block .section-header h2,
@@ -363,15 +359,6 @@
 }
 .pw-flutes strong {
   color: var(--blue);
-}
-
-/* FAQ: centred, narrower list. */
-.pw-faq .faq-list {
-  max-width: 820px;
-  margin-inline: auto;
-}
-.pw-faq .faq__answer {
-  max-width: 600px;
 }
 
 @media (max-width: 1100px) {

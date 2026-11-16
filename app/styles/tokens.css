@@ -54,6 +54,8 @@
    jump links sit just below it. On phones and tablets the header (logo + menu) is pinned. */
 :root {
   --sticky-top: 0px;
+  /* Line length of every centred paragraph (section subtitles, notes under cards): about 95 characters. */
+  --text-max: 680px;
 }
 @media (max-width: 1100px) {
   :root {

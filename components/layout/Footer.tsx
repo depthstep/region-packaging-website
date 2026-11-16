@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { withBase } from '@/lib/asset'
-import Link from 'next/link'
+import { NavLink } from '@/components/ui/NavLink'
 import type { SiteSettings } from '@/lib/types'
 import { Social } from '@/components/ui/glyphs'
 import { telHref } from './Header'
@@ -35,7 +35,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             <ul>
               {col.links.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href}>{l.label}</Link>
+                  <NavLink href={l.href}>{l.label}</NavLink>
                 </li>
               ))}
             </ul>
@@ -92,7 +92,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         <ul>
           {f.legal.map((l) => (
             <li key={l.label}>
-              <Link href={l.href}>{l.label}</Link>
+              <NavLink href={l.href}>{l.label}</NavLink>
             </li>
           ))}
         </ul>

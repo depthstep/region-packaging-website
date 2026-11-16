@@ -103,7 +103,7 @@ export default async function ArtworkGuidelinesPage() {
                 </Fragment>
               ))}
             </ol>
-            {a.steps.note && <p className="art-steps__note">{a.steps.note}</p>}
+            {a.steps.note && <p className="note art-steps__note">{a.steps.note}</p>}
           </div>
         </section>
       )}

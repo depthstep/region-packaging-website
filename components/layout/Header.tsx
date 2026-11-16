@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { NavLink } from '@/components/ui/NavLink'
 import { withBase } from '@/lib/asset'
 import type { Category, SiteData } from '@/lib/types'
 import { Chevron } from '@/components/ui/glyphs'
@@ -107,7 +108,7 @@ export function Header({ data }: { data: SiteData }) {
                 <ul className="dropdown">
                   {settings.resourcesMenu.map((l) => (
                     <li key={l.href}>
-                      <Link href={l.href}>{l.label}</Link>
+                      <NavLink href={l.href}>{l.label}</NavLink>
                     </li>
                   ))}
                 </ul>

@@ -24,8 +24,8 @@ export function FaqSection({ section, id = 'faq', rule = false }: { section?: Se
   if (!section?.items?.length) return null
   return (
     <section data-section="faq faqs" className={`section ${rule ? 'section--rule' : ''}`} id={id}>
-      <div className="container split split--faq">
-        <SectionHeader eyebrow={section.eyebrow} heading={section.heading} text={section.text} align="left" />
+      <div className="container">
+        <SectionHeader eyebrow={section.eyebrow} heading={section.heading} text={section.text} />
         <FaqList items={section.items} />
       </div>
     </section>

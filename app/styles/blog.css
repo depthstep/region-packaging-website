@@ -19,7 +19,7 @@
   position: relative;
 }
 .blog-hero p {
-  max-width: 580px;
+  max-width: var(--text-max);
   margin: 12px auto 0;
   font-size: var(--p1);
   line-height: 1.28;

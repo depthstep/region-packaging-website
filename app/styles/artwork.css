@@ -63,13 +63,6 @@
 .art-steps .section-header {
   margin-bottom: 68px;
 }
-.art-formats .section-header__text,
-.art-steps .section-header__text {
-  max-width: 701px;
-}
-.art-essentials .section-header__text {
-  max-width: 560px;
-}
 
 .art-grid {
   display: grid;
@@ -175,11 +168,7 @@
   color: var(--sky);
 }
 .art-steps__note {
-  max-width: 546px;
-  margin: 103px auto 0;
-  text-align: center;
-  font-size: var(--p1);
-  line-height: 1.28;
+  margin-top: 103px;
 }
 
 @media (max-width: 1100px) {

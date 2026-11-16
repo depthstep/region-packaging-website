@@ -343,6 +343,36 @@
 .overview__img--2 {
   aspect-ratio: 280 / 290;
 }
+/* Short text: the text beside the first photo, the other two photos underneath (Figma). */
+.overview.overview--compact {
+  width: min(1010px, 100% - 2 * var(--gutter));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas:
+    'one copy'
+    'two three';
+  gap: 18px;
+  align-items: stretch;
+}
+/* Each photo fills its box; a longer text makes the first row taller instead of the photo wider. */
+.overview--compact .overview__img {
+  aspect-ratio: 496 / 258;
+  justify-self: stretch;
+  align-self: stretch;
+}
+.overview--compact .overview__img--0 {
+  grid-area: one;
+}
+.overview--compact .overview__img--1 {
+  grid-area: two;
+}
+.overview--compact .overview__img--2 {
+  grid-area: three;
+}
+.overview__copy {
+  grid-area: copy;
+  align-self: center;
+  padding-left: 20px;
+}
 
 /* ---------- 7. Specs ---------- */
 .spec-table {
@@ -613,6 +643,18 @@
   .overview,
   .pricing__inner {
     grid-template-columns: minmax(0, 1fr);
+  }
+  /* Phones and tablets: the text first, then the large photo, then the two others side by side. */
+  .overview.overview--compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'copy copy'
+      'one one'
+      'two three';
+  }
+  .overview__copy {
+    padding-left: 0;
+    margin-bottom: 12px;
   }
   .product-top__gallery {
     position: static;

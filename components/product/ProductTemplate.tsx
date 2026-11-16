@@ -52,6 +52,21 @@ export function formOptions(page: PageContent, defaults: FormOptions): FormOptio
   }
 }
 
+/** Text up to about this many characters fits beside one photo ("compact" overview layout). */
+const SHORT_OVERVIEW = 650
+
+/** The overview layout chosen in the admin, or, when none is chosen, the one that suits the length of the text. */
+function overviewLayout(o: NonNullable<PageContent['overview']>): 'side' | 'compact' {
+  if (o.layout === 'side' || o.layout === 'compact') return o.layout
+  const length = [o.text, ...(o.body ?? [])].filter(Boolean).join(' ').length
+  return length <= SHORT_OVERVIEW ? 'compact' : 'side'
+}
+
+/** Benefit cards fill whole rows of two: six cards make three rows, otherwise at most four (2 × 2). */
+function benefitCards<T>(items: T[] = []) {
+  return items.length >= 6 ? items.slice(0, 6) : items.slice(0, 4)
+}
+
 export function ProductTemplate({ data, page, category, explore, fallbackRelated }: Props) {
   const { settings } = data
   const d = settings.productDefaults
@@ -87,7 +102,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
               heading={page.explore?.heading || `Explore Our ${page.title} Styles & Options`}
               text={page.explore?.text}
             />
-            <div className="grid-3 card-grid">
+            <div className="grid-3 card-grid card-grid--4">
               {explore.map((p) => (
                 <PhotoCard key={p.id} card={toCard(data, p, 'Customize Now')} headingLevel="h3" />
               ))}
@@ -99,19 +114,34 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
       {/* 5. Overview */}
       {page.overview?.heading && (
         <section data-section="overview" className="section section--beige">
-          <div className="container overview">
-            <div className="overview__images">
+          {overviewLayout(page.overview) === 'compact' ? (
+            // Short text: text beside the first photo, the other two photos underneath.
+            <div className="container overview overview--compact">
               {[0, 1, 2].map((i) => (
                 <div key={i} className={`rounded-media overview__img overview__img--${i}`}>
-                  <Media img={page.overview!.images?.[i]} fallback={`Overview photo ${i + 1}`} sizes={i === 0 ? '590px' : '290px'} />
+                  <Media img={page.overview!.images?.[i]} fallback={`Overview photo ${i + 1}`} sizes="(max-width: 900px) 50vw, 600px" />
                 </div>
               ))}
+              <div className="overview__copy">
+                <SectionHeader eyebrow={page.overview.eyebrow} heading={page.overview.heading} text={page.overview.text} align="left" className="section-header--tight" />
+                <Paragraphs items={page.overview.body} className="prose prose--sm" />
+              </div>
             </div>
-            <div>
-              <SectionHeader eyebrow={page.overview.eyebrow} heading={page.overview.heading} text={page.overview.text} align="left" className="section-header--tight" />
-              <Paragraphs items={page.overview.body} className="prose prose--sm" />
+          ) : (
+            <div className="container overview">
+              <div className="overview__images">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className={`rounded-media overview__img overview__img--${i}`}>
+                    <Media img={page.overview!.images?.[i]} fallback={`Overview photo ${i + 1}`} sizes={i === 0 ? '590px' : '290px'} />
+                  </div>
+                ))}
+              </div>
+              <div>
+                <SectionHeader eyebrow={page.overview.eyebrow} heading={page.overview.heading} text={page.overview.text} align="left" className="section-header--tight" />
+                <Paragraphs items={page.overview.body} className="prose prose--sm" />
+              </div>
             </div>
-          </div>
+          )}
         </section>
       )}
 
@@ -125,7 +155,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
             </div>
             {(page.benefits.items?.length ?? 0) > 0 && (
               <div className="grid-2">
-                {page.benefits.items.map((b) => (
+                {benefitCards(page.benefits.items).map((b) => (
                   <FeatureCard key={b.title} item={b} />
                 ))}
               </div>
