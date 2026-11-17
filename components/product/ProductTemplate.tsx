@@ -1,7 +1,7 @@
 import type { Card, Category, FormOptions, PageContent, Product, SiteData, TitleText } from '@/lib/types'
 import { resolveRelated, toCard } from '@/lib/data'
 import { FeatureCard, PhotoCard } from '@/components/ui/Cards'
-import { Media } from '@/components/ui/Media'
+import { Icon, Media } from '@/components/ui/Media'
 import { Paragraphs, SectionHeader } from '@/components/ui/SectionHeader'
 import { CtaSection } from '@/components/sections/CtaSection'
 import { FaqSection } from '@/components/sections/FaqSection'
@@ -271,9 +271,16 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
             </div>
             <ul className="pricing__cards">
               {pricing.cards.map((c) => (
-                <li key={c.title}>
-                  <strong>{c.title}</strong>
-                  <span>{c.text}</span>
+                <li key={c.title} className={c.icon?.src ? 'has-icon' : ''}>
+                  {c.icon?.src && (
+                    <span className="pricing__icon">
+                      <Icon img={c.icon} size={56} label={c.title} />
+                    </span>
+                  )}
+                  <span className="pricing__card-text">
+                    <strong>{c.title}</strong>
+                    <span>{c.text}</span>
+                  </span>
                 </li>
               ))}
             </ul>

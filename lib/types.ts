@@ -149,7 +149,7 @@ export type ProductDefaults = {
   trustHeading?: string
   exploreEyebrow?: string
   howToOrder?: SectionHeading & { steps: TitleText[] }
-  pricing?: SectionHeading & { cards: TitleText[] }
+  pricing?: SectionHeading & { cards: IconItem[] }
   whyUs?: SectionHeading & { cards: TitleText[] }
   faqs?: SectionHeading & { items: Faq[] }
   relatedHeading?: SectionHeading
@@ -201,7 +201,7 @@ export type PageContent = {
   addons?: { items: OptionCard[]; note?: string }
   useCases?: SectionHeading & { pills: string[]; note?: string }
   howToOrder?: SectionHeading & { steps: TitleText[]; note?: string }
-  pricing?: SectionHeading & { body: string[]; cards: TitleText[]; image?: Img }
+  pricing?: SectionHeading & { body: string[]; cards: IconItem[]; image?: Img }
   whyUs?: SectionHeading & { cards: TitleText[]; note?: string }
   faqs?: SectionHeading & { items: Faq[] }
   /** Product or category ids shown in "Related Products". */

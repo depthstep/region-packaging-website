@@ -373,6 +373,7 @@ export interface Category {
       | {
           title?: string | null;
           text?: string | null;
+          icon?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -761,6 +762,7 @@ export interface Product {
       | {
           title?: string | null;
           text?: string | null;
+          icon?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -1364,6 +1366,7 @@ export interface CategoriesSelect<T extends boolean = true> {
           | {
               title?: T;
               text?: T;
+              icon?: T;
               id?: T;
             };
         image?: T;
@@ -1662,6 +1665,7 @@ export interface ProductsSelect<T extends boolean = true> {
           | {
               title?: T;
               text?: T;
+              icon?: T;
               id?: T;
             };
         image?: T;
@@ -2595,6 +2599,7 @@ export interface SiteSetting {
         | {
             title?: string | null;
             text?: string | null;
+            icon?: (number | null) | Media;
             id?: string | null;
           }[]
         | null;
@@ -3643,6 +3648,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
                 | {
                     title?: T;
                     text?: T;
+                    icon?: T;
                     id?: T;
                   };
             };

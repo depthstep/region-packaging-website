@@ -51,7 +51,7 @@ export const SiteSettings: GlobalConfig = {
               fields: [
                 str('exploreEyebrow', 'Small label above "Explore styles"'),
                 section('howToOrder', 'How to order', [...heading, titleText('steps', 'Steps')]),
-                section('pricing', 'Pricing', [...heading, titleText('cards', 'Cards')]),
+                section('pricing', 'Pricing', [...heading, iconItems('cards', 'Cards')]),
                 section('whyUs', 'Why choose us', [...heading, titleText('cards', 'Cards')]),
                 section('faqs', 'FAQs', [...heading, faqList()]),
                 section('relatedHeading', 'Related products heading', heading),

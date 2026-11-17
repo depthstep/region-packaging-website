@@ -586,6 +586,7 @@
   display: grid;
   gap: 20px;
 }
+/* Each card: a light blue icon tile on the left, the title and short text beside it (Figma). */
 .pricing__cards li {
   background: var(--beige);
   border-radius: 20px;
@@ -599,6 +600,30 @@
 .pricing__cards strong {
   color: var(--black);
   font-size: 18px;
+}
+.pricing__card-text {
+  display: grid;
+  gap: 6px;
+}
+.pricing__cards li.has-icon {
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+  padding: 16px 24px 16px 16px;
+  text-align: left;
+  font-size: var(--p2);
+}
+.pricing__cards li.has-icon strong {
+  font-size: 20px;
+  line-height: 1.2;
+}
+.pricing__icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 12px;
+  background: var(--sky);
 }
 
 /* ---------- 13. Why choose us ---------- */

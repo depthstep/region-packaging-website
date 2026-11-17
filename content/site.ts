@@ -305,9 +305,9 @@ export const settings: SiteSettings = {
       heading: 'Low Minimums, Pricing & Turnaround',
       text: 'Transparent instant pricing, built around what your business actually needs.',
       cards: [
-        { title: 'From 100 units', text: 'Low minimums' },
-        { title: 'No plate fees', text: 'On short digital runs' },
-        { title: 'Rush available', text: 'When a launch date is fixed' },
+        { title: 'From 100 units', text: 'Low minimums', icon: img('/icons/pricing-from-100-units.svg', '') },
+        { title: 'No plate fees', text: 'On short digital runs', icon: img('/icons/pricing-no-plate-fees.svg', '') },
+        { title: 'Rush available', text: 'When a launch date is fixed', icon: img('/icons/pricing-rush-available.svg', '') },
       ],
     },
     whyUs: {

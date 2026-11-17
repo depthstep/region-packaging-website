@@ -12,6 +12,7 @@ import * as migration_20261110_200323_product_layout from './20261110_200323_pro
 import * as migration_20261114_054239_paper_weight_quote from './20261114_054239_paper_weight_quote';
 import * as migration_20261116_175406_overview_layout from './20261116_175406_overview_layout';
 import * as migration_20261116_193023_topbar_tag from './20261116_193023_topbar_tag';
+import * as migration_20261117_104754_pricing_card_icons from './20261117_104754_pricing_card_icons';
 
 export const migrations = [
   {
@@ -82,6 +83,11 @@ export const migrations = [
   {
     up: migration_20261116_193023_topbar_tag.up,
     down: migration_20261116_193023_topbar_tag.down,
-    name: '20261116_193023_topbar_tag'
+    name: '20261116_193023_topbar_tag',
+  },
+  {
+    up: migration_20261117_104754_pricing_card_icons.up,
+    down: migration_20261117_104754_pricing_card_icons.down,
+    name: '20261117_104754_pricing_card_icons'
   },
 ];

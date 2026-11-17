@@ -60,7 +60,7 @@ export const sectionsTab: Field[] = [
   ]),
   section('useCases', '10. Industries & use cases', [...heading, strings('pills', 'Tags (small rounded labels)', 'Type one, then press Enter to add the next.'), txt('note', 'Text under the tags', 6)]),
   section('howToOrder', '11. How to order', [...heading, titleText('steps', 'Steps', 'Empty = defaults from Site settings.'), txt('note', 'Text under the steps', 6)]),
-  section('pricing', '12. Pricing', [...heading, paragraphs(), titleText('cards', 'Cards', 'Empty = defaults from Site settings.'), img('image', 'Background photo (appears with a blue tint)')]),
+  section('pricing', '12. Pricing', [...heading, paragraphs(), list('cards', 'Cards', [str('title'), txt('text', 'Text', 2), img('icon', 'Icon')], 'Empty = defaults from Site settings.'), img('image', 'Background photo (appears with a blue tint)')]),
   section('whyUs', '13. Why choose us', [...heading, titleText('cards', 'Cards', 'Empty = defaults from Site settings.'), txt('note', 'Text under the cards', 6)]),
   section('faqs', '16. FAQs', [...heading, faqList('items', 'Questions', 'Empty = defaults from Site settings.')]),
   {
