@@ -1,12 +1,10 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import type { FormOptions, SiteSettings } from '@/lib/types'
+import type { SiteSettings } from '@/lib/types'
 import { QuoteForm } from './QuoteForm'
 
 type Props = {
-  choices: string[]
-  options: FormOptions
   formNote?: string
   ctaText?: string
   sampleLinkLabel?: string
@@ -21,7 +19,7 @@ export function QuotePageBody(props: Props) {
 }
 
 /** Figma 787:248: heading and reasons on the left, the inquiry form on the right. */
-export function QuoteBody({ choices, options, formNote, ctaText, sampleLinkLabel, intros, page, type, product }: Props & { type?: string | null; product?: string }) {
+export function QuoteBody({ formNote, ctaText, sampleLinkLabel, intros, page, type, product }: Props & { type?: string | null; product?: string }) {
   const sample = type === 'sample'
   const intro = sample ? intros.sample : intros.quote
   return (
@@ -43,11 +41,9 @@ export function QuoteBody({ choices, options, formNote, ctaText, sampleLinkLabel
           )}
         </div>
         <div className="quote-card quote-hero__card">
-          <p className="quote-form__heading quote-page__heading">Tell us about your packaging needs!</p>
+          <p className="quote-form__heading quote-page__heading">{sample ? 'Request a Free Sample' : 'Get a Free Quote'}</p>
           <QuoteForm
-            productChoices={product ? undefined : choices}
             product={product}
-            options={options}
             note={formNote}
             sampleLinkLabel={sample ? undefined : sampleLinkLabel}
             defaultMessage={sample ? 'I would like to request a free sample pack.' : undefined}

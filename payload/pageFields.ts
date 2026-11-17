@@ -15,7 +15,9 @@ export const galleryTab: Field[] = [
   strings('highlights', 'Three bullet points with tick marks', 'Category pages only. Type one, then press Enter to add the next.'),
   strings('badges', 'Small tags under the quote form', 'Product pages only, e.g. "Low MOQ". Type one, then press Enter to add the next.'),
   imgs('gallery', 'Photos beside the quote form'),
-  section('formOptions', 'Quote form options', formOptionFields, 'Leave a list empty to use the defaults from Site settings.'),
+  // The quote form now asks for the size and quantity as typed values, so these dropdown lists are no
+  // longer used. Hidden (not deleted) so the saved lists stay in the database.
+  ({ ...section('formOptions', 'Quote form options', formOptionFields), admin: { hidden: true } }) as Field,
 ]
 
 const overviewFields: Field[] = [...heading, paragraphs(), imgs('images', 'Photos (3)')]

@@ -23,6 +23,9 @@ const schema = z.object({
   finish: s.optional(),
   material: s.optional(),
   size: s.optional(),
+  length: s.optional(),
+  width: s.optional(),
+  depth: s.optional(),
   printing: s.optional(),
   productionSpeed: s.optional(),
   quantity: s.optional(),
@@ -32,6 +35,7 @@ const schema = z.object({
   website: s.optional(), // honeypot
 })
 
+const EMAIL_LABELS: Record<string, string> = { depth: 'depth / height' }
 const esc = (v = '') => v.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
 
 export async function POST(req: Request) {
@@ -90,7 +94,7 @@ export async function POST(req: Request) {
       const adminUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ''}/admin/collections/quote-requests/${quote.id}`
       const rows = Object.entries({ ...fields, artwork: art ? `${artwork!.name} (open the request in the admin)` : '' })
         .filter(([, v]) => v)
-        .map(([k, v]) => `<tr><td><b>${esc(k)}</b></td><td>${esc(String(v))}</td></tr>`)
+        .map(([k, v]) => `<tr><td><b>${esc(EMAIL_LABELS[k] ?? k)}</b></td><td>${esc(String(v))}</td></tr>`)
         .join('')
       // The enquiry is already saved, so a mail problem is logged rather than shown to the customer.
       await Promise.all([

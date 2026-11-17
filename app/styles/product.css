@@ -99,6 +99,10 @@
 .quote-card__desc {
   font-size: var(--p2);
 }
+/* Box pages have no tick list, so the form follows the description directly. */
+.quote-card__desc + .quote-form {
+  margin-top: 26px;
+}
 .quote-card__checks {
   display: grid;
   gap: 8px;
@@ -192,6 +196,22 @@
 .input--email {
   background-image: url('../../public/icons/mail.svg');
 }
+.input--plain {
+  padding-left: 18px;
+}
+/* Size and quantity are typed in: no up/down arrows. */
+.input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.input[type='number']::-webkit-inner-spin-button,
+.input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.field__req {
+  color: var(--danger);
+}
 .textarea {
   height: auto;
   min-height: 100px;
@@ -221,6 +241,13 @@
   font-size: var(--p3);
   cursor: pointer;
   text-align: center;
+}
+/* Under its own label inside the form grid. */
+.field > .dropzone {
+  margin-top: 0;
+}
+.field > .dropzone__meta {
+  margin-top: 0;
 }
 .dropzone.is-dragging,
 .dropzone:focus-within {
@@ -708,6 +735,13 @@
 @media (max-width: 560px) {
   .quote-form__grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+  /* Quote form on phones: name and email full width, size and quantity two to a row. */
+  .quote-form__grid--pairs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .quote-form__grid--pairs .field--phone-wide {
+    grid-column: 1 / -1;
   }
 }
 /* Phones: one step per row, with a small arrow pointing down to the next. */

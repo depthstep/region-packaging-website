@@ -182,9 +182,6 @@ export interface Category {
    */
   badges?: string[] | null;
   gallery?: (number | Media)[] | null;
-  /**
-   * Leave a list empty to use the defaults from Site settings.
-   */
   formOptions?: {
     style?: string[] | null;
     finish?: string[] | null;
@@ -499,9 +496,6 @@ export interface Product {
    */
   badges?: string[] | null;
   gallery?: (number | Media)[] | null;
-  /**
-   * Leave a list empty to use the defaults from Site settings.
-   */
   formOptions?: {
     style?: string[] | null;
     finish?: string[] | null;
@@ -952,6 +946,9 @@ export interface QuoteRequest {
   finish?: string | null;
   material?: string | null;
   size?: string | null;
+  length?: string | null;
+  width?: string | null;
+  depth?: string | null;
   printing?: string | null;
   productionSpeed?: string | null;
   quantity?: string | null;
@@ -1770,6 +1767,9 @@ export interface QuoteRequestsSelect<T extends boolean = true> {
   finish?: T;
   material?: T;
   size?: T;
+  length?: T;
+  width?: T;
+  depth?: T;
   printing?: T;
   productionSpeed?: T;
   quantity?: T;

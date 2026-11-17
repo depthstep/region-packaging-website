@@ -3,42 +3,35 @@
 import Link from 'next/link'
 import { useRef, useState } from 'react'
 import { isStaticPreview, withBase } from '@/lib/asset'
-import type { FormOptions } from '@/lib/types'
 import { ArrowRight } from '@/components/ui/glyphs'
 
 export const MAX_ARTWORK_BYTES = 15 * 1024 * 1024
 const ACCEPT = '.pdf,.eps,.png,.jpg,.jpeg,application/pdf,application/postscript,image/png,image/jpeg'
 const ALLOWED_EXT = /\.(pdf|eps|png|jpe?g)$/i
 
-const SELECTS: { key: keyof FormOptions; label: string; icon: string }[] = [
-  { key: 'style', label: 'Style', icon: '/icons/feature-layers.svg' },
-  { key: 'material', label: 'Material', icon: '/icons/feature-layers.svg' },
-  { key: 'size', label: 'Size', icon: '/icons/feature-box-search.svg' },
-  { key: 'finish', label: 'Finish', icon: '/icons/feature-print.svg' },
-  { key: 'printing', label: 'Printing', icon: '/icons/feature-print.svg' },
-  { key: 'productionSpeed', label: 'Production Speed', icon: '/icons/feature-fast.svg' },
-  { key: 'quantity', label: 'Quantity', icon: '/icons/feature-boxes.svg' },
-  { key: 'design', label: 'Design', icon: '/icons/feature-box-design.svg' },
-]
+// Fields, labels and placeholders follow the SEO team's form exactly (17 Nov 2026).
+const SIZE_FIELDS = [
+  { name: 'length', label: 'Length', placeholder: 'Length' },
+  { name: 'width', label: 'Width', placeholder: 'Width' },
+  { name: 'depth', label: 'Depth / Height', placeholder: 'Depth' },
+] as const
 
 type Props = {
   product?: string
-  /** Shown as a "Product" select on the standalone /quote page. */
-  productChoices?: string[]
-  options: FormOptions
   sampleLinkLabel?: string
   note?: string
   defaultMessage?: string
-  /** Which option lists to show, in order (the two-column grid fills left to right). */
-  fields?: (keyof FormOptions)[]
 }
-
-/** Category pages and the /quote page. Industry sub-products pass their own set. */
-export const DEFAULT_FIELDS: (keyof FormOptions)[] = ['material', 'size', 'printing', 'productionSpeed', 'quantity', 'design']
 
 type Status = { state: 'idle' | 'sending' | 'sent' } | { state: 'error'; message: string }
 
-export function QuoteForm({ product, productChoices, options, sampleLinkLabel, note, defaultMessage, fields = DEFAULT_FIELDS }: Props) {
+const Req = () => (
+  <span className="field__req" aria-hidden="true">
+    *
+  </span>
+)
+
+export function QuoteForm({ product, sampleLinkLabel, note, defaultMessage }: Props) {
   const [status, setStatus] = useState<Status>({ state: 'idle' })
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState('')
@@ -98,87 +91,68 @@ export function QuoteForm({ product, productChoices, options, sampleLinkLabel, n
         </label>
       </div>
 
-      <div className="quote-form__grid">
-        {productChoices && (
-          <label className="field field--wide">
-            <span className="field__label">Product</span>
-            <span className="select">
-              <select name="product" defaultValue="">
-                <option value="">Not sure yet</option>
-                {productChoices.map((p) => (
-                  <option key={p}>{p}</option>
-                ))}
-              </select>
+      <div className="quote-form__grid quote-form__grid--pairs">
+        <label className="field field--phone-wide">
+          <span className="field__label">Name</span>
+          <input className="input input--name" name="name" placeholder="Name*" required autoComplete="name" maxLength={200} />
+        </label>
+        <label className="field field--phone-wide">
+          <span className="field__label">Email</span>
+          <input className="input input--email" name="email" type="email" placeholder="Email*" required autoComplete="email" maxLength={200} />
+        </label>
+        {SIZE_FIELDS.map((f) => (
+          <label key={f.name} className="field">
+            <span className="field__label">
+              {f.label} <Req />
             </span>
+            <input className="input input--plain" name={f.name} type="number" inputMode="decimal" min="0" step="any" placeholder={f.placeholder} required />
           </label>
-        )}
-        {fields.map((f) => SELECTS.find((s) => s.key === f)!).map(({ key, label, icon }) =>
-          options[key]?.length ? (
-            <label key={key} className="field">
-              <span className="field__label">{label}</span>
-              <span className="select">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="select__icon" src={withBase(icon)} alt="" width={18} height={18} />
-                <select name={key} defaultValue={options[key][0]}>
-                  {options[key].map((o) => (
-                    <option key={o}>{o}</option>
-                  ))}
-                </select>
+        ))}
+        <label className="field">
+          <span className="field__label">
+            Quantity <Req />
+          </span>
+          <input className="input input--plain" name="quantity" type="number" inputMode="numeric" min="1" step="1" placeholder="Quantity" required />
+        </label>
+
+        <div className="field field--wide">
+          <span className="field__label">Upload File / Design</span>
+          <label
+            className={`dropzone ${dragging ? 'is-dragging' : ''}`}
+            onDragOver={(e) => {
+              e.preventDefault()
+              setDragging(true)
+            }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={(e) => {
+              e.preventDefault()
+              setDragging(false)
+              pickFile(e.dataTransfer.files[0])
+            }}
+          >
+            <input type="file" name="artwork" accept={ACCEPT} className="sr-only" onChange={(e) => pickFile(e.target.files?.[0])} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={withBase('/icons/upload.svg')} alt="" width={34} height={34} />
+            {file ? (
+              <span className="dropzone__file">
+                {file.name} ({(file.size / 1024 / 1024).toFixed(1)}MB) <span className="dropzone__change">Change</span>
               </span>
-            </label>
-          ) : null,
-        )}
-      </div>
+            ) : (
+              <span>
+                <u>Choose a file</u> or drag &amp; drop
+              </span>
+            )}
+          </label>
+          <div className="dropzone__meta">
+            <span>Supported formats: PDF, EPS, PNG or JPG</span>
+            <span>Maximum Size: 15mb</span>
+          </div>
+          {fileError && <p className="field__error">{fileError}</p>}
+        </div>
 
-      <label
-        className={`dropzone ${dragging ? 'is-dragging' : ''}`}
-        onDragOver={(e) => {
-          e.preventDefault()
-          setDragging(true)
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={(e) => {
-          e.preventDefault()
-          setDragging(false)
-          pickFile(e.dataTransfer.files[0])
-        }}
-      >
-        <input type="file" name="artwork" accept={ACCEPT} className="sr-only" onChange={(e) => pickFile(e.target.files?.[0])} />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={withBase('/icons/upload.svg')} alt="" width={34} height={34} />
-        {file ? (
-          <span className="dropzone__file">
-            {file.name} ({(file.size / 1024 / 1024).toFixed(1)}MB) <span className="dropzone__change">Change</span>
-          </span>
-        ) : (
-          <span>
-            <u>Choose a file</u> or drag &amp; drop
-          </span>
-        )}
-      </label>
-      <div className="dropzone__meta">
-        <span>Supported formats: PDF, EPS, PNG or JPG</span>
-        <span>Maximum Size: 15mb</span>
-      </div>
-      {fileError && <p className="field__error">{fileError}</p>}
-
-      <p className="quote-form__heading">Your Details</p>
-      <div className="quote-form__grid">
-        <label className="field">
-          <span className="sr-only">Full name</span>
-          <input className="input input--name" name="name" placeholder="Full name" required autoComplete="name" maxLength={200} />
-        </label>
-        <label className="field">
-          <span className="sr-only">Phone/mobile number</span>
-          <input className="input input--phone" name="phone" type="tel" placeholder="Phone/mobile number" autoComplete="tel" maxLength={50} />
-        </label>
         <label className="field field--wide">
-          <span className="sr-only">Email Address</span>
-          <input className="input input--email" name="email" type="email" placeholder="Email Address" required autoComplete="email" maxLength={200} />
-        </label>
-        <label className="field field--wide">
-          <span className="sr-only">Message</span>
-          <textarea className="input textarea" name="message" placeholder="Tell us about your packaging needs!" rows={4} maxLength={2000} defaultValue={defaultMessage} />
+          <span className="field__label">Message / Project Details</span>
+          <textarea className="input textarea" name="message" placeholder="Any special instructions or requirements…" rows={4} maxLength={2000} defaultValue={defaultMessage} />
         </label>
       </div>
 
@@ -190,7 +164,7 @@ export function QuoteForm({ product, productChoices, options, sampleLinkLabel, n
 
       <div className="quote-form__actions">
         <button type="submit" className="btn btn--primary btn--sm" disabled={status.state === 'sending'}>
-          {status.state === 'sending' ? 'Sending…' : 'Send Inquiry'}
+          {status.state === 'sending' ? 'Sending…' : 'Submit'}
         </button>
         {sampleLinkLabel && (
           <Link href="/quote?type=sample" className="quote-form__sample">

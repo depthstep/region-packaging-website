@@ -5,14 +5,12 @@ import { FaqSection } from '@/components/sections/FaqSection'
 import { ProductTabs, type TabItem } from './ProductTabs'
 import { OptionsSection } from './OptionsSection'
 import { ProductTop } from './ProductTop'
-import { formOptions, mergeFaqs } from './ProductTemplate'
+import { mergeFaqs } from './ProductTemplate'
 
 // Every product page (e.g. /black-mailer-boxes, /cream-boxes): the shared top, a construction
 // section, four tabs (Overview, Specifications, Sustainability & Why Us, FAQ), then the options
 // section with its own tabs (Material, Printing, Finishes, Add-ons).
 // Each section uses the product's own content, or Site settings > Sub-product pages when empty.
-
-const FIELDS = ['style', 'finish', 'productionSpeed', 'quantity'] as const
 
 /** The product's section if it has a heading, else the default, with {product} filled in. */
 function pick<T extends { heading?: string; text?: string }>(own: T | undefined, def: T | undefined, product: string): T | undefined {
@@ -190,8 +188,6 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
         highlights={[]}
         badges={page.badges?.length ? page.badges : (def.badges ?? [])}
         gallery={page.gallery.length ? page.gallery : def.gallery}
-        options={formOptions(page, settings.formDefaults)}
-        fields={[...FIELDS]}
       />
       {construction}
       {tabs.length > 0 && <ProductTabs tabs={tabs} />}

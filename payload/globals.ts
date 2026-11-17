@@ -42,7 +42,8 @@ export const SiteSettings: GlobalConfig = {
           label: 'Product page defaults',
           fields: [
             iconItems('trustStrip', 'Five icons under the quote form'),
-            { name: 'formDefaults', label: 'Quote form options', type: 'group', fields: formOptionFields },
+            // No longer used by the quote form (size and quantity are typed in); hidden, data kept.
+            { name: 'formDefaults', label: 'Quote form options', type: 'group', fields: formOptionFields, admin: { hidden: true } },
             {
               name: 'productDefaults',
               label: 'Standard text for product pages',

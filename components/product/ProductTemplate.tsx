@@ -1,4 +1,4 @@
-import type { Card, Category, FormOptions, PageContent, Product, SiteData, TitleText } from '@/lib/types'
+import type { Card, Category, PageContent, Product, SiteData, TitleText } from '@/lib/types'
 import { resolveRelated, toCard } from '@/lib/data'
 import { FeatureCard, PhotoCard } from '@/components/ui/Cards'
 import { Icon, Media } from '@/components/ui/Media'
@@ -37,20 +37,6 @@ export function mergeFaqs(defaults?: PageContent['faqs'], own?: PageContent['faq
   return { items: [], ...defaults, ...Object.fromEntries(filled) } as NonNullable<PageContent['faqs']>
 }
 
-export function formOptions(page: PageContent, defaults: FormOptions): FormOptions {
-  const own = page.formOptions ?? {}
-  const pick = (k: keyof FormOptions) => (own[k]?.length ? own[k]! : defaults[k])
-  return {
-    style: pick('style'),
-    finish: pick('finish'),
-    material: pick('material'),
-    size: pick('size'),
-    printing: pick('printing'),
-    productionSpeed: pick('productionSpeed'),
-    quantity: pick('quantity'),
-    design: pick('design'),
-  }
-}
 
 /** Text up to about this many characters fits beside one photo ("compact" overview layout). */
 const SHORT_OVERVIEW = 650
@@ -90,7 +76,6 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
         shortDescription={page.shortDescription}
         highlights={page.highlights}
         gallery={page.gallery}
-        options={formOptions(page, settings.formDefaults)}
       />
 
       {/* 4. Explore styles (category pages list their sub-products) */}

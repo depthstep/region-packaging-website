@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import type { Category, FormOptions, Img, SiteData } from '@/lib/types'
+import type { Category, Img, SiteData } from '@/lib/types'
 import { groupLabel } from '@/lib/data'
 import { Check, Star } from '@/components/ui/glyphs'
 import { Icon } from '@/components/ui/Media'
@@ -18,19 +18,17 @@ type Props = {
   /** Small tags under the quote form (product pages). */
   badges?: string[]
   gallery: Img[]
-  options: FormOptions
-  fields?: (keyof FormOptions)[]
   /** Industry sub-product pages use larger trust-strip icons. */
   trustIconSize?: number
 }
 
 /** Breadcrumb, sticky gallery + quote card, and the trust strip: the top of every product page. */
-export function ProductTop({ data, title, category, isCategory, ratingText, shortDescription, highlights, badges = [], gallery, options, fields, trustIconSize = 30 }: Props) {
+export function ProductTop({ data, title, category, isCategory, ratingText, shortDescription, highlights, badges = [], gallery, trustIconSize = 30 }: Props) {
   const { settings } = data
   const d = settings.productDefaults
   return (
     <>
-      <section data-section="ratingText shortDescription highlights badges gallery formOptions formDefaults formNote sampleLinkLabel" className="product-top">
+      <section data-section="ratingText shortDescription highlights badges gallery formNote sampleLinkLabel" className="product-top">
         <div className="container">
           <nav className="breadcrumb" aria-label="Breadcrumb">
             <Link href="/">Home</Link> / <Link href="/products">{groupLabel(category.kind)}</Link> /{' '}
@@ -63,7 +61,7 @@ export function ProductTop({ data, title, category, isCategory, ratingText, shor
                   ))}
                 </ul>
               )}
-              <QuoteForm product={title} options={options} fields={fields} sampleLinkLabel={d.sampleLinkLabel} note={d.formNote} />
+              <QuoteForm product={title} sampleLinkLabel={d.sampleLinkLabel} note={d.formNote} />
               {badges.length > 0 && (
                 <ul className="pill-row pdp-mini">
                   {badges.map((b) => (
