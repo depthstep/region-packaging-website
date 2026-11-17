@@ -22,7 +22,7 @@
 /* "Sticky while scrolling": the gallery stays in view beside the taller form. */
 .product-top__gallery {
   position: sticky;
-  top: 24px;
+  top: calc(var(--sticky-top) + 24px);
 }
 .gallery__main {
   position: relative;

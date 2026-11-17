@@ -125,10 +125,7 @@
   grid-template-columns: 1fr 1fr;
   overflow: hidden;
   border-radius: var(--radius-card);
-  scroll-margin-top: calc(var(--sticky-top) + 24px);
-}
-#chart {
-  scroll-margin-top: var(--sticky-top);
+  scroll-margin-top: 24px;
 }
 .pw-conv__intro {
   position: relative;

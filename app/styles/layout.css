@@ -1,6 +1,10 @@
 /* ---------- Header: sky top bar ---------- */
+/* The header is pinned: the light blue top bar scrolls away and the main bar (logo, menu,
+   phone, Get a Quote) stays at the top of the screen. --sticky-top is the main bar's height. */
 .site-header {
-  position: relative;
+  --topbar-h: 59px;
+  position: sticky;
+  top: calc(-1 * var(--topbar-h));
   z-index: 50;
   background: var(--white);
 }
@@ -9,12 +13,11 @@
   color: var(--blue);
 }
 .topbar__inner {
-  min-height: 59px;
+  height: var(--topbar-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
 }
 .topbar__promo {
   display: flex;
@@ -286,10 +289,7 @@
     display: block;
   }
   .has-promo .topbar__inner {
-    height: var(--topbar-h);
-    min-height: 0;
     justify-content: center;
-    flex-wrap: nowrap;
   }
   .has-promo .topbar__actions {
     display: none;

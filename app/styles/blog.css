@@ -326,13 +326,13 @@
   margin-top: 64px;
   font-size: var(--h2);
   line-height: 1.05;
-  scroll-margin-top: 120px;
+  scroll-margin-top: 24px;
 }
 .rich-text h3 {
   margin-top: 48px;
   font-size: var(--h4);
   font-weight: 600;
-  scroll-margin-top: 120px;
+  scroll-margin-top: 24px;
 }
 .rich-text h2 + *,
 .rich-text h3 + * {
@@ -376,7 +376,7 @@
 
 .post-aside {
   position: sticky;
-  top: 24px;
+  top: calc(var(--sticky-top) + 24px);
   display: grid;
   gap: 24px;
 }

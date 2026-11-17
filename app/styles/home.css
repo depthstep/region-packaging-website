@@ -226,7 +226,7 @@
   box-shadow: 0 4px 10px rgba(1, 47, 141, 0.25);
 }
 .industry-panel {
-  scroll-margin-top: calc(var(--sticky-top) + 90px);
+  scroll-margin-top: 90px;
 }
 /* Phones and tablets: one row that swipes sideways, fading at the edges, instead of 4-5 rows. */
 @media (max-width: 1100px) {
