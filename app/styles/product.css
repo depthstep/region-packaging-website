@@ -617,7 +617,9 @@
   font-size: 20px;
   line-height: 1.2;
 }
+/* Short cards: the text is centred beside the tile. Long cards: the tile stays at the top. */
 .pricing__icon {
+  align-self: start;
   display: grid;
   place-items: center;
   width: 76px;
