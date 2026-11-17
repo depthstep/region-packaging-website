@@ -404,28 +404,37 @@
 /* ---------- 7. Specs ---------- */
 .spec-table {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 40px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: 0;
-}
-.spec-table div {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 26px 0;
   border-top: 1px solid #e3e3e3;
+  border-left: 1px solid #e3e3e3;
 }
-.spec-table div:nth-last-child(-n + 2) {
+/* A boxed grid: name in its own column, value left-aligned beside it. Each cell draws its right and
+   bottom line, so the middle divider and the outer edge line up in one or two columns. */
+.spec-table div {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: center;
+  gap: 20px;
+  padding: 26px 36px;
+  border-right: 1px solid #e3e3e3;
+  border-bottom: 1px solid #e3e3e3;
+}
+/* Odd number of rows: an empty cell closes the box in the bottom right corner. */
+.spec-table:has(> div:last-child:nth-child(odd))::after {
+  content: '';
+  border-right: 1px solid #e3e3e3;
   border-bottom: 1px solid #e3e3e3;
 }
 .spec-table dt {
   color: var(--black);
+  font-size: var(--p1);
   font-weight: 700;
 }
 .spec-table dd {
   margin: 0;
-  text-align: right;
-  font-size: var(--p3);
+  font-size: var(--p2);
+  text-align: center;
 }
 .sizes__heading {
   text-align: center;
@@ -717,10 +726,10 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .spec-table {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
-  .spec-table div:nth-last-child(2) {
-    border-bottom: 0;
+  .spec-table::after {
+    display: none;
   }
   .order-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -745,6 +754,15 @@
   }
 }
 /* Phones: one step per row, with a small arrow pointing down to the next. */
+@media (max-width: 640px) {
+  .spec-table div {
+    gap: 14px;
+    padding: 18px 20px;
+  }
+  .spec-table dt {
+    font-size: var(--p2);
+  }
+}
 @media (max-width: 640px) {
   .order-steps {
     grid-template-columns: minmax(0, 1fr);

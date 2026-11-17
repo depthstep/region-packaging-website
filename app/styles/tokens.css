@@ -54,8 +54,8 @@
    pinned bars and jump links sit just below it. */
 :root {
   --sticky-top: 108px;
-  /* Line length of every centred paragraph (section subtitles, notes under cards): about 95 characters. */
-  --text-max: 680px;
+  /* Line length of every centred paragraph (section subtitles, notes under cards). Widened 17 Nov. */
+  --text-max: 880px;
 }
 html {
   scroll-padding-top: var(--sticky-top);

@@ -78,8 +78,6 @@
   padding-top: 160px;
   border-top: 1px solid var(--stroke);
 }
-.pw-block .section-header__copy,
-.pw-wide-header .section-header__copy,
 .pw-block .section-header h2,
 .pw-wide-header h2 {
   max-width: 760px;
@@ -211,9 +209,6 @@
 }
 
 /* Conversion tables: blue header bar, every other row on beige. */
-.pw-chart .section-header__copy {
-  max-width: 600px;
-}
 .pw-table {
   overflow-x: auto;
   padding: 15px;
