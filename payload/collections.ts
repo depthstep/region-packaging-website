@@ -50,7 +50,11 @@ export const Media: CollectionConfig = {
     staticDir: uploadsDir('media'),
     mimeTypes: ['image/*', 'application/pdf'],
   },
-  fields: [{ name: 'alt', label: 'Alt text', type: 'text', admin: { description: 'Describe the image for screen readers and SEO.' } }],
+  fields: [
+    { name: 'alt', label: 'Alt text', type: 'text', admin: { description: 'Describe the image for screen readers and SEO.' } },
+    // Read-only list of the pages, products and settings that use this file. Nothing is stored.
+    { name: 'usedOn', type: 'ui', admin: { components: { Field: '/components/admin/MediaUsage#MediaUsage' } } },
+  ],
   hooks: revalidateOnChange,
 }
 

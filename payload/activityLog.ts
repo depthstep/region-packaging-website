@@ -26,7 +26,8 @@ export const ActivityLog: CollectionConfig = {
   labels: { singular: 'Activity entry', plural: 'Activity log' },
   admin: {
     useAsTitle: 'summary',
-    defaultColumns: ['createdAt', 'user', 'action', 'section', 'item', 'summary'],
+    listSearchableFields: ['summary', 'item'],
+    defaultColumns: ['createdAt', 'user', 'action', 'section', 'item', 'open', 'summary'],
     group: 'Settings',
     hidden: ({ user }) => (user as { role?: string } | null | undefined)?.role !== 'admin',
     description: 'Every change the team made in the admin. Open an entry to see exactly which characters changed. Entries cannot be edited or deleted.',
@@ -34,6 +35,13 @@ export const ActivityLog: CollectionConfig = {
   defaultSort: '-createdAt',
   access: { read: isAdmin, create: () => false, update: () => false, delete: () => false },
   fields: [
+    // A link to the page, product, file or setting the entry is about. Worked out when shown; nothing is stored.
+    {
+      name: 'open',
+      label: 'Open',
+      type: 'ui',
+      admin: { position: 'sidebar', components: { Field: '/components/admin/OpenLogItem#OpenLogItem', Cell: '/components/admin/OpenLogItem#OpenLogItemCell' } },
+    },
     { name: 'user', label: 'Login', type: 'text', index: true, admin: { position: 'sidebar' } },
     {
       name: 'action',
@@ -78,10 +86,10 @@ const SKIP = new Set([
   'loginAttempts', 'lockUntil', 'resetPasswordToken', 'resetPasswordExpiration', '_verified', '_verificationToken',
 ])
 
-const words = (name: string) => name.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/^./, (c) => c.toUpperCase())
-const labelOf = (f: { label?: unknown; name?: string }) => (typeof f.label === 'string' && f.label ? f.label : f.name ? words(f.name) : '')
-const obj = (v: unknown): Doc => (v && typeof v === 'object' ? (v as Doc) : {})
-const idOf = (v: unknown) => (v && typeof v === 'object' ? ((v as Doc).value ?? (v as Doc).id) : v)
+export const words = (name: string) => name.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/^./, (c) => c.toUpperCase())
+export const labelOf = (f: { label?: unknown; name?: string }) => (typeof f.label === 'string' && f.label ? f.label : f.name ? words(f.name) : '')
+export const obj = (v: unknown): Doc => (v && typeof v === 'object' ? (v as Doc) : {})
+export const idOf = (v: unknown) => (v && typeof v === 'object' ? ((v as Doc).value ?? (v as Doc).id) : v)
 
 /** Shows an item's name rather than its database number, e.g. the file name of a photo. */
 async function nameOf(ref: unknown, relationTo: string | string[], ctx: Ctx) {
@@ -214,7 +222,7 @@ const addWhole = (ctx: Ctx, field: string, before: string, after: string) => {
 
 const TYPED = new Set(['text', 'textarea', 'richText', 'email', 'code', 'json'])
 
-const rowName = (row: Doc) => {
+export const rowName = (row: Doc) => {
   const t = [row.title, row.name, row.label, row.question, row.heading, row.text].find((v) => typeof v === 'string' && v)
   return t ? String(t).slice(0, 50) : ''
 }
@@ -311,7 +319,10 @@ async function record(req: PayloadRequest, entry: { action: 'created' | 'updated
   })
 }
 
-const sectionName = (labels: unknown, slug: string) => {
+/** The section name a global's log entries are filed under, e.g. "Site settings". */
+export const globalName = (g: { label?: unknown; slug: string }) => (typeof g.label === 'string' ? g.label : words(g.slug))
+
+export const sectionName = (labels: unknown, slug: string) => {
   const plural = obj(labels).plural
   return typeof plural === 'string' ? plural : words(slug)
 }
@@ -407,7 +418,7 @@ export const withGlobalActivityLog = (g: GlobalConfig): GlobalConfig => ({
         await guarded(async () => {
           const ctx: Ctx = { req, out: [] }
           await walk(global.fields, before, after, [], ctx)
-          const name = typeof global.label === 'string' ? global.label : words(global.slug)
+          const name = globalName(global)
           await record(req, { action: 'updated', section: name, item: name }, ctx.out)
         })
         return doc

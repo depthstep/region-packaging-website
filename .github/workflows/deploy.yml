@@ -62,8 +62,12 @@ jobs:
           install -m 700 -d ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
           echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
-          rsync -az --delete -e 'ssh -i ~/.ssh/deploy' .next/standalone/ "$DEPLOY_USER@$HOST:rp/app/"
-          ssh -i ~/.ssh/deploy "$DEPLOY_USER@$HOST" 'bash rp/app/after-deploy.sh'
+          # Two copies of the site take turns (ports 3000 and 3001). The update goes into the copy that is
+          # not serving visitors, so the live site is never touched until the new one is ready.
+          live=$(ssh -i ~/.ssh/deploy "$DEPLOY_USER@$HOST" 'cat rp/live-port 2>/dev/null || echo 3000')
+          if [ "$live" = 3001 ]; then next=3000; else next=3001; fi
+          rsync -az --delete -e 'ssh -i ~/.ssh/deploy' .next/standalone/ "$DEPLOY_USER@$HOST:rp/app-$next/"
+          ssh -i ~/.ssh/deploy "$DEPLOY_USER@$HOST" "bash rp/app-$next/after-deploy.sh $next"
 
       - name: Static preview build
         if: github.event_name != 'pull_request'

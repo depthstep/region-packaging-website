@@ -21,6 +21,9 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93
 import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { MediaUsage as MediaUsage_37496de85f8616f72cf2999ceb1e940e } from '../../../components/admin/MediaUsage'
+import { OpenLogItem as OpenLogItem_56ce4e0386bd39b09fd8d71acf59c8ef } from '../../../components/admin/OpenLogItem'
+import { OpenLogItemCell as OpenLogItemCell_56ce4e0386bd39b09fd8d71acf59c8ef } from '../../../components/admin/OpenLogItem'
 import { ActivityChanges as ActivityChanges_ae5de1f6b67bb26f63fb895c983f2c74 } from '../../../components/admin/ActivityChanges'
 import { PreviewFollow as PreviewFollow_a3d1958ad3dc6d99cf98d7ca1d03f15b } from '../../../components/admin/PreviewFollow'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -50,6 +53,9 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#UnderlineFeatureClient": UnderlineFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "/components/admin/MediaUsage#MediaUsage": MediaUsage_37496de85f8616f72cf2999ceb1e940e,
+  "/components/admin/OpenLogItem#OpenLogItem": OpenLogItem_56ce4e0386bd39b09fd8d71acf59c8ef,
+  "/components/admin/OpenLogItem#OpenLogItemCell": OpenLogItemCell_56ce4e0386bd39b09fd8d71acf59c8ef,
   "/components/admin/ActivityChanges#ActivityChanges": ActivityChanges_ae5de1f6b67bb26f63fb895c983f2c74,
   "/components/admin/PreviewFollow#PreviewFollow": PreviewFollow_a3d1958ad3dc6d99cf98d7ca1d03f15b,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
