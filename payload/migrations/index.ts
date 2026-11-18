@@ -14,6 +14,7 @@ import * as migration_20261116_175406_overview_layout from './20261116_175406_ov
 import * as migration_20261116_193023_topbar_tag from './20261116_193023_topbar_tag';
 import * as migration_20261117_104754_pricing_card_icons from './20261117_104754_pricing_card_icons';
 import * as migration_20261117_171547_quote_size_fields from './20261117_171547_quote_size_fields';
+import * as migration_20261118_162441_quote_unit from './20261118_162441_quote_unit';
 
 export const migrations = [
   {
@@ -94,6 +95,11 @@ export const migrations = [
   {
     up: migration_20261117_171547_quote_size_fields.up,
     down: migration_20261117_171547_quote_size_fields.down,
-    name: '20261117_171547_quote_size_fields'
+    name: '20261117_171547_quote_size_fields',
+  },
+  {
+    up: migration_20261118_162441_quote_unit.up,
+    down: migration_20261118_162441_quote_unit.down,
+    name: '20261118_162441_quote_unit'
   },
 ];

@@ -228,6 +228,7 @@ export const QuoteRequests: CollectionConfig = {
     ro('length'),
     ro('width'),
     ro('depth', 'Depth / height'),
+    ro('unit', 'Size unit'),
     ro('printing'),
     ro('productionSpeed', 'Production speed'),
     ro('quantity'),

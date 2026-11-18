@@ -949,6 +949,7 @@ export interface QuoteRequest {
   length?: string | null;
   width?: string | null;
   depth?: string | null;
+  unit?: string | null;
   printing?: string | null;
   productionSpeed?: string | null;
   quantity?: string | null;
@@ -1770,6 +1771,7 @@ export interface QuoteRequestsSelect<T extends boolean = true> {
   length?: T;
   width?: T;
   depth?: T;
+  unit?: T;
   printing?: T;
   productionSpeed?: T;
   quantity?: T;

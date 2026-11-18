@@ -61,7 +61,7 @@ export function ProductTop({ data, title, category, isCategory, ratingText, shor
                   ))}
                 </ul>
               )}
-              <QuoteForm product={title} sampleLinkLabel={d.sampleLinkLabel} note={d.formNote} />
+              <QuoteForm product={title} categoryFields={isCategory} sampleLinkLabel={d.sampleLinkLabel} note={d.formNote} />
               {badges.length > 0 && (
                 <ul className="pill-row pdp-mini">
                   {badges.map((b) => (

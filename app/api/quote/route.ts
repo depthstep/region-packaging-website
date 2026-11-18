@@ -26,6 +26,7 @@ const schema = z.object({
   length: s.optional(),
   width: s.optional(),
   depth: s.optional(),
+  unit: s.optional(),
   printing: s.optional(),
   productionSpeed: s.optional(),
   quantity: s.optional(),

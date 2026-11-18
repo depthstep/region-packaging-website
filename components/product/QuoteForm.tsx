@@ -15,12 +15,17 @@ const SIZE_FIELDS = [
   { name: 'width', label: 'Width', placeholder: 'Width' },
   { name: 'depth', label: 'Depth / Height', placeholder: 'Depth' },
 ] as const
+// Category pages only (SEO team's sample form, 18 Nov 2026): a unit after the size, printing after quantity.
+const UNITS = ['in', 'cm', 'mm']
+const PRINTING = ['Outside Only', 'Inside & Outside']
 
 type Props = {
   product?: string
   sampleLinkLabel?: string
   note?: string
   defaultMessage?: string
+  /** Category pages: also ask for the size unit and where the box is printed. */
+  categoryFields?: boolean
 }
 
 type Status = { state: 'idle' | 'sending' | 'sent' } | { state: 'error'; message: string }
@@ -31,7 +36,7 @@ const Req = () => (
   </span>
 )
 
-export function QuoteForm({ product, sampleLinkLabel, note, defaultMessage }: Props) {
+export function QuoteForm({ product, sampleLinkLabel, note, defaultMessage, categoryFields = false }: Props) {
   const [status, setStatus] = useState<Status>({ state: 'idle' })
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState('')
@@ -108,12 +113,15 @@ export function QuoteForm({ product, sampleLinkLabel, note, defaultMessage }: Pr
             <input className="input input--plain" name={f.name} type="number" inputMode="decimal" min="0" step="any" placeholder={f.placeholder} required />
           </label>
         ))}
-        <label className="field">
+        {categoryFields && <ChoiceField name="unit" label="Unit" options={UNITS} />}
+        {/* On phones, Quantity and Printing get a row each so "Inside & Outside" fits. */}
+        <label className={categoryFields ? 'field field--phone-wide' : 'field'}>
           <span className="field__label">
             Quantity <Req />
           </span>
           <input className="input input--plain" name="quantity" type="number" inputMode="numeric" min="1" step="1" placeholder="Quantity" required />
         </label>
+        {categoryFields && <ChoiceField name="printing" label="Printing" options={PRINTING} wide />}
 
         <div className="field field--wide">
           <span className="field__label">Upload File / Design</span>
@@ -174,5 +182,21 @@ export function QuoteForm({ product, sampleLinkLabel, note, defaultMessage }: Pr
       </div>
       {note && <p className="quote-form__note">{note}</p>}
     </form>
+  )
+}
+
+/** A dropdown in the same pill style as the other fields. The first option is preselected. */
+function ChoiceField({ name, label, options, wide = false }: { name: string; label: string; options: string[]; wide?: boolean }) {
+  return (
+    <label className={wide ? 'field field--phone-wide' : 'field'}>
+      <span className="field__label">{label}</span>
+      <span className="select">
+        <select name={name} defaultValue={options[0]}>
+          {options.map((o) => (
+            <option key={o}>{o}</option>
+          ))}
+        </select>
+      </span>
+    </label>
   )
 }
