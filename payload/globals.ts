@@ -3,6 +3,16 @@ import { cards, faqList, formOptionFields, heading, iconItems, img, imgs, link, 
 import { revalidateGlobal } from './hooks'
 import { subProductDefaultFields } from './pageFields'
 
+/** A card in the shared options section: photo, name, an optional thickness line, text and a small label. */
+const sharedOptionCards = (name: string, label: string) =>
+  list(name, label, [
+    str('name'),
+    str('spec', 'Thickness line (e.g. 14pt – 28pt)', { description: 'Optional. Shown with a layers icon under the text.' }),
+    txt('description', 'Description', 2),
+    str('tag', 'Small label at the bottom (e.g. Eco-Friendly Choice)'),
+    img('image', 'Photo'),
+  ])
+
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Site settings',
@@ -42,6 +52,22 @@ export const SiteSettings: GlobalConfig = {
           label: 'Product page defaults',
           fields: [
             iconItems('trustStrip', 'Five icons under the quote form'),
+            {
+              name: 'pageOptions',
+              label: 'Option cards and specifications (every category and product page)',
+              type: 'group',
+              admin: {
+                description:
+                  "Shown the same on every category and product page. While a tab here has cards, the pages' own cards for that tab are not used, and while the table has rows, the pages' own specification rows are not used.",
+              },
+              fields: [
+                sharedOptionCards('materials', 'Material tab'),
+                sharedOptionCards('printing', 'Printing tab'),
+                sharedOptionCards('finishes', 'Finishes tab'),
+                sharedOptionCards('addons', 'Add-on tab'),
+                list('specRows', 'Specifications table', [str('label'), str('value')]),
+              ],
+            },
             // No longer used by the quote form (size and quantity are typed in); hidden, data kept.
             { name: 'formDefaults', label: 'Quote form options', type: 'group', fields: formOptionFields, admin: { hidden: true } },
             {

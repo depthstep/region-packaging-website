@@ -55,6 +55,9 @@
 
 /* Sustainability & Why Us tab */
 .pdp-eco { padding: 50px 0 0; }
+/* Centred, like the rest of the tabs (SEO team, 20 Nov 2026). */
+.pdp-eco .eco { text-align: center; }
+.pdp-eco .eco__copy { margin-inline: auto; }
 .pdp-why { padding: 44px 0 var(--section-y); }
 .pdp-why .section-header { margin-bottom: 30px; }
 .pdp-why .note { margin-top: 30px; }
@@ -83,6 +86,19 @@
 .mp-grid > .material { flex: 0 0 calc((100% - 72px) / 4); min-width: 0; }
 .mp-grid .material h4 { font-size: var(--h4); font-weight: 600; }
 .mp-grid .material p { font-size: var(--p2); }
+/* Shared option cards: a thickness line with a layers icon, and a small label at the bottom. */
+.mp-grid .material__spec { display: flex; align-items: center; gap: 6px; font-weight: 600; }
+.mp-grid .material__spec svg { flex: none; color: var(--blue); }
+.mp-grid .material__tag {
+  align-self: flex-start;
+  margin-top: auto;
+  background: var(--sky);
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+}
 .mp-panel .note { margin-top: 50px; }
 
 @media (max-width: 900px) {

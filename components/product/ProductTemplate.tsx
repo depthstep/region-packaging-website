@@ -60,6 +60,12 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
   const howToOrder = withDefaults(page.howToOrder, d.howToOrder, 'steps')
   const pricing = withDefaults(page.pricing, d.pricing, 'cards')
   const whyUs = withDefaults(page.whyUs, d.whyUs, 'cards')
+  // Every page shows the shared specification rows (Site settings) when there are any.
+  const sharedRows = settings.pageOptions?.specRows ?? []
+  const specs =
+    page.specs?.heading || sharedRows.length
+      ? { ...page.specs, heading: page.specs?.heading || 'Specifications', rows: sharedRows.length ? sharedRows : (page.specs?.rows ?? []), stockSizes: page.specs?.stockSizes ?? [] }
+      : undefined
   const faqs = mergeFaqs(d.faqs, page.faqs)
   const related = resolveRelated(data, page.relatedIds ?? [])
   const relatedCards: Card[] = (related.length ? related : fallbackRelated).map((r) => toCard(data, r, 'Explore Product'))
@@ -149,14 +155,14 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
         </section>
       )}
 
-      {/* 7. Specs + stock sizes */}
-      {page.specs?.heading && (
+      {/* 7. Specs + stock sizes. The table rows are the shared ones from Site settings when set. */}
+      {specs && (
         <section data-section="specs" className="section section--rule" id="specs">
           <div className="container">
-            <SectionHeader eyebrow={page.specs.eyebrow} heading={page.specs.heading} text={page.specs.text} />
-            {(page.specs.rows?.length ?? 0) > 0 && (
+            <SectionHeader eyebrow={specs.eyebrow} heading={specs.heading} text={specs.text} />
+            {specs.rows.length > 0 && (
               <dl className="spec-table">
-                {page.specs.rows.map((r) => (
+                {specs.rows.map((r) => (
                   <div key={r.label}>
                     <dt>{r.label}</dt>
                     <dd>{r.value}</dd>
@@ -164,9 +170,9 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
                 ))}
               </dl>
             )}
-            {(page.specs.stockSizes?.length ?? 0) > 0 && (
+            {(specs.stockSizes?.length ?? 0) > 0 && (
               <>
-                <h3 className="sizes__heading">{page.specs.stockSizesHeading || 'Popular Stock Sizes'}</h3>
+                <h3 className="sizes__heading">{specs.stockSizesHeading || 'Popular Stock Sizes'}</h3>
                 <div className="sizes">
                   <table>
                     <thead>
@@ -177,7 +183,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
                       </tr>
                     </thead>
                     <tbody>
-                      {page.specs.stockSizes.map((s) => (
+                      {specs.stockSizes.map((s) => (
                         <tr key={s.size}>
                           <td>{s.size}</td>
                           <td>{s.dimensions}</td>
@@ -189,7 +195,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
                 </div>
               </>
             )}
-            {page.specs.note && <p className="note">{page.specs.note}</p>}
+            {specs.note && <p className="note">{specs.note}</p>}
           </div>
         </section>
       )}
@@ -200,6 +206,7 @@ export function ProductTemplate({ data, page, category, explore, fallbackRelated
         materials={page.materials?.heading ? page.materials : undefined}
         printing={page.printing}
         addons={page.addons?.items?.length ? page.addons : settings.subProductDefaults.addons}
+        shared={settings.pageOptions}
         labels={settings.subProductDefaults.tabs}
       />
 

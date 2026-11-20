@@ -1,35 +1,15 @@
 import type { Review, SiteSettings } from '@/lib/types'
-import { GoogleG, ReviewCard } from '@/components/ui/Cards'
-import { Stars } from '@/components/ui/glyphs'
+import { ReviewCard } from '@/components/ui/Cards'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 
 export function ReviewsSection({ settings, reviews }: { settings: SiteSettings; reviews: Review[] }) {
   if (!reviews.length) return null
-  const { google, reviewsSection } = settings
+  const { reviewsSection } = settings
   return (
-    <section data-section="reviewsSection google" className="section" id="reviews">
+    <section data-section="reviewsSection" className="section" id="reviews">
       <div className="container">
         <SectionHeader {...reviewsSection} />
-        <div className="rating-bar">
-          <GoogleG />
-          <span className="rating-bar__score">{google.score}</span>
-          <div>
-            <Stars size={26} />
-            <p>
-              <strong>{google.label}</strong> · {google.countText}
-            </p>
-          </div>
-          {reviewsSection.buttonLabel &&
-            (google.reviewUrl ? (
-              <a className="btn btn--outline btn--sm rating-bar__button" href={google.reviewUrl} target="_blank" rel="noreferrer">
-                {reviewsSection.buttonLabel}
-              </a>
-            ) : (
-              <span className="btn btn--outline btn--sm rating-bar__button" aria-disabled="true" title="Add the Google review link in Site settings">
-                {reviewsSection.buttonLabel}
-              </span>
-            ))}
-        </div>
+        {/* The Google rating bar was removed from the whole site (SEO team, 20 Nov 2026). */}
         <div className="grid-3 reviews-grid">
           {reviews.map((r) => (
             <ReviewCard key={r.id} review={r} />

@@ -9,7 +9,23 @@ export type TitleText = { title: string; text: string }
 export type IconItem = TitleText & { icon?: Img }
 export type NameDescription = { name: string; description: string }
 /** A card in the options section of product pages: name, text and photo (a material's tag is not shown there). */
-export type OptionCard = NameDescription & { badge?: string; image?: Img }
+export type OptionCard = NameDescription & {
+  badge?: string
+  image?: Img
+  /** Shared cards only: a thickness line such as "14pt – 28pt" (Material tab). */
+  spec?: string
+  /** Shared cards only: the small label at the bottom of the card, e.g. "Eco-Friendly Choice". */
+  tag?: string
+}
+
+/** Site settings > Product page defaults: the same option cards and specifications on every category and product page. */
+export type PageOptions = {
+  materials?: OptionCard[]
+  printing?: OptionCard[]
+  finishes?: OptionCard[]
+  addons?: OptionCard[]
+  specRows?: { label: string; value: string }[]
+}
 
 export type SectionHeading = { eyebrow?: string; heading?: string; text?: string }
 
@@ -80,6 +96,8 @@ export type Card = { title: string; kicker?: string; text?: string; linkLabel?: 
 
 
 export type SiteSettings = {
+  /** The option cards and specifications every category and product page shows. */
+  pageOptions?: PageOptions
   /** Small label before the top bar message (e.g. a holiday offer). */
   announcementTag?: string
   announcement?: string

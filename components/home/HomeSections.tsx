@@ -125,7 +125,8 @@ export function Steps({ s }: { s: HomePage['steps'] }) {
 
 export function Industries({ s, data }: { s: HomePage['industries']; data: SiteData }) {
   if (!s.tabs.length) return null
-  // A tab shows its own cards, else the products of its linked category, else the default cards.
+  // Before a tab is chosen the section shows the default cards. A tab shows its own cards, else the
+  // products of its linked category, else the default cards.
   const tabs = s.tabs.map((t) => {
     if (t.cards?.length) return { label: t.label, cards: t.cards }
     const fromCategory = t.categoryId ? productsIn(data, t.categoryId).map((p) => toCard(data, p, 'Customize Now')) : []
@@ -135,7 +136,7 @@ export function Industries({ s, data }: { s: HomePage['industries']; data: SiteD
     <section data-section="industries" className="section">
       <div className="container">
         <SectionHeader eyebrow={s.eyebrow} heading={s.heading} text={s.text} />
-        <IndustryTabs tabs={tabs} />
+        <IndustryTabs tabs={tabs} start={s.defaultCards} />
         {s.note && <p className="note">{s.note}</p>}
       </div>
     </section>

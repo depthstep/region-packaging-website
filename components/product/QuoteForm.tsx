@@ -15,7 +15,7 @@ const SIZE_FIELDS = [
   { name: 'width', label: 'Width', placeholder: 'Width' },
   { name: 'depth', label: 'Depth / Height', placeholder: 'Depth' },
 ] as const
-// Category pages only (SEO team's sample form, 18 Nov 2026): a unit after the size, printing after quantity.
+// Category and product pages (SEO team's sample form, 18 and 20 Nov 2026): a unit after the size, printing after quantity. Not on /quote.
 const UNITS = ['in', 'cm', 'mm']
 const PRINTING = ['Outside Only', 'Inside & Outside']
 
@@ -24,8 +24,8 @@ type Props = {
   sampleLinkLabel?: string
   note?: string
   defaultMessage?: string
-  /** Category pages: also ask for the size unit and where the box is printed. */
-  categoryFields?: boolean
+  /** Category and product pages: also ask for the size unit and where the box is printed. */
+  unitAndPrinting?: boolean
 }
 
 type Status = { state: 'idle' | 'sending' | 'sent' } | { state: 'error'; message: string }
@@ -36,7 +36,7 @@ const Req = () => (
   </span>
 )
 
-export function QuoteForm({ product, sampleLinkLabel, note, defaultMessage, categoryFields = false }: Props) {
+export function QuoteForm({ product, sampleLinkLabel, note, defaultMessage, unitAndPrinting = false }: Props) {
   const [status, setStatus] = useState<Status>({ state: 'idle' })
   const [file, setFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState('')
@@ -113,15 +113,15 @@ export function QuoteForm({ product, sampleLinkLabel, note, defaultMessage, cate
             <input className="input input--plain" name={f.name} type="number" inputMode="decimal" min="0" step="any" placeholder={f.placeholder} required />
           </label>
         ))}
-        {categoryFields && <ChoiceField name="unit" label="Unit" options={UNITS} />}
+        {unitAndPrinting && <ChoiceField name="unit" label="Unit" options={UNITS} />}
         {/* On phones, Quantity and Printing get a row each so "Inside & Outside" fits. */}
-        <label className={categoryFields ? 'field field--phone-wide' : 'field'}>
+        <label className={unitAndPrinting ? 'field field--phone-wide' : 'field'}>
           <span className="field__label">
             Quantity <Req />
           </span>
           <input className="input input--plain" name="quantity" type="number" inputMode="numeric" min="1" step="1" placeholder="Quantity" required />
         </label>
-        {categoryFields && <ChoiceField name="printing" label="Printing" options={PRINTING} wide />}
+        {unitAndPrinting && <ChoiceField name="printing" label="Printing" options={PRINTING} wide />}
 
         <div className="field field--wide">
           <span className="field__label">Upload File / Design</span>

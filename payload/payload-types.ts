@@ -2560,6 +2560,70 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Shown the same on every category and product page. While a tab here has cards, the pages' own cards for that tab are not used, and while the table has rows, the pages' own specification rows are not used.
+   */
+  pageOptions?: {
+    materials?:
+      | {
+          name?: string | null;
+          /**
+           * Optional. Shown with a layers icon under the text.
+           */
+          spec?: string | null;
+          description?: string | null;
+          tag?: string | null;
+          image?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+    printing?:
+      | {
+          name?: string | null;
+          /**
+           * Optional. Shown with a layers icon under the text.
+           */
+          spec?: string | null;
+          description?: string | null;
+          tag?: string | null;
+          image?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+    finishes?:
+      | {
+          name?: string | null;
+          /**
+           * Optional. Shown with a layers icon under the text.
+           */
+          spec?: string | null;
+          description?: string | null;
+          tag?: string | null;
+          image?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+    addons?:
+      | {
+          name?: string | null;
+          /**
+           * Optional. Shown with a layers icon under the text.
+           */
+          spec?: string | null;
+          description?: string | null;
+          tag?: string | null;
+          image?: (number | null) | Media;
+          id?: string | null;
+        }[]
+      | null;
+    specRows?:
+      | {
+          label?: string | null;
+          value?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   formDefaults?: {
     style?: string[] | null;
     finish?: string[] | null;
@@ -3608,6 +3672,57 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         text?: T;
         icon?: T;
         id?: T;
+      };
+  pageOptions?:
+    | T
+    | {
+        materials?:
+          | T
+          | {
+              name?: T;
+              spec?: T;
+              description?: T;
+              tag?: T;
+              image?: T;
+              id?: T;
+            };
+        printing?:
+          | T
+          | {
+              name?: T;
+              spec?: T;
+              description?: T;
+              tag?: T;
+              image?: T;
+              id?: T;
+            };
+        finishes?:
+          | T
+          | {
+              name?: T;
+              spec?: T;
+              description?: T;
+              tag?: T;
+              image?: T;
+              id?: T;
+            };
+        addons?:
+          | T
+          | {
+              name?: T;
+              spec?: T;
+              description?: T;
+              tag?: T;
+              image?: T;
+              id?: T;
+            };
+        specRows?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              id?: T;
+            };
       };
   formDefaults?:
     | T

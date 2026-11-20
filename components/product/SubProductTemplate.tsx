@@ -69,6 +69,9 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
   if (s.construction && !page.construction?.image && own.length > 1) s.construction = { ...s.construction, image: own[4] ?? own[0] }
   if (s.overview && !page.overview?.images?.length && own.length > 1) s.overview = { ...s.overview, images: own.slice(1, 4) }
   const addons = page.addons?.items?.length ? page.addons : def.addons
+  // Every page shows the shared specification rows (Site settings) when there are any.
+  const sharedRows = settings.pageOptions?.specRows ?? []
+  if (sharedRows.length) s.specs = { ...s.specs, heading: s.specs?.heading || 'Specifications', rows: sharedRows, stockSizes: s.specs?.stockSizes ?? [] }
   const faqs = mergeFaqs(settings.productDefaults.faqs, page.faqs)
   const label = def.tabs ?? {}
 
@@ -191,7 +194,7 @@ export function SubProductTemplate({ data, page, category }: { data: SiteData; p
       />
       {construction}
       {tabs.length > 0 && <ProductTabs tabs={tabs} />}
-      <OptionsSection materials={s.materials} printing={s.printing} addons={addons} labels={label} underTabBar />
+      <OptionsSection materials={s.materials} printing={s.printing} addons={addons} shared={settings.pageOptions} labels={label} underTabBar />
     </>
   )
 }

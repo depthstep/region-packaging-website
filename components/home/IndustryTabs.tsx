@@ -5,12 +5,14 @@ import type { Card } from '@/lib/types'
 import { PhotoCard } from '@/components/ui/Cards'
 
 /**
- * Home page "Custom boxes by industry". The buttons stay pinned at the top of the screen while
+ * Home page "Custom boxes by industry". Until a button is chosen the cards are `start` (the
+ * section's default cards); a button shows its own cards, and choosing it again goes back.
+ * The buttons stay pinned at the top of the screen while
  * the visitor scrolls through the cards, so they can switch industry without scrolling back up.
  * On phones and tablets they sit in one row that swipes sideways.
  */
-export function IndustryTabs({ tabs }: { tabs: { label: string; cards: Card[] }[] }) {
-  const [active, setActive] = useState(0)
+export function IndustryTabs({ tabs, start = [] }: { tabs: { label: string; cards: Card[] }[]; start?: Card[] }) {
+  const [active, setActive] = useState(start.length ? -1 : 0)
   const [stuck, setStuck] = useState(false)
   const sentinel = useRef<HTMLDivElement>(null)
   const bar = useRef<HTMLDivElement>(null)
@@ -28,7 +30,7 @@ export function IndustryTabs({ tabs }: { tabs: { label: string; cards: Card[] }[
   }, [])
 
   function choose(i: number) {
-    setActive(i)
+    setActive(i === active && start.length ? -1 : i)
     // Keep the chosen button in view in the sideways row (without moving the page).
     const r = row.current
     const btn = r?.children[i] as HTMLElement | undefined
@@ -60,9 +62,10 @@ export function IndustryTabs({ tabs }: { tabs: { label: string; cards: Card[] }[
           ))}
         </div>
       </div>
-      <div ref={panel} className="grid-3 industry-panel" role="tabpanel" id="industry-panel" aria-labelledby={`industry-tab-${active}`}>
-        {tabs[active]?.cards.slice(0, 3).map((c) => (
-          <PhotoCard key={c.title} card={c} />
+      <div ref={panel} className="grid-3 industry-panel" role="tabpanel" id="industry-panel" aria-labelledby={active >= 0 ? `industry-tab-${active}` : undefined}>
+        {(active >= 0 ? tabs[active]?.cards : start)?.slice(0, 3).map((c, i) => (
+          // A product tab's cards are its photos, so they can share a title.
+          <PhotoCard key={`${active}-${i}-${c.title}`} card={c} />
         ))}
       </div>
     </>
